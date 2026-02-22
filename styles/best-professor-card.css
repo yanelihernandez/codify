@@ -1,0 +1,64 @@
+.best-professor-card {
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 10px;
+    width: 200px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    text-align: center;
+    background-color: white;
+}
+
+.best-professor-card p{
+    margin: 10px 5px;
+}
+
+.card-top {         /* rating y fav */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.fav-btn {              /* boton favorito */
+    font-size: 25px;
+    background: none;
+    border-radius: 10px;
+    cursor: pointer;
+    color: transparent;
+    -webkit-text-stroke: 2px red;
+    transition: all 0.3s ease;
+}
+.fav-btn:hover {
+    background-color: white;
+    transform: scale(1.15);
+}
+
+.best-professor-card img {    /* foto profesor */
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.professor-name {           /* nombre profesor*/
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+.professor-especiality {    /* especialidad profesor*/
+    font-size: 0.9em;
+    color: grey;
+}
+
+.best-professor-card a {         /* boton perfil*/
+    display: inline-block;
+    text-decoration: none;
+    color: #fff;
+    background-color: #007bff;
+    padding: 5px 10px;
+    border-radius: 5px;
+    transition: 0.3s;
+}
+.best-professor-card a:hover {
+    background-color: #0056b3;
+    transform: scale(1.1);
+}
