@@ -3,8 +3,104 @@
 <head>
     <meta charset="UTF-8">
     <title>Home</title>
+    <link rel="stylesheet" href="styles/style.css">
+    <link rel="stylesheet" href="styles/header.css">
+    <link rel="stylesheet" href="styles/footer.css">
+    <link rel="stylesheet" href="styles/best-professor-card.css">
 </head>
 <body>
-    <h1>Bienvenido</h1>
+
+<header class="site-header">
+    <a class="home-btn" href="index.html">
+        <img src="images/logo.jpg" alt="Logo">
+    </a>
+
+    <section>
+        <h2>Selecciona tu lenguaje: </h2>
+        <nav>
+            <ul class="nav-bar">
+                <li><a href="pages/python.html">Python</a></li>
+                <li><a href="#">Java</a></li>
+                <li><a href="#">C</a></li>
+                <li><a href="#">Assembly</a></li>
+            </ul>
+        </nav>
+    </section>
+
+    <div class="profile">
+        <a href="pages/profile.html">
+            <img src="images/perfil.jpg" alt="perfil">
+        </a>
+        <a href="pages/login.html" class="login-btn">LOG IN</a>
+    </div>
+
+</header>
+
+<main>
+    <h1>Texto de bienvenida</h1>
+    <section class="bloque_inicio">
+        <div class="imagen_main">
+            <img src="images/home.jpg" alt="Descripción">
+        </div>
+
+        <div class="texto_main">
+            <p>
+                Impulsa tu carrera tecnológica con clases personalizadas impartidas por expertos en los principales lenguajes de programación.
+                Nuestra plataforma te conecta con profesores especializados en áreas como Python, Java, JavaScript y C++, entre muchos otros. <br>
+                Reserva fácilmente, elige la modalidad y avanza a tu ritmo con acompañamiento profesional. <br>
+                Ya sea que estés comenzando desde cero o quieras perfeccionar tus habilidades, aquí encontrarás el apoyo ideal para alcanzar tus metas. <br>
+                Da el siguiente paso y convierte tu aprendizaje en resultados reales.
+            </p>
+        </div>
+    </section>
+
+    <section class="profesores-mejor-valorados">
+        <h2>Profesores mejor valorados</h2>
+        <div class="lista-profesores">
+            <div class="best-professor-card">
+                <div class="card-top">
+                    <p>4.8 ⭐</p>
+                    <button class="fav-btn">♥</button>
+                </div>
+
+                <img src="images/juan_manuel.png" alt="María">
+
+                <p class="professor-name">Juan Manuel</p>
+                <p class="professor-especiality">Especialidad: Python</p>
+                <a href="#" class="see-profile">Ver perfil</a>
+            </div>
+
+            <div class="best-professor-card">
+                <div class="card-top">
+                    <p>4.7 ⭐</p>
+                    <button class="fav-btn">♥</button>
+                </div>
+
+                <img src="images/maria.png" alt="María">
+
+                <p class="professor-name">María</p>
+                <p class="professor-especiality">Especialidad: Java</p>
+                <a href="#" class="see-profile">Ver perfil</a>
+            </div>
+
+        </div>
+
+    </section>
+
+</main>
+
+<footer>
+    <img src="images/logo.jpg" alt="Logo">
+
+    <p>© 2026 Mi Web</p>
+
+    <p>
+        Contacto:<br>
+        xxxxxxxx@gmail.com<br>
+        Instagram: yyyyyyyyy<br>
+        X: zzzzzzzzzz
+    </p>
+</footer>
+
 </body>
 </html>
