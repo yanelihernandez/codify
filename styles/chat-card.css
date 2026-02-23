@@ -1,0 +1,46 @@
+.chat-card {
+    display: flex;
+    width: fit-content;
+    padding: 20px 40px;
+    justify-content: space-between;
+    gap: 40px;
+    height: 100px;
+
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    background-color: #bcbaba;
+}
+
+.chat-card img{
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 2px solid white;
+}
+
+.chat-card{
+    width: 600px;
+}
+
+.professor-name{
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+.access {
+    height: 40px;
+    align-self: end;
+    display: block;
+    margin-left: auto;
+    text-decoration: none;
+    color: #fff;
+    background-color: #0a79d3;
+    padding: 5px 10px;
+    border-radius: 5px;
+    transition: 0.3s;
+}
+.access:hover {
+    background-color: #0649dd;
+}
