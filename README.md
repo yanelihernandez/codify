@@ -1,5 +1,5 @@
 # Codify -  Sprint 1
-#### Programación Web y Móvil
+### Programación Web y Móvil
 
 Codify es una plataforma web diseñada para conectar a estudiantes con profesores particulares de programación.
 
