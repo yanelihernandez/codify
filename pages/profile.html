@@ -3,21 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <title>Profile</title>
-    <script src="../index.js"></script>
-    <link rel="stylesheet" href="../styles/profile.css">
-    <link rel="stylesheet" href="../styles/header.css">
-    <link rel="stylesheet" href="../styles/footer.css">
-    <link rel="stylesheet" href="../styles/chat-card.css">
+    <script src="/index.js"></script>
+    <link rel="stylesheet" href="/styles/profile.css">
+    <link rel="stylesheet" href="/styles/header.css">
+    <link rel="stylesheet" href="/styles/footer.css">
+    <link rel="stylesheet" href="/styles/chat-card.css">
 </head>
 <body>
 
-<header class="site-header" xlu-include-file="../templates/header.html"></header>
+<header class="site-header" xlu-include-file="/templates/header.html"></header>
 
 <main>
     <div class="contenedor">
         <div class="izquierda">     <!-- info perfil -->
             <h1>Mi Perfil</h1>
-            <img src="../images/perfil.jpg" alt="Logo">
+            <img src="/images/perfil.jpg" alt="Logo">
             <p>Nombre usuario</p>
             <p>
                 Nombre y Apellidos<br>
@@ -45,18 +45,22 @@
 
             <section class="chats-section">
                 <!-- templates de chat -->
-                <div class="chat-card" xlu-include-file="../templates/chat-card.html"></div>
-                <div class="chat-card" xlu-include-file="../templates/chat-card.html"></div>
+                <div class="chat-card" xlu-include-file="/templates/chat-card.html"></div>
+                <div class="chat-card" xlu-include-file="/templates/chat-card.html"></div>
             </section>
 
         </div>      <!-- final chats -->
     </div>
 </main>
 
-<footer class="site-footer" xlu-include-file="../templates/footer.html"></footer>
+<footer class="site-footer" xlu-include-file="/templates/footer.html"></footer>
+
+
+
+</body>
 
 <script>
     xLuIncludeFile();
 </script>
 
-</body>
+</html>
