@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Home</title>
+    <script src="index.js"></script>
     <link rel="stylesheet" href="styles/style.css">
     <link rel="stylesheet" href="styles/header.css">
     <link rel="stylesheet" href="styles/footer.css">
@@ -10,32 +11,7 @@
 </head>
 <body>
 
-<header class="site-header">
-    <a class="home-btn" href="index.html">
-        <img src="images/logo.jpg" alt="Logo">
-    </a>
-
-    <section>
-        <h2>Selecciona tu lenguaje:</h2>
-        <nav>
-            <ul class="nav-bar">
-                <li><a href="pages/python.html">Python</a></li>
-                <li><a href="#">Java</a></li>
-                <li><a href="#">C</a></li>
-                <li><a href="#">Assembly</a></li>
-            </ul>
-        </nav>
-    </section>
-
-    <div class="profile">
-        <a href="pages/profile.html" class="profile-link">
-            <img src="images/perfil.jpg" alt="perfil">
-        </a>
-        <span class="username">Invitado</span>
-        <a href="pages/login.html" class="login-btn">LOG IN</a>
-    </div>
-
-</header>
+<header class="site-header" xlu-include-file="/templates/header.html"></header>
 
 <main>
     <h1>Texto de bienvenida</h1>
@@ -58,71 +34,19 @@
     <section class="profesores-mejor-valorados">
         <h2>Profesores mejor valorados</h2>
         <div class="lista-profesores">
-            <div class="best-professor-card">
-                <div class="card-top">
-                    <p>4.8 ⭐</p>
-                    <button class="fav-btn">♥</button>
-                </div>
-
-                <img src="images/juan_manuel.png" alt="María">
-
-                <p class="professor-name">Juan Manuel</p>
-                <p class="professor-especiality">Especialidad: Python</p>
-                <a href="#" class="see-profile">Ver perfil</a>
-            </div>
-
-            <div class="best-professor-card">
-                <div class="card-top">
-                    <p>4.7 ⭐</p>
-                    <button class="fav-btn">♥</button>
-                </div>
-
-                <img src="images/maria.png" alt="María">
-
-                <p class="professor-name">María</p>
-                <p class="professor-especiality">Especialidad: Java</p>
-                <a href="#" class="see-profile">Ver perfil</a>
-            </div>
-
+            <div class="best-professor-card" xlu-include-file="templates/best-professor-card.html"></div>
+            <div class="best-professor-card" xlu-include-file="templates/best-professor-card.html"></div>
         </div>
 
     </section>
 
 </main>
 
-<footer class="site-footer">
-    <div class="left">
-        <img src="images/logo.jpg" alt="Logo">
-    </div>
+<footer class="site-footer" xlu-include-file="templates/footer.html"></footer>
 
-    <div class="right">
-        <div class="up">
-            <div class="text">
-                <p>Codidy texto</p>
-            </div>
-            <div class="social media">
-                <p>Contacta con nosotros</p>
-                <nav>
-                    <ul class="social-media-list">
-                        <li><a href="#">
-                            <img src="images/perfil.jpg" alt="Instagram">
-                        </a></li>
-                        <li><a href="#">
-                            <img src="images/perfil.jpg" alt="X">
-                        </a></li>
-                        <li><a href="#">
-                            <img src="images/perfil.jpg" alt="Facebook">
-                        </a></li>
-                    </ul>
-                </nav>
-            </div>
-        </div>
-        <div class="bottom">
-            <p>© Codify 2026</p>
-        </div>
-    </div>
-
-</footer>
+<script>
+    xLuIncludeFile();
+</script>
 
 </body>
 </html>

@@ -4,11 +4,15 @@
 <head>
     <meta charset="UTF-8">
     <title>Log In</title>
+    <script src="../index.js"></script>
     <link rel="stylesheet" href="../styles/login.css">
+    <link rel="stylesheet" href="../styles/header.css">
     <link rel="stylesheet" href="../styles/footer.css">
 
 </head>
 <body>
+
+<header class="site-header" xlu-include-file="../templates/header.html"></header>
 
 <main>
 
@@ -35,18 +39,11 @@
 
 </main>
 
-<footer>
-    <img src="../images/logo.jpg" alt="Logo">
+<footer class="site-footer" xlu-include-file="../templates/footer.html"></footer>
 
-    <p>© 2026 Mi Web</p>
-
-    <p>
-        Contacto:<br>
-        xxxxxxxx@gmail.com<br>
-        Instagram: yyyyyyyyy<br>
-        X: zzzzzzzzzz
-    </p>
-</footer>
+<script>
+    xLuIncludeFile();
+</script>
 
 </body>
 </html>

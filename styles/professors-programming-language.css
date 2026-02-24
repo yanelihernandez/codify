@@ -35,3 +35,9 @@ main {
 .language-introduction {
     margin: 0;
 }
+
+.professors-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
