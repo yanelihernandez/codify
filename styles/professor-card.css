@@ -23,7 +23,7 @@
 }
 
 .professor-card-buttons{
-    align-self: end;
+    margin-left: auto;
     height: 100%;
     display: flex;
     flex-direction: column;
