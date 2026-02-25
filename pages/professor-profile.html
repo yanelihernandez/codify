@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Perfil del Profesor</title>
+
+    <script src="../index.js"></script>
+
+    <link rel="stylesheet" href="../styles/header.css">
+    <link rel="stylesheet" href="../styles/footer.css">
+    <link rel="stylesheet" href="../styles/professor-profile.css">
+</head>
+
+<body>
+
+<header class="site-header" xlu-include-file="../templates/header.html"></header>
+
+<main>
+    <div class="profesor-perfil-horizontal">
+
+        <a href="chat.html" class="chat-icon-corner" title="Enviar mensaje">📩</a>
+
+        <div class="columna-izquierda">
+            <div class="profesor-imagen">
+                <img src="../images/juan_manuel.png" alt="Juan Manuel">
+            </div>
+
+            <h1>Juan Manuel González</h1>
+
+            <div class="estadisticas-vertical">
+                <div class="estadistica-item">
+                    <span class="estadistica-valor">25€</span>
+                    <span class="estadistica-etiqueta">PRECIO/HORA</span>
+                </div>
+                <div class="estadistica-item">
+                    <span class="estadistica-valor">&lt; 2h</span>
+                    <span class="estadistica-etiqueta">T RESPUESTA</span>
+                </div>
+                <div class="estadistica-item">
+                    <span class="estadistica-valor">127</span>
+                    <span class="estadistica-etiqueta">Nº ALUMNOS</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="columna-central">
+            <div class="sobre-profesor">
+                <h2>Sobre Juan Manuel</h2>
+                <p>
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                </p>
+            </div>
+
+            <div class="opiniones">
+                <h2>Opiniones</h2>
+
+                <div class="opinion-item">
+                    <div class="opinion-header">
+                        <span class="opinion-usuario">usuario</span>
+                        <span class="opinion-rating">5★</span>
+                    </div>
+                    <p class="opinion-texto">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                </div>
+
+                <div class="opinion-item">
+                    <div class="opinion-header">
+                        <span class="opinion-usuario">usuario</span>
+                        <span class="opinion-rating">4★</span>
+                    </div>
+                    <p class="opinion-texto">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                </div>
+
+                <div class="opinion-item">
+                    <div class="opinion-header">
+                        <span class="opinion-usuario">usuario</span>
+                        <span class="opinion-rating">3.5★</span>
+                    </div>
+                    <p class="opinion-texto">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="columna-derecha">
+            <div class="grupos">
+                <h2>Grupos</h2>
+                <p>
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                </p>
+                <p class="descuento"><strong>10% en cada hora</strong></p>
+            </div>
+
+            <div class="video">
+                <h2>Video Juan Manuel</h2>
+                <div class="video-placeholder">
+                    <p>[Video URL]</p>
+                </div>
+            </div>
+
+            <div class="reserva-container">
+                <a href="book-class.html" class="btn-reservar">Reservar</a>
+            </div>
+        </div>
+
+    </div>
+</main>
+
+<footer class="site-footer" xlu-include-file="../templates/footer.html"></footer>
+
+</body>
+
+<script>
+    xLuIncludeFile();
+</script>
+
+</html>
