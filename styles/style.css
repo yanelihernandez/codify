@@ -45,4 +45,60 @@ main {
     display: flex;
     gap: 20px;
     flex-wrap: wrap;
+    padding: 20px;
+    background-color: #87ab69;
+    border-radius: 10px;
+}
+
+
+.about-us {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    margin: 40px;
+}
+
+.about-us-intro{
+    margin-left: -20px;
+    margin-right: -20px;
+    padding: -20px;
+    background-color: #595f60;
+    color: white;
+    text-align: center;
+}
+
+.about-us-title{
+    font-size: 30px;
+    font-weight: bold;
+}
+
+.history {
+    display: flex;
+    gap: 20px;
+}
+
+.history-text {
+    flex: 7;
+    padding: 20px;
+    background: #f5f5f5;
+    border-radius: 12px;
+}
+
+.history-media {
+    flex: 3;
+    background: #ddd;
+    border: 2px dashed #999;
+    border-radius: 12px;
+    height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.contact {
+    padding: 20px;
+    background: #ddd;
+    border-radius: 12px;
+    text-align: center;
+    line-height: 1.2;
 }
