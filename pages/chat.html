@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+    <title>Chat</title>
+
+    <script src="../index.js"></script>
+
+    <link rel="stylesheet" href="../styles/header.css">
+    <link rel="stylesheet" href="../styles/footer.css">
+    <link rel="stylesheet" href="../styles/chat.css">
+</head>
+<body>
+
+<header class="site-header" xlu-include-file="../templates/header.html"></header>
+
+<main>
+    <div class="chat-container">
+
+        <div class="chat-header">
+            <a href="python.html" class="back-btn" title="Volver a profesores">←</a>
+            <div class="chat-header-info">
+                <img src="../images/juan_manuel.png" alt="Juan Manuel" class="chat-avatar">
+                <div>
+                    <h2>Juan Manuel González</h2>
+                    <p class="online-status">🟢 En línea</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="chat-messages">
+
+            <div class="message profesor">
+                <img src="../images/juan_manuel.png" alt="Juan Manuel" class="message-avatar">
+                <div class="message-content">
+                    <p>¡Hola! ¿En qué puedo ayudarte con Python?</p>
+                    <span class="message-time">10:30</span>
+                </div>
+            </div>
+
+            <div class="message alumno">
+                <div class="message-content alumno">
+                    <p>Hola Juan Manuel, soy de ingeniería informática y tengo un proyecto con Django</p>
+                    <span class="message-time">10:32</span>
+                </div>
+                <img src="../images/perfil.jpg" alt="Mi perfil" class="message-avatar alumno-avatar">
+            </div>
+
+            <div class="message profesor">
+                <img src="../images/juan_manuel.png" alt="Juan Manuel" class="message-avatar">
+                <div class="message-content">
+                    <p>Cuéntame, ¿qué es lo que se te complica?</p>
+                    <span class="message-time">10:33</span>
+                </div>
+            </div>
+
+            <div class="message alumno">
+                <div class="message-content alumno">
+                    <p>Los modelos y las relaciones entre tablas</p>
+                    <span class="message-time">10:35</span>
+                </div>
+                <img src="../images/perfil.jpg" alt="Mi perfil" class="message-avatar alumno-avatar">
+            </div>
+        </div>
+
+        <div class="chat-input-area">
+            <input type="text" placeholder="Escribe un mensaje..." class="chat-input">
+            <button class="send-btn">Enviar</button>
+        </div>
+
+    </div>
+</main>
+
+<footer class="site-footer" xlu-include-file="../templates/footer.html"></footer>
+
+</body>
+
+<script>
+    xLuIncludeFile();
+</script>
+
+</html>
