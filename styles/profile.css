@@ -1,6 +1,7 @@
 html, body {
     margin: 0;
     height: 100%;
+    font-family: Arial, sans-serif;
 }
 
 .contenedor {
@@ -29,6 +30,12 @@ html, body {
     display: inline-block;
     height: 15rem;
     width: auto;
+    border-radius: 5%;
+}
+
+.buttons {
+    display: flex;
+    gap: 20px;
 }
 
 .izquierda a{
@@ -74,5 +81,38 @@ html, body {
     background-color: #3368f8;
     font-size: 20px;
     color: #ffffff;
-    margin: 20px 0;
+    margin-top: 20px;
 }
+
+
+.fav-professors {
+    position: relative;
+    padding: 50px 20px 20px;
+    background: #f2f2f2;
+    border-radius: 12px;
+    margin: 100px 50px;
+}
+
+.fav-professors-title {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    padding: 8px 20px;
+    background: #4b7e09;
+    color: white;
+    border-radius: 40px;
+
+    white-space: nowrap;
+}
+
+.fav-professors-content {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem;
+    margin: 50px;
+}
+
+
+

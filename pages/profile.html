@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="/styles/header.css">
     <link rel="stylesheet" href="/styles/footer.css">
     <link rel="stylesheet" href="/styles/chat-card.css">
+    <link rel="stylesheet" href="/styles/best-professor-card.css">
 </head>
 <body>
 
@@ -25,7 +26,7 @@
                 Mas info...
             </p>
             <div class="buttons">
-                <a href="login.html">Modificar perfil</a>
+                <a href="singup.html">Modificar perfil</a>
                 <a href="reservas.html">Ver Reservas</a>
             </div>
 
@@ -51,6 +52,16 @@
 
         </div>      <!-- final chats -->
     </div>
+
+    <div class="fav-professors">
+        <div class="fav-professors-title">
+            <h1>Mis professores favoritos</h1>
+        </div>
+        <div class="fav-professors-content">
+            <div class="best-professor-card" xlu-include-file="../templates/best-professor-card.html"></div>
+        </div>
+    </div>
+
 </main>
 
 <footer class="site-footer" xlu-include-file="/templates/footer.html"></footer>
