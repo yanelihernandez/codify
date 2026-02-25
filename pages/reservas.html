@@ -16,18 +16,27 @@
 
 <main>
 
-    <h1>Mis Reservas</h1>
-    <section class="lista-reservas">
+    <p class="title">Mis reservas</p>
+
+    <section class="reservation-list">
+        <div class="reservation-card" xlu-include-file="/templates/reservation-card.html"></div>
         <div class="reservation-card" xlu-include-file="/templates/reservation-card.html"></div>
         <div class="reservation-card" xlu-include-file="/templates/reservation-card.html"></div>
         <div class="reservation-card" xlu-include-file="/templates/reservation-card.html"></div>
     </section>
 
+    <p>Has llegado al final.</p>
+
 </main>
 
+<section class="action-bar">
+    <div class="action-bar-content">
+        <button class="btn-save">Guardar cambios</button>
+        <button class="btn-cancel">Cancelar</button>
+    </div>
+</section>
+
 <footer class="site-footer" xlu-include-file="/templates/footer.html"></footer>
-
-
 
 </body>
 
