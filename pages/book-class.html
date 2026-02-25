@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Reserva con Profesor</title>
+
+  <script src="../index.js"></script>
+
+  <link rel="stylesheet" href="../styles/header.css" />
+  <link rel="stylesheet" href="../styles/footer.css" />
+  <link rel="stylesheet" href="../styles/book-class.css" />
+</head>
+
+<body>
+<header class="site-header" xlu-include-file="../templates/header.html"></header>
+
+<main class="booking-page">
+  <section class="booking-card">
+    <h1 class="booking-title">Reserva con Profesor</h1>
+    <p class="booking-teacher-name">Juan Manuel González</p>
+
+    <div class="booking-top">
+      <div class="booking-photo">
+        <img src="../images/juan_manuel.png" alt="Profesor Juan Manuel" />
+      </div>
+
+      <div class="booking-about">
+        <p>
+          Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+        </p>
+        <p>
+          Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+        </p>
+      </div>
+    </div>
+
+    <form class="booking-form">
+      <div class="field full">
+        <label for="fullName">nombre y apellidos</label>
+        <input id="fullName" type="text" />
+      </div>
+
+      <div class="field">
+        <label for="date">fecha</label>
+        <input id="date" type="date" />
+      </div>
+
+      <div class="field">
+        <label for="time">hora</label>
+        <input id="time" type="time" />
+      </div>
+
+      <div class="field">
+        <label for="hours">nº de horas</label>
+        <select id="hours">
+          <option>1</option>
+          <option>2</option>
+          <option>3</option>
+        </select>
+      </div>
+
+      <div class="field modality">
+        <div class="modality-head">
+          <label>modalidad</label>
+        </div>
+
+        <div class="toggle-row">
+          <label class="switch">
+            <input type="checkbox" />
+            <span class="slider"></span>
+          </label>
+          <span class="toggle-label">individual / en grupo</span>
+        </div>
+      </div>
+
+      <div class="price-box">
+        <p class="price-label">precio</p>
+        <p class="price-value">50€</p>
+      </div>
+
+      <div class="booking-actions">
+        <a class="btn btn-cancel" href="professor-profile.html">cancelar</a>
+        <a class="btn btn-accept" href="reservas.html">aceptar</a>
+      </div>
+    </form>
+  </section>
+</main>
+
+<footer class="site-footer" xlu-include-file="../templates/footer.html"></footer>
+
+<script>
+  xLuIncludeFile();
+</script>
+</body>
+</html>
