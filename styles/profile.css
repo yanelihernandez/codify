@@ -36,21 +36,29 @@ html, body {
 .buttons {
     display: flex;
     gap: 20px;
+    flex-wrap: wrap;
 }
 
-.izquierda a{
+.buttons a,
+.buttons button {
     display: inline-block;
     padding: 10px 20px;
     margin-bottom: 20px;
-    text-decoration: none;
     font-weight: 600;
+    font-family: inherit;
+    font-size: 16px;
     color: black;
     background-color: #b3cf99;
     border-radius: 8px;
+    border: none;
+    text-decoration: none;
     box-shadow: 0 3px 6px rgba(0,0,0,0.2);
     transition: all 0.3s ease;
+    cursor: pointer;
 }
-.izquierda a:hover {
+
+.buttons a:hover,
+.buttons button:hover {
     background-color: #4b7e09;
     box-shadow: 0 6px 12px rgba(0,0,0,0.3);
 }
@@ -58,32 +66,77 @@ html, body {
 .calendar-section {
     width: 100%;
     max-width: 600px;
-}
-
-.calendar-placeholder {
-    height: 400px;
-    border: 2px dashed #999;
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: #f5f5f5;
-    font-size: 20px;
-    color: #666;
-}
-.calendar-day-info {
-    height: 200px;
-    border: 2px solid #999;
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: #3368f8;
-    font-size: 20px;
-    color: #ffffff;
     margin-top: 20px;
 }
 
+.calendar-placeholder {
+    padding: 16px;
+    background: #f5f5f5;
+    border-radius: 8px;
+}
+
+.mini-calendar{
+    background: #fff;
+    border: 1px solid #d1d5db;
+    border-radius: 10px;
+    padding: 12px;
+}
+
+.mini-cal-header{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.mini-cal-header strong{
+    font-size: 14px;
+}
+
+.mini-cal-nav{
+    width: 30px;
+    height: 30px;
+    border-radius: 8px;
+    border: 1px solid #d1d5db;
+    background: #fff;
+    cursor: pointer;
+    font-weight: 700;
+}
+
+.mini-cal-grid{
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 6px;
+}
+
+.dow{
+    font-size: 12px;
+    font-weight: 700;
+    color: #6b7280;
+    text-align: center;
+    padding: 6px 0;
+}
+
+.day{
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    font-size: 13px;
+    background: #f3f4f6;
+    color: #111827;
+}
+
+.day.muted{
+    opacity: .45;
+}
+
+.day.today{
+    background: #1f4d0b;
+    color: #fff;
+    font-weight: 800;
+}
 
 .fav-professors {
     position: relative;
@@ -98,12 +151,10 @@ html, body {
     top: 0;
     left: 50%;
     transform: translate(-50%, -50%);
-
     padding: 8px 20px;
     background: #4b7e09;
     color: white;
     border-radius: 40px;
-
     white-space: nowrap;
 }
 
@@ -113,6 +164,3 @@ html, body {
     gap: 2rem;
     margin: 50px;
 }
-
-
-
