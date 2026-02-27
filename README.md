@@ -77,8 +77,7 @@ La organización de los estilos está centralizada en la carpeta `/styles`.
 
 | Paleta de Colores | Detalles de Diseño |
 | :--- | :--- |
-| <img width="407" height="201" alt="Paleta de verdes Codify" src="https://github.com/user-attachments/assets/26274e96-8ad9-4426-83bb-bdde723d44ef" /> | <small>**Identidad Visual:**<br>Se ha seleccionado una gama de **tonos verdes** para transmitir frescura, aprendizaje y profesionalidad. Esta paleta asegura un contraste óptimo y un **Look & Feel** limpio y moderno, orientado totalmente a mejorar la experiencia de usuario (UX). 
-* Uso de nomenclatura **BEM** para un código CSS escalable, legible y organizado por componentes estructurales.</small> |
+| <img width="407" height="201" alt="Paleta de verdes Codify" src="https://github.com/user-attachments/assets/26274e96-8ad9-4426-83bb-bdde723d44ef" /> | <small><br>Se ha seleccionado una gama de **tonos verdes** para transmitir frescura, aprendizaje y profesionalidad. Esta paleta asegura un contraste óptimo y un **Look & Feel** limpio y moderno, orientado totalmente a mejorar la experiencia de usuario (UX).<br><br>• También se ha hecho uso de la metodología **BEM** para obtener un código CSS escalable, legible y organizado por componentes estructurales.</small> |
 
 ---
 
