@@ -3,11 +3,12 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Log In</title>
-    <script src="/index.js"></script>
+    <title>Inicia Sesión</title>
+    <script src="../index.js"></script>
     <link rel="stylesheet" href="../styles/sign-in.css">
     <link rel="stylesheet" href="../styles/header.css">
     <link rel="stylesheet" href="../styles/footer.css">
+    <link rel="stylesheet" href="../styles/toast.css">
 
 </head>
 <body>
@@ -19,7 +20,7 @@
     <div class="contenedor">
         <h1>Inicia Sesión</h1>
 
-        <a class="home-btn" href="home.html">
+        <a class="home-btn" href="home-public.html">
             <img src="../images/logo.png" alt="Logo">
         </a>
 
@@ -35,13 +36,12 @@
                     <input class="formulario-input" type="password" id="contraseña">
                     <button type="button" class="toggle-btn">👁</button>
                 </div>
-                <p class="error-msg">Contraseña incorrecta</p>
-            </div>
+                </div>
         </div>
 
         <div class="botones">
-            <a href="sing-up.html">¿No tienes cuenta? - Regístrate</a>
-            <button>Aceptar</button>
+            <a href="sign-up.html">¿No tienes cuenta? - Regístrate</a>
+            <button id="btnLogin" type="button">Aceptar</button>
         </div>
     </div>
 
@@ -53,6 +53,13 @@
 
 <script>
     xLuIncludeFile();
+
+    document.getElementById("btnLogin")?.addEventListener("click", () => {
+        const user = document.getElementById("usuario")?.value?.trim() || "Usuario registrado";
+        window.codify?.setAuth?.({ loggedIn: true, username: user });
+        window.codify?.toast?.("Sesión iniciada");
+        setTimeout(() => (window.location.href = "home.html"), 400);
+    });
 </script>
 
 </html>
