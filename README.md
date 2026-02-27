@@ -1,9 +1,9 @@
 ![Logo de Codify](./images/logo.png)
 # Codify -  Sprint 1
 ### ➣ Programación Web y Móvil
-#### Desarrollo de la web está optimizado únicamente para *Desktop*
+> El desarrollo de la web está optimizado únicamente para vistas **Desktop**.
 
-Codify es una plataforma web diseñada para facilitar el aprendizaje online mediante clases particulares de programación, conectando a alumnos con tutores especializados de forma directa.
+Codify es una plataforma web diseñada para facilitar el aprendizaje online mediante clases particulares de programación, conectando a alumnos con tutores especializados de forma directa y eficiente.
 
 ## 👥 Integrantes del Grupo
 * **Dámaso Guerra, Sergio**
@@ -30,19 +30,57 @@ El sitio dispone de una **parte pública** accesible para cualquier visitante, d
 ---
 
 ## 💻 Mockups y Storyboard
-* Mockups: Se encuentran detallados en el archivo PDF *sprint1-mockups.pdf* , dónde se pueden ver todas las capturas de dichos mockups y se aprecian correctamente todos los detalles y textos de la interfaz, propotipadas en la plataforma **Figma**, lo que nos ha permitido definir un diseño moderno y funcional. En total son nueves páginas con los siguientes nombres:
+* **Mockups**: El prototipado se ha realizado en la plataforma **Figma**, lo que nos ha permitido definir un diseño moderno y funcional. Todos los detalles, textos e interacciones se encuentran detallados en el archivo **`sprint1-mockups.pdf`**, donde se puede apreciar el diseño con total claridad mediante el uso de zoom.
+
+* **StoryBoard**: Disponible en el archivo **`.mp4`**, donde se explica visualmente la navegabilidad entre páginas y el flujo de experiencia de usuario.
+
+<img width="955" height="812" alt="image" src="https://github.com/user-attachments/assets/c1449a05-5fc8-4a40-8e87-f193119e083c" />
+
+---
+
+# Estrutura de Páginas HTML
+El proyecto se compone de **nueve páginas** principales alojadas en la carpeta `/pages`, donde mantienen el nombre de su mockup asociado:
 
 | Página | Descripción |
 | :--- | :--- |
-| **Home** | Página principal de presentación y bienvenida a la plataforma. |
+| **Home** | Página de inicio, presentación y bienvenida a la plataforma. |
 | **Sign In** | Formulario de acceso para usuarios ya registrados. |
 | **Sign Up** | Formulario de registro con validaciones de seguridad y edad. |
-| **List of Teachers** | Pantalla de resultados filtrados según el **lenguaje de programación** seleccionado. |
+| **List of Teachers** | Resultados de búsqueda filtrados según el **lenguaje de programación** seleccionado. |
 | **Teacher** | Vista con información detallada, experiencia y tarifas del tutor. |
 | **Booking** | Interfaz dedicada para la selección de fechas y horarios disponibles. |
 | **Chat** | Sistema de mensajería privada (disponible solo para usuarios logueados). |
-| **Profile** | Panel de control personal y ajustes, visible únicamente tras el login. |
+| **Profile** | Panel de control personal y ajustes de cuenta. |
 | **My Bookings** | Sección de gestión de clases donde se pueden visualizar o cancelar las citas. |
 
-* StoryBoard: Disponible en el archivo *.mp4*, donde se explica la navegabilidad entre páginas y el flujo de experiencia de usuario.
+---
+
+## 🧩 Templates
+Para evitar la duplicidad de código y mejorar la mantenibilidad, hemos extraído las estructuras repetitivas en la carpeta `/templates`. Estos archivos se integran o cargan dinámicamente para mantener una **coherencia visual** en todo el sitio.
+
+Se han identificado **7 componentes característicos** (visibles en la imagen inferior), entre los que destacan:
+* **Header:** Barra de navegación consistente con acceso a las secciones principales.
+* **Footer:** Pie de página con enlaces de interés, contacto y redes sociales.
+* **Layouts reutilizables:** Estructuras de tarjetas y contenedores comunes.
+
+<img width="909" height="509" alt="image" src="https://github.com/user-attachments/assets/9bc3cff6-fd8b-45c2-879f-e776ff9fdf97" />
+
+* También se ha añadido una carpeta de imágenes de prueba en la web para verificar el diseño final, en _/images_
+
+* *Los recursos gráficos y fotos de prueba se encuentran organizados en la carpeta `/images`.*
+
+---
+
+## Estilo y Apariencia
+La organización de los estilos está centralizada en la carpeta `/styles`. 
+* **Look & Feel:** Se ha buscado una estética limpia, moderna y profesional, priorizando la usabilidad.
+* **Metodología BEM:** Se ha implementado la nomenclatura **BEM (Block Element Modifier)** para las clases CSS, garantizando un código legible, escalable y modular.
+* **Estructura:** Hemos separado los archivos CSS estructuralmente (layout, componentes, bases) para facilitar el mantenimiento técnico.
+
+---
+
+## Lógica y Entorno
+El archivo `index.js` gestiona la lógica global de la aplicación, controlando los eventos principales y la interactividad del sitio. Mientras que el `package.json` define las dependencias necesarias para el despliegue y establece el entorno de desarrollo estándar para el proyecto.
+
+
 
