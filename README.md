@@ -38,7 +38,7 @@ El sitio dispone de una **parte pública** accesible para cualquier visitante, d
 
 ---
 
-# Estrutura de Páginas HTML
+## Estrutura de Páginas HTML
 El proyecto se compone de **nueve páginas** principales alojadas en la carpeta `/pages`, donde mantienen el nombre de su mockup asociado:
 
 | Página | Descripción |
@@ -67,7 +67,7 @@ Se han identificado **7 componentes característicos** (visibles en la imagen in
 
 * También se ha añadido una carpeta de imágenes de prueba en la web para verificar el diseño final, en _/images_
 
-* *Los recursos gráficos y fotos de prueba se encuentran organizados en la carpeta `/images`.*
+* >Los recursos gráficos y fotos de prueba se encuentran organizados en la carpeta `/images`.*
 
 ---
 
@@ -81,6 +81,3 @@ La organización de los estilos está centralizada en la carpeta `/styles`.
 
 ## Lógica y Entorno
 El archivo `index.js` gestiona la lógica global de la aplicación, controlando los eventos principales y la interactividad del sitio. Mientras que el `package.json` define las dependencias necesarias para el despliegue y establece el entorno de desarrollo estándar para el proyecto.
-
-
-
