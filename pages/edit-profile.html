@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Modificar perfil</title>
+
+    <script src="../index.js"></script>
+
+    <link rel="stylesheet" href="../styles/header.css">
+    <link rel="stylesheet" href="../styles/footer.css">
+    <link rel="stylesheet" href="../styles/sign-up.css">
+    <link rel="stylesheet" href="../styles/toast.css">
+</head>
+
+<body>
+
+<header class="site-header" xlu-include-file="../templates/header.html"></header>
+
+<main>
+    <div class="contenedor">
+        <h1>Modificar perfil</h1>
+
+        <div class="formulario">
+            <div class="form-group">
+                <label for="nombre">Nombre</label>
+                <input class="formulario-input" type="text" id="nombre">
+            </div>
+
+            <div class="form-group">
+                <label for="apellidos">Apellidos</label>
+                <input class="formulario-input" type="text" id="apellidos">
+            </div>
+
+            <div class="form-group">
+                <label for="fecha-nacimiento">Fecha de nacimiento</label>
+                <input class="formulario-input" type="date" id="fecha-nacimiento">
+            </div>
+
+            <div class="form-group">
+                <label for="mas-info">Más información</label>
+                <input class="formulario-input" type="text" id="mas-info">
+            </div>
+        </div>
+
+        <div class="botones">
+            <button id="btnCancel" type="button">Cancelar</button>
+            <button id="btnSave" type="button">Guardar cambios</button>
+        </div>
+    </div>
+</main>
+
+<footer class="site-footer" xlu-include-file="../templates/footer.html"></footer>
+
+<script>
+    xLuIncludeFile();
+
+    function loadProfile() {
+        try {
+            const raw = localStorage.getItem('codify_profile');
+            return raw ? JSON.parse(raw) : null;
+        } catch {
+            return null;
+        }
+    }
+
+    function saveProfile(profile) {
+        localStorage.setItem('codify_profile', JSON.stringify(profile));
+    }
+
+    function showToast(message) {
+        if (window.codify?.toast) {
+            window.codify.toast(message);
+        } else {
+            alert(message);
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const auth = window.codify?.getAuth?.();
+
+        if (!auth?.loggedIn) {
+            window.location.href = 'sign-in.html';
+            return;
+        }
+
+        const profile = loadProfile();
+        if (!profile) return;
+
+        document.getElementById('nombre').value = profile.nombre || '';
+        document.getElementById('apellidos').value = profile.apellidos || '';
+        document.getElementById('fecha-nacimiento').value = profile.fechaNacimiento || '';
+        document.getElementById('mas-info').value = profile.masInfo || '';
+    });
+
+    document.getElementById('btnCancel').addEventListener('click', function() {
+        window.location.href = 'profile.html';
+    });
+
+    document.getElementById('btnSave').addEventListener('click', function() {
+        const nombre = document.getElementById('nombre').value.trim();
+        const apellidos = document.getElementById('apellidos').value.trim();
+        const fechaNacimiento = document.getElementById('fecha-nacimiento').value;
+        const masInfo = document.getElementById('mas-info').value.trim();
+
+        if (!nombre) {
+            showToast('El nombre es obligatorio');
+            return;
+        }
+
+        const fullName = (nombre + ' ' + apellidos).trim();
+
+        saveProfile({
+            nombre: nombre,
+            apellidos: apellidos,
+            fullName: fullName,
+            fechaNacimiento: fechaNacimiento,
+            masInfo: masInfo
+        });
+
+        const auth = window.codify?.getAuth?.() || {};
+        if (window.codify?.setAuth) {
+            window.codify.setAuth({
+                ...auth,
+                loggedIn: true,
+                username: nombre || auth.username || 'Usuario'
+            });
+        }
+
+        showToast('Cambios guardados correctamente');
+        window.location.href = 'profile.html';
+    });
+</script>
+
+</body>
+</html>
