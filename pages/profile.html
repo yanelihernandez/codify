@@ -2,15 +2,13 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Perfil</title>
+    <title>Modificar perfil</title>
 
     <script src="../index.js"></script>
 
-    <link rel="stylesheet" href="../styles/profile.css">
     <link rel="stylesheet" href="../styles/header.css">
     <link rel="stylesheet" href="../styles/footer.css">
-    <link rel="stylesheet" href="../styles/chat-card.css">
-    <link rel="stylesheet" href="../styles/best-professor-card.css">
+    <link rel="stylesheet" href="../styles/sign-up.css">
     <link rel="stylesheet" href="../styles/toast.css">
 </head>
 
@@ -20,83 +18,62 @@
 
 <main>
     <div class="contenedor">
+        <h1>Modificar perfil</h1>
 
-        <div class="izquierda">
-            <h1>Mi Perfil</h1>
-
-            <img src="../images/perfil.jpg" alt="Foto de perfil">
-
-            <p id="profileUsername">Invitado</p>
-
-            <p>
-                <span id="profileFullName">Nombre y Apellidos</span><br>
-                <span id="profileBirth">Fecha de nacimiento</span><br>
-                <span id="profileMore">Mas info...</span>
-            </p>
-
-            <div class="buttons">
-                <a href="edit-profile.html">Modificar perfil</a>
-                <a href="my-bookings.html">Ver Reservas</a>
+        <div class="formulario">
+            <div class="form-group">
+                <label for="nombre">Nombre</label>
+                <input class="formulario-input" type="text" id="nombre">
             </div>
 
-            <section class="calendar-section">
-                <div class="calendar-placeholder">
+            <div class="form-group">
+                <label for="apellidos">Apellidos</label>
+                <input class="formulario-input" type="text" id="apellidos">
+            </div>
 
-                    <div class="mini-calendar">
-                        <div class="mini-cal-header">
-                            <button type="button" class="mini-cal-nav">&lt;</button>
-                            <strong>Febrero 2026</strong>
-                            <button type="button" class="mini-cal-nav">&gt;</button>
-                        </div>
+            <div class="form-group">
+                <label for="fecha-nacimiento">Fecha de nacimiento</label>
+                <input class="formulario-input" type="date" id="fecha-nacimiento">
+            </div>
 
-                        <div class="mini-cal-grid">
-                            <div class="dow">L</div><div class="dow">M</div><div class="dow">X</div><div class="dow">J</div><div class="dow">V</div><div class="dow">S</div><div class="dow">D</div>
-
-                            <div class="day muted">26</div><div class="day muted">27</div><div class="day muted">28</div><div class="day muted">29</div><div class="day muted">30</div><div class="day muted">31</div><div class="day">1</div>
-                            <div class="day">2</div><div class="day">3</div><div class="day">4</div><div class="day">5</div><div class="day">6</div><div class="day">7</div><div class="day">8</div>
-                            <div class="day">9</div><div class="day">10</div><div class="day">11</div><div class="day">12</div><div class="day">13</div><div class="day">14</div><div class="day">15</div>
-                            <div class="day">16</div><div class="day">17</div><div class="day">18</div><div class="day">19</div><div class="day">20</div><div class="day">21</div><div class="day">22</div>
-                            <div class="day">23</div><div class="day">24</div><div class="day today">25</div><div class="day">26</div><div class="day">27</div><div class="day">28</div><div class="day muted">1</div>
-                        </div>
-                    </div>
-
-                </div>
-
-                <div class="calendar-day-info">
-                    Información del día seleccionado
-                </div>
-            </section>
-
+            <div class="form-group">
+                <label for="mas-info">Más información</label>
+                <input class="formulario-input" type="text" id="mas-info">
+            </div>
         </div>
 
-        <div class="derecha">
-            <h2>Mis Chats</h2>
-
-            <section class="chats-section">
-                <div class="chat-card" xlu-include-file="../templates/chat-card.html"></div>
-                <div class="chat-card" xlu-include-file="../templates/chat-card.html"></div>
-            </section>
-        </div>
-
-    </div>
-
-    <div class="fav-professors">
-        <div class="fav-professors-title">
-            <h2>Mis favoritos</h2>
-        </div>
-
-        <div class="fav-professors-content">
-            <div class="best-professor-card" xlu-include-file="../templates/best-professor-card.html"></div>
-            <div class="best-professor-card" xlu-include-file="../templates/best-professor-card.html"></div>
+        <div class="botones">
+            <button id="btnCancel" type="button">Cancelar</button>
+            <button id="btnSave" type="button">Guardar cambios</button>
         </div>
     </div>
-
 </main>
 
 <footer class="site-footer" xlu-include-file="../templates/footer.html"></footer>
 
 <script>
     xLuIncludeFile();
+
+    function loadProfile() {
+        try {
+            const raw = localStorage.getItem('codify_profile');
+            return raw ? JSON.parse(raw) : null;
+        } catch {
+            return null;
+        }
+    }
+
+    function saveProfile(profile) {
+        localStorage.setItem('codify_profile', JSON.stringify(profile));
+    }
+
+    function showToast(message) {
+        if (window.codify?.toast) {
+            window.codify.toast(message);
+        } else {
+            alert(message);
+        }
+    }
 
     document.addEventListener('DOMContentLoaded', function() {
         const auth = window.codify?.getAuth?.();
@@ -106,27 +83,51 @@
             return;
         }
 
-        document.getElementById('profileUsername').textContent = auth.username || 'Usuario';
+        const profile = loadProfile();
+        if (!profile) return;
 
-        try {
-            const profileData = localStorage.getItem('codify_profile');
-            if (profileData) {
-                const profile = JSON.parse(profileData);
+        document.getElementById('nombre').value = profile.nombre || '';
+        document.getElementById('apellidos').value = profile.apellidos || '';
+        document.getElementById('fecha-nacimiento').value = profile.fechaNacimiento || '';
+        document.getElementById('mas-info').value = profile.masInfo || '';
+    });
 
-                document.getElementById('profileFullName').textContent = profile.fullName || 'Nombre y Apellidos';
-                document.getElementById('profileBirth').textContent = profile.fechaNacimiento
-                    ? 'Fecha de nacimiento: ' + profile.fechaNacimiento
-                    : 'Fecha de nacimiento';
-                document.getElementById('profileMore').textContent = profile.masInfo || 'Mas info...';
-            }
-        } catch (e) {
-            console.log('Error al cargar el perfil');
+    document.getElementById('btnCancel').addEventListener('click', function() {
+        window.location.href = 'profile.html';
+    });
+
+    document.getElementById('btnSave').addEventListener('click', function() {
+        const nombre = document.getElementById('nombre').value.trim();
+        const apellidos = document.getElementById('apellidos').value.trim();
+        const fechaNacimiento = document.getElementById('fecha-nacimiento').value;
+        const masInfo = document.getElementById('mas-info').value.trim();
+
+        if (!nombre) {
+            showToast('El nombre es obligatorio');
+            return;
         }
 
-        document.querySelectorAll('.fav-professors-content .fav-btn').forEach(function(btn) {
-            btn.classList.add('liked');
-            btn.textContent = '♥';
+        const fullName = (nombre + ' ' + apellidos).trim();
+
+        saveProfile({
+            nombre: nombre,
+            apellidos: apellidos,
+            fullName: fullName,
+            fechaNacimiento: fechaNacimiento,
+            masInfo: masInfo
         });
+
+        const auth = window.codify?.getAuth?.() || {};
+        if (window.codify?.setAuth) {
+            window.codify.setAuth({
+                ...auth,
+                loggedIn: true,
+                username: nombre || auth.username || 'Usuario'
+            });
+        }
+
+        showToast('Cambios guardados correctamente');
+        window.location.href = 'profile.html';
     });
 </script>
 
