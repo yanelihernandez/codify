@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="../styles/sign-up.css">
     <link rel="stylesheet" href="../styles/header.css">
     <link rel="stylesheet" href="../styles/footer.css">
+    <link rel="stylesheet" href="../styles/toast.css">
 
 </head>
 <body>
@@ -60,7 +61,7 @@
 
         <div class="botones">
             <a href="sign-in.html">¿Ya tienes cuenta? - Inicia Sesión</a>
-            <button>Aceptar</button>
+            <button id="btnSignup" type="button">Aceptar</button>
         </div>
     </div>
 </main>
@@ -71,6 +72,13 @@
 
 <script>
     xLuIncludeFile();
+
+    document.getElementById("btnSignup")?.addEventListener("click", () => {
+        const name = document.getElementById("nombre")?.value?.trim() || "Usuario";
+        window.codify?.setAuth?.({ loggedIn: true, username: name });
+        window.codify?.toast?.("Registro completado");
+        setTimeout(() => (window.location.href = "sign-in.html"), 450);
+    });
 </script>
 
 </html>
