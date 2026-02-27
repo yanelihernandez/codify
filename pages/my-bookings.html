@@ -9,14 +9,14 @@
     <link rel="stylesheet" href="../styles/header.css">
     <link rel="stylesheet" href="../styles/footer.css">
     <link rel="stylesheet" href="../styles/my-bookings.css">
+    <link rel="stylesheet" href="../styles/toast.css">
 </head>
 <body>
 
 <header class="site-header" xlu-include-file="../templates/header.html"></header>
 
 <main>
-
-    <p class="title">Mis Reservas</p>
+    <h1 class="page-title">Mis Reservas</h1>
 
     <section class="reservation-list">
         <div class="reservation-card" xlu-include-file="../templates/reservation-card.html"></div>
@@ -24,22 +24,82 @@
         <div class="reservation-card" xlu-include-file="../templates/reservation-card.html"></div>
         <div class="reservation-card" xlu-include-file="../templates/reservation-card.html"></div>
     </section>
-
 </main>
 
-<section class="action-bar">
+<div class="action-bar">
     <div class="action-bar-content">
         <button class="btn-save">Guardar cambios</button>
         <button class="btn-cancel">Cancelar</button>
     </div>
-</section>
+</div>
 
 <footer class="site-footer" xlu-include-file="../templates/footer.html"></footer>
 
-</body>
-
 <script>
     xLuIncludeFile();
+
+    if (window.codify?.initCodifyUI) {
+        window.codify.initCodifyUI();
+    }
+
+    const actionBar = document.querySelector('.action-bar');
+
+    function hideActionBar() {
+        if (actionBar) actionBar.style.display = 'none';
+    }
+
+    function showActionBar() {
+        if (actionBar) actionBar.style.display = 'block';
+    }
+
+    hideActionBar();
+
+    document.addEventListener('click', function(event) {
+        const btn = event.target.closest('button.cancel');
+        if (!btn) return;
+
+        if (btn.classList.contains('is-cancelled')) return;
+
+        btn.classList.add('is-cancelled');
+        btn.textContent = 'Reserva cancelada';
+        btn.disabled = true;
+
+        showActionBar();
+
+        if (window.codify?.toast) {
+            window.codify.toast('Reserva cancelada');
+        }
+    });
+
+    document.querySelector('.btn-save')?.addEventListener('click', function() {
+        const cancelledCards = document.querySelectorAll('.reservation-card .cancel.is-cancelled');
+
+        cancelledCards.forEach(function(btn) {
+            const card = btn.closest('.reservation-card');
+            if (card) card.remove();
+        });
+
+        if (window.codify?.toast) {
+            window.codify.toast('Cambios guardados');
+        }
+        hideActionBar();
+    });
+
+    document.querySelector('.btn-cancel')?.addEventListener('click', function() {
+        const cancelledButtons = document.querySelectorAll('.reservation-card .cancel.is-cancelled');
+
+        cancelledButtons.forEach(function(btn) {
+            btn.classList.remove('is-cancelled');
+            btn.textContent = 'Cancelar Reserva';
+            btn.disabled = false;
+        });
+
+        if (window.codify?.toast) {
+            window.codify.toast('Cambios cancelados');
+        }
+        hideActionBar();
+    });
 </script>
 
+</body>
 </html>
