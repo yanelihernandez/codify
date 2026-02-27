@@ -1,62 +1,78 @@
-.site-footer {
-    display: flex;
+.site-footer{
     width: 100%;
     background-color: #87ab69;
+    color: #0f1a0a;
 }
 
-.site-footer .left {
-    width: 200px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+.footer-inner{
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 22px 18px;
+    display: grid;
+    grid-template-columns: 1.2fr 1fr 1fr;
+    gap: 18px;
 }
 
-.site-footer .left img {
-    max-width: 80%;
-    height: auto;
+.footer-brand img{
+    height: 64px;
+    width: auto;
+    display: block;
 }
 
-.site-footer .right {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
+.footer-tagline{
+    margin: 10px 0 0;
+    color: #1d2c14;
+    max-width: 320px;
 }
 
-.site-footer .up {
-    flex: 1;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 20px;
+.footer-title{
+    margin: 0 0 10px;
+    font-weight: 700;
 }
 
-.site-footer .bottom {
-    display: flex;
-    align-items: center;
-    justify-content: center;
+.footer-links a{
+    display: block;
+    text-decoration: none;
+    color: #0f1a0a;
+    margin: 6px 0;
 }
 
-.social-media-list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
+.footer-links a:hover{
+    text-decoration: underline;
+}
+
+.social-row{
     display: flex;
     gap: 10px;
-}
-
-.social-media-list li {
-    display: flex;
     align-items: center;
 }
 
-.social-media-list a {
-    display: flex;
+.social-btn{
+    width: 36px;
+    height: 36px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    background: rgba(255,255,255,0.65);
+    border: 1px solid rgba(0,0,0,0.08);
+    text-decoration: none;
 }
 
-.social-media-list img {
-    width: 32px;
-    height: 32px;
-    object-fit: cover;
-    border-radius: 50%;
-    border: 1px solid white;
+.social-btn img {
+    width: 20px;
+    height: 20px;
+    display: block;
+    object-fit: contain;
+}
+
+.footer-contact{
+    margin: 10px 0 0;
+    color: #1d2c14;
+}
+
+.footer-bottom{
+    border-top: 1px solid rgba(0,0,0,0.12);
+    text-align: center;
+    padding: 12px 18px;
 }
