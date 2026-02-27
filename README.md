@@ -35,7 +35,7 @@ El sitio dispone de una **parte pública** accesible para cualquier visitante, d
 ## 💻 Mockups y Storyboard
 * **Mockups**: El prototipado se ha realizado en la plataforma **Figma**, lo que nos ha permitido definir un diseño moderno y funcional. Todos los detalles, textos e interacciones se encuentran detallados en el archivo **`sprint1-mockups.pdf`**, donde se puede apreciar el diseño con total claridad mediante el uso de zoom.
 
-* **StoryBoard**: Disponible en el archivo **`.mp4`**, donde se explica visualmente la navegabilidad entre páginas y el flujo de experiencia de usuario.
+* **StoryBoard**: Disponible en el archivo **`sprint-storyboard.mp4`**, donde se explica visualmente la navegabilidad entre páginas y el flujo de experiencia de usuario.
 
 <img width="955" height="812" alt="image" src="https://github.com/user-attachments/assets/c1449a05-5fc8-4a40-8e87-f193119e083c" />
 
