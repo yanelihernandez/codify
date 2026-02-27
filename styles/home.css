@@ -6,7 +6,6 @@ body {
     min-height: 100vh;
 }
 
-
 main {
     flex: 1;
     padding: 20px;
@@ -26,12 +25,9 @@ main {
 }
 
 .texto_main {
-    align-content: start;
     flex: 1;
     line-height: 1.8;
 }
-
-
 
 .profesores-mejor-valorados {
     padding: 20px;
@@ -50,7 +46,6 @@ main {
     border-radius: 10px;
 }
 
-
 .about-us {
     display: flex;
     flex-direction: column;
@@ -58,16 +53,15 @@ main {
     margin: 40px;
 }
 
-.about-us-intro{
+.about-us-intro {
     margin-left: -20px;
     margin-right: -20px;
-    padding: -20px;
     background-color: #595f60;
     color: white;
     text-align: center;
 }
 
-.about-us-title{
+.about-us-title {
     font-size: 30px;
     font-weight: bold;
 }
@@ -101,4 +95,49 @@ main {
     border-radius: 12px;
     text-align: center;
     line-height: 1.2;
+}
+
+.public-cta {
+    margin: 16px auto;
+    max-width: 1100px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    padding: 16px 18px;
+    border: 1px solid #d9e6d0;
+    border-radius: 14px;
+    background: #ffffff;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+
+.public-cta h1 {
+    margin: 0 0 6px;
+}
+
+.public-cta p {
+    margin: 0;
+    color: #3b3b3b;
+}
+
+.cta-buttons {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.cta-buttons a {
+    text-decoration: none;
+    padding: 10px 14px;
+    border-radius: 10px;
+}
+
+.btn-signin {
+    background: #25510a;
+    color: #fff;
+}
+
+.btn-signup {
+    background: #007bff;
+    color: #fff;
 }
