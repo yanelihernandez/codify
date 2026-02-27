@@ -1,4 +1,7 @@
-![Logo de Codify](./images/logo.png)
+<p align="center">
+  <img src="./images/logo.png" alt="Logo de Codify" width="200"/>
+</p>
+
 # Codify -  Sprint 1
 ### ➣ Programación Web y Móvil
 > El desarrollo de la web está optimizado únicamente para vistas **Desktop**.
@@ -65,17 +68,17 @@ Se han identificado **7 componentes característicos** (visibles en la imagen in
 
 <img width="909" height="509" alt="image" src="https://github.com/user-attachments/assets/9bc3cff6-fd8b-45c2-879f-e776ff9fdf97" />
 
-* También se ha añadido una carpeta de imágenes de prueba en la web para verificar el diseño final, en _/images_
-
-* >Los recursos gráficos y fotos de prueba se encuentran organizados en la carpeta `/images`.*
+* Los recursos gráficos y fotos de prueba se encuentran organizados en la carpeta `/images`.
 
 ---
 
 ## Estilo y Apariencia
 La organización de los estilos está centralizada en la carpeta `/styles`. 
-* **Look & Feel:** Se ha buscado una estética limpia, moderna y profesional, priorizando la usabilidad.
-* **Metodología BEM:** Se ha implementado la nomenclatura **BEM (Block Element Modifier)** para las clases CSS, garantizando un código legible, escalable y modular.
-* **Estructura:** Hemos separado los archivos CSS estructuralmente (layout, componentes, bases) para facilitar el mantenimiento técnico.
+
+| Paleta de Colores | Detalles de Diseño |
+| :--- | :--- |
+| <img width="407" height="201" alt="Paleta de verdes Codify" src="https://github.com/user-attachments/assets/26274e96-8ad9-4426-83bb-bdde723d44ef" /> | <small>**Identidad Visual:**<br>Se ha seleccionado una gama de **tonos verdes** para transmitir frescura, aprendizaje y profesionalidad. Esta paleta asegura un contraste óptimo y un **Look & Feel** limpio y moderno, orientado totalmente a mejorar la experiencia de usuario (UX). 
+* Uso de nomenclatura **BEM** para un código CSS escalable, legible y organizado por componentes estructurales.</small> |
 
 ---
 
