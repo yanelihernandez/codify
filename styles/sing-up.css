@@ -38,22 +38,57 @@ main {
 .formulario {
     display: flex;
     flex-direction: column;
-    gap: 12px;
     width: 80%;
     max-width: 700px;
+    gap: 0;
 }
 
-.formulario label {
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    margin-bottom: 20px;
+    width: 100%;
+}
+
+.form-group label {
+    margin: 0;
     font-size: 17px;
     font-weight: bold;
 }
 
-.formulario input {
-    height: 30px;
-    padding: 8px;
+.formulario-input {
+    width: 100%;
+    box-sizing: border-box;
+    height: 40px;
+    padding: 8px 40px 8px 12px;
     font-size: 16px;
     border: 1px solid #ccc;
     border-radius: 6px;
+}
+
+.field-wrapper {
+    position: relative;
+    width: 100%;
+    display: flex;
+    align-items: center;
+}
+
+.toggle-btn {
+    position: absolute;
+    right: 10px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 18px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #666;
+}
+.toggle-btn:hover {
+    color: #000;
 }
 
 .nombre-apellidos {
@@ -94,4 +129,11 @@ main {
 
 .botones a:hover {
     text-decoration: underline;
+}
+
+.error-msg{
+    /*display: none;*/      /* para activar/desactivar */
+    font-size: 15px;
+    color: red;
+    margin: 0;
 }

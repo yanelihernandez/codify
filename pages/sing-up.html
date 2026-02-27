@@ -19,34 +19,48 @@
         <h1>Regístrate</h1>
 
         <a class="home-btn" href="home.html">
-            <img src="../images/logo.jpg" alt="Logo">
+            <img src="../images/logo.png" alt="Logo">
         </a>
 
         <div class="formulario">
-            <div class="nombre-apellidos">
+            <div class="form-group">
                 <label for="nombre">Nombre</label>
-                <input type="text" id="nombre">
-
-                <label for="apellidos">Apellidos</label>
-                <input type="text" id="apellidos">
+                <input class="formulario-input" type="text" id="nombre">
             </div>
 
-            <label for="fecha-nacimiento">Fecha de nacimiento</label>
-            <input type="datetime-local" id="fecha-nacimiento">
+            <div class="form-group">
+                <label for="apellidos">Apellidos</label>
+                <input class="formulario-input" type="text" id="apellidos">
+            </div>
 
-            <label for="usuario">Nombre de usuario</label>
-            <input type="text" id="usuario">
+            <div class="form-group">
+                <label for="fecha-nacimiento">Fecha de nacimiento</label>
+                <input class="formulario-input" type="date" id="fecha-nacimiento">
+            </div>
 
-            <label for="contraseña">Contraseña</label>
-            <input type="text" id="contraseña">
+            <div class="form-group">
+                <label for="contraseña">Contraseña</label>
+                <div class="field-wrapper">
+                    <input class="formulario-input" type="password" id="contraseña">
+                    <button type="button" class="toggle-btn">👁</button>
+                </div>
+                <p class="error-msg">Contraseña no válida</p>
+            </div>
 
-            <label for="rep-contraseña">Repetir Contraseña</label>
-            <input type="text" id="rep-contraseña">
+            <div class="form-group">
+                <label for="rep-contraseña">Repetir Contraseña</label>
+                <div class="field-wrapper">
+                    <input class="formulario-input" type="password" id="rep-contraseña">
+                    <button type="button" class="toggle-btn">👁</button>
+                </div>
+                <p class="error-msg">Las contraseñas no coinciden</p>
+            </div>
+
         </div>
 
         <div class="botones">
-            <button>Aceptar</button>
             <a href="sign-in.html">¿Ya tienes cuenta? - Inicia Sesión</a>
+            <button>Aceptar</button>
         </div>
     </div>
 </main>

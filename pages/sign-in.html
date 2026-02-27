@@ -20,20 +20,28 @@
         <h1>Inicia Sesión</h1>
 
         <a class="home-btn" href="home.html">
-            <img src="../images/logo.jpg" alt="Logo">
+            <img src="../images/logo.png" alt="Logo">
         </a>
 
         <div class="formulario">
-            <label for="usuario">Usuario</label>
-            <input type="text" id="usuario">
+            <div class="form-group">
+                <label for="usuario">Usuario</label>
+                <input class="formulario-input" type="text" id="usuario">
+            </div>
 
-            <label for="contraseña">Contraseña</label>
-            <input type="text" id="contraseña">
+            <div class="form-group">
+                <label for="contraseña">Contraseña</label>
+                <div class="field-wrapper">
+                    <input class="formulario-input" type="password" id="contraseña">
+                    <button type="button" class="toggle-btn">👁</button>
+                </div>
+                <p class="error-msg">Contraseña incorrecta</p>
+            </div>
         </div>
 
         <div class="botones">
-            <button>Aceptar</button>
             <a href="sing-up.html">¿No tienes cuenta? - Regístrate</a>
+            <button>Aceptar</button>
         </div>
     </div>
 
