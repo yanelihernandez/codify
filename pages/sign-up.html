@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Regístrate</title>
+    <script src="../index.js"></script>
+    <link rel="stylesheet" href="../styles/sign-up.css">
+    <link rel="stylesheet" href="../styles/header.css">
+    <link rel="stylesheet" href="../styles/footer.css">
+    <link rel="stylesheet" href="../styles/toast.css">
+</head>
+
+<body>
+
+<header class="site-header" xlu-include-file="../templates/header.html"></header>
+
+<main>
+    <div class="contenedor">
+        <h1>Regístrate</h1>
+
+        <a class="home-btn" href="../pages/home-public.html">
+            <img src="../images/logo.png" alt="Logo" width="180" height="auto">
+        </a>
+
+        <div class="formulario">
+            <div class="fila-doble">
+                <div class="form-group mitad">
+                    <label for="nombre">nombre</label>
+                    <input class="formulario-input" type="text" id="nombre" placeholder="Ingresa tu nombre">
+                </div>
+
+                <div class="form-group mitad">
+                    <label for="apellidos">apellidos</label>
+                    <input class="formulario-input" type="text" id="apellidos" placeholder="Ingresa tus apellidos">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="fecha-nacimiento">fecha de nacimiento</label>
+                <input class="formulario-input" type="text" id="fecha-nacimiento" placeholder="DD-MM-YYYY (ejemplo: 24-03-2000)">
+                <div id="mensajeEdad" class="mensaje-edad"></div>
+            </div>
+
+            <div class="form-group">
+                <label for="username">nombre usuario</label>
+                <input class="formulario-input" type="text" id="username" placeholder="Ingresa un nombre de usuario">
+            </div>
+
+            <div class="form-group">
+                <label for="contraseña">contraseña</label>
+                <div class="field-wrapper">
+                    <input class="formulario-input" type="password" id="contraseña" placeholder="********">
+                    <button type="button" class="toggle-btn" id="btnVer1">👁</button>
+                </div>
+                <p class="password-hint">Mínimo 6 caracteres</p>
+                <p class="error-msg" id="passwordError">La contraseña debe tener al menos 6 caracteres</p>
+            </div>
+
+            <div class="form-group">
+                <label for="rep-contraseña">repetir contraseña</label>
+                <div class="field-wrapper">
+                    <input class="formulario-input" type="password" id="rep-contraseña" placeholder="********">
+                    <button type="button" class="toggle-btn" id="btnVer2">👁</button>
+                </div>
+                <p class="password-hint">Confirma tu contraseña</p>
+                <p class="error-msg" id="repeatError">Las contraseñas no coinciden</p>
+            </div>
+        </div>
+
+        <div class="botones">
+            <a href="sign-in.html">¿Ya tienes una cuenta? Inicia sesión</a>
+            <button id="btnSignup" type="button">Registrarse</button>
+        </div>
+
+    </div>
+</main>
+
+<footer class="site-footer" xlu-include-file="../templates/footer.html"></footer>
+
+<script>
+    xLuIncludeFile();
+
+    // función para comprobar la edad
+    function comprobarEdad() {
+        let fecha = document.getElementById('fecha-nacimiento').value;
+        let mensaje = document.getElementById('mensajeEdad');
+
+        if (fecha == "") {
+            mensaje.innerHTML = "";
+            return;
+        }
+
+        let partes = fecha.split("-");
+        if (partes.length != 3) {
+            mensaje.innerHTML = "";
+            return;
+        }
+
+        let año = partes[2];
+
+        if (año.length < 4) {
+            mensaje.innerHTML = "";
+            return;
+        }
+
+        let fechaNac = new Date(año + "-" + partes[1] + "-" + partes[0]);
+
+        if (fechaNac == "Invalid Date") {
+            mensaje.innerHTML = "";
+            return;
+        }
+
+        let hoy = new Date();
+        let edad = hoy.getFullYear() - fechaNac.getFullYear();
+
+        if (hoy.getMonth() < fechaNac.getMonth() ||
+            (hoy.getMonth() == fechaNac.getMonth() && hoy.getDate() < fechaNac.getDate())) {
+            edad = edad - 1;
+        }
+
+        if (edad >= 18) {
+            mensaje.innerHTML = "✓ Eres mayor de edad, puedes registrarte";
+            mensaje.className = "mensaje-edad ok-mensaje";
+        } else {
+            mensaje.innerHTML = "✗ Eres menor de edad, no puedes registrarte";
+            mensaje.className = "mensaje-edad no-mensaje";
+        }
+    }
+
+    // función para comprobar contraseñas
+    function comprobarPass() {
+        let pass1 = document.getElementById('contraseña');
+        let pass2 = document.getElementById('rep-contraseña');
+        let error1 = document.getElementById('passwordError');
+        let error2 = document.getElementById('repeatError');
+
+        error1.style.display = 'none';
+        error2.style.display = 'none';
+
+        if (pass1.closest('.field-wrapper')) {
+            pass1.closest('.field-wrapper').classList.remove('has-error');
+        }
+        if (pass2.closest('.field-wrapper')) {
+            pass2.closest('.field-wrapper').classList.remove('has-error');
+        }
+
+        if (pass1.value.length > 0 && pass1.value.length < 6) {
+            error1.style.display = 'block';
+            pass1.closest('.field-wrapper').classList.add('has-error');
+        }
+
+        if (pass2.value.length > 0 && pass1.value != pass2.value) {
+            error2.style.display = 'block';
+            pass2.closest('.field-wrapper').classList.add('has-error');
+        }
+    }
+
+    // event listeners
+    document.getElementById('fecha-nacimiento').addEventListener('input', comprobarEdad);
+    document.getElementById('contraseña').addEventListener('input', comprobarPass);
+    document.getElementById('rep-contraseña').addEventListener('input', comprobarPass);
+
+    // botones para ver contraseña
+    document.getElementById('btnVer1').addEventListener('click', function() {
+        let input = document.getElementById('contraseña');
+        if (input.type == 'password') {
+            input.type = 'text';
+            this.innerHTML = '🔒';
+        } else {
+            input.type = 'password';
+            this.innerHTML = '👁';
+        }
+    });
+
+    document.getElementById('btnVer2').addEventListener('click', function() {
+        let input = document.getElementById('rep-contraseña');
+        if (input.type == 'password') {
+            input.type = 'text';
+            this.innerHTML = '🔒';
+        } else {
+            input.type = 'password';
+            this.innerHTML = '👁';
+        }
+    });
+
+    document.getElementById("btnSignup").addEventListener("click", function() {
+        let nombre = document.getElementById('nombre').value;
+        let apellidos = document.getElementById('apellidos').value;
+        let usuario = document.getElementById('username').value;
+        let fecha = document.getElementById('fecha-nacimiento').value;
+        let pass1 = document.getElementById('contraseña').value;
+        let pass2 = document.getElementById('rep-contraseña').value;
+
+        nombre = nombre.trim();
+        usuario = usuario.trim();
+
+        if (nombre == "") {
+            window.codify?.toast?.("Ingresa tu nombre");
+            return;
+        }
+
+        if (usuario == "") {
+            window.codify?.toast?.("Ingresa un nombre de usuario");
+            return;
+        }
+
+        if (fecha == "") {
+            window.codify?.toast?.("Ingresa tu fecha de nacimiento");
+            return;
+        }
+
+        let partes = fecha.split("-");
+        if (partes.length != 3) {
+            window.codify?.toast?.("Formato incorrecto. Usa DD-MM-YYYY");
+            return;
+        }
+
+        if (partes[2].length < 4) {
+            window.codify?.toast?.("El año debe tener 4 dígitos");
+            return;
+        }
+
+        let fechaNac = new Date(partes[2] + "-" + partes[1] + "-" + partes[0]);
+        if (fechaNac == "Invalid Date") {
+            window.codify?.toast?.("Fecha no válida");
+            return;
+        }
+
+        let hoy = new Date();
+        let edad = hoy.getFullYear() - fechaNac.getFullYear();
+
+        if (hoy.getMonth() < fechaNac.getMonth() ||
+            (hoy.getMonth() == fechaNac.getMonth() && hoy.getDate() < fechaNac.getDate())) {
+            edad = edad - 1;
+        }
+
+        if (edad < 18) {
+            window.codify?.toast?.("Debes ser mayor de 18 años para registrarte");
+            return;
+        }
+
+        if (pass1.length < 6) {
+            window.codify?.toast?.("La contraseña debe tener al menos 6 caracteres");
+            return;
+        }
+
+        if (pass1 != pass2) {
+            window.codify?.toast?.("Las contraseñas no coinciden");
+            return;
+        }
+
+        window.codify?.setAuth?.({ loggedIn: true, username: nombre });
+        window.codify?.toast?.("Registro completado con éxito");
+
+        setTimeout(function() {
+            window.location.href = "sign-in.html";
+        }, 450);
+    });
+</script>
+
+</body>
+</html>

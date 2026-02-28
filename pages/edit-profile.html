@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Modificar perfil</title>
+
+    <script src="../index.js"></script>
+
+    <link rel="stylesheet" href="../styles/header.css">
+    <link rel="stylesheet" href="../styles/footer.css">
+    <link rel="stylesheet" href="../styles/sign-up.css">
+    <link rel="stylesheet" href="../styles/toast.css">
+</head>
+
+<body>
+
+<header class="site-header" xlu-include-file="../templates/header.html"></header>
+
+<main>
+    <div class="contenedor">
+        <h1>Modificar perfil</h1>
+
+        <a class="home-btn" href="../pages/home.html">
+            <img src="../images/logo.png" alt="Logo" width="180" height="auto">
+        </a>
+
+        <div class="formulario">
+            <div class="fila-doble">
+                <div class="form-group mitad">
+                    <label for="nombre">nombre</label>
+                    <input class="formulario-input" type="text" id="nombre" placeholder="Tu nombre">
+                </div>
+
+                <div class="form-group mitad">
+                    <label for="apellidos">apellidos</label>
+                    <input class="formulario-input" type="text" id="apellidos" placeholder="Tus apellidos">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="fecha-nacimiento">fecha de nacimiento</label>
+                <input class="formulario-input" type="text" id="fecha-nacimiento" placeholder="DD-MM-YYYY (ejemplo: 24-03-2000)">
+                <div id="mensajeEdad" class="mensaje-edad"></div>
+            </div>
+
+            <div class="form-group">
+                <label for="username">nombre usuario</label>
+                <input class="formulario-input" type="text" id="username" placeholder="Nombre de usuario">
+            </div>
+
+            <div class="form-group">
+                <label for="contraseña">nueva contraseña</label>
+                <div class="field-wrapper">
+                    <input class="formulario-input" type="password" id="contraseña" placeholder="********">
+                    <button type="button" class="toggle-btn" id="btnVer1">👁</button>
+                </div>
+                <p class="password-hint">Mínimo 6 caracteres - Déjalo en blanco para no cambiar</p>
+                <p class="error-msg" id="passwordError">La contraseña debe tener al menos 6 caracteres</p>
+            </div>
+
+            <div class="form-group">
+                <label for="rep-contraseña">repetir nueva contraseña</label>
+                <div class="field-wrapper">
+                    <input class="formulario-input" type="password" id="rep-contraseña" placeholder="********">
+                    <button type="button" class="toggle-btn" id="btnVer2">👁</button>
+                </div>
+                <p class="error-msg" id="repeatError">Las contraseñas no coinciden</p>
+            </div>
+        </div>
+
+        <div class="botones">
+            <button type="button" onclick="window.location.href='profile.html'">Cancelar</button>
+            <button id="btnSave" type="button">Guardar cambios</button>
+        </div>
+
+    </div>
+</main>
+
+<footer class="site-footer" xlu-include-file="../templates/footer.html"></footer>
+
+<script>
+    xLuIncludeFile();
+
+    // función para comprobar la edad
+    function comprobarEdad() {
+        let fecha = document.getElementById('fecha-nacimiento').value;
+        let mensaje = document.getElementById('mensajeEdad');
+
+        if (fecha == "") {
+            mensaje.innerHTML = "";
+            return;
+        }
+
+        let partes = fecha.split("-");
+        if (partes.length != 3) {
+            mensaje.innerHTML = "";
+            return;
+        }
+
+        let año = partes[2];
+
+        if (año.length < 4) {
+            mensaje.innerHTML = "";
+            return;
+        }
+
+        let fechaNac = new Date(año + "-" + partes[1] + "-" + partes[0]);
+
+        if (fechaNac == "Invalid Date") {
+            mensaje.innerHTML = "";
+            return;
+        }
+
+        let hoy = new Date();
+        let edad = hoy.getFullYear() - fechaNac.getFullYear();
+
+        if (hoy.getMonth() < fechaNac.getMonth() ||
+            (hoy.getMonth() == fechaNac.getMonth() && hoy.getDate() < fechaNac.getDate())) {
+            edad = edad - 1;
+        }
+
+        if (edad >= 18) {
+            mensaje.innerHTML = "✓ Eres mayor de edad";
+            mensaje.className = "mensaje-edad ok-mensaje";
+        } else {
+            mensaje.innerHTML = "✗ Eres menor de edad";
+            mensaje.className = "mensaje-edad no-mensaje";
+        }
+    }
+
+    // función para comprobar contraseñas
+    function comprobarPass() {
+        let pass1 = document.getElementById('contraseña');
+        let pass2 = document.getElementById('rep-contraseña');
+        let error1 = document.getElementById('passwordError');
+        let error2 = document.getElementById('repeatError');
+
+        error1.style.display = 'none';
+        error2.style.display = 'none';
+
+        if (pass1.closest('.field-wrapper')) {
+            pass1.closest('.field-wrapper').classList.remove('has-error');
+        }
+        if (pass2.closest('.field-wrapper')) {
+            pass2.closest('.field-wrapper').classList.remove('has-error');
+        }
+
+        // Solo validar si se está intentando cambiar la contraseña
+        if (pass1.value.length > 0) {
+            if (pass1.value.length < 6) {
+                error1.style.display = 'block';
+                pass1.closest('.field-wrapper').classList.add('has-error');
+            }
+
+            if (pass2.value.length > 0 && pass1.value != pass2.value) {
+                error2.style.display = 'block';
+                pass2.closest('.field-wrapper').classList.add('has-error');
+            }
+        }
+    }
+
+    function loadProfile() {
+        try {
+            const raw = localStorage.getItem('codify_profile');
+            return raw ? JSON.parse(raw) : null;
+        } catch {
+            return null;
+        }
+    }
+
+    function saveProfile(profile) {
+        localStorage.setItem('codify_profile', JSON.stringify(profile));
+    }
+
+    function showToast(message) {
+        if (window.codify?.toast) {
+            window.codify.toast(message);
+        } else {
+            alert(message);
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const auth = window.codify?.getAuth?.();
+
+        if (!auth?.loggedIn) {
+            window.location.href = 'sign-in.html';
+            return;
+        }
+
+        const profile = loadProfile() || {};
+
+        // Cargar TODOS los datos existentes en los campos
+        document.getElementById('nombre').value = profile.nombre || '';
+        document.getElementById('apellidos').value = profile.apellidos || '';
+        document.getElementById('fecha-nacimiento').value = profile.fechaNacimiento || '';
+        document.getElementById('username').value = profile.username || auth.username || '';
+
+        // Comprobar edad
+        if (profile.fechaNacimiento) {
+            comprobarEdad();
+        }
+    });
+
+    // event listeners
+    document.getElementById('fecha-nacimiento').addEventListener('input', comprobarEdad);
+    document.getElementById('contraseña').addEventListener('input', comprobarPass);
+    document.getElementById('rep-contraseña').addEventListener('input', comprobarPass);
+
+    // botones para ver contraseña
+    document.getElementById('btnVer1').addEventListener('click', function() {
+        let input = document.getElementById('contraseña');
+        if (input.type == 'password') {
+            input.type = 'text';
+            this.innerHTML = '🔒';
+        } else {
+            input.type = 'password';
+            this.innerHTML = '👁';
+        }
+    });
+
+    document.getElementById('btnVer2').addEventListener('click', function() {
+        let input = document.getElementById('rep-contraseña');
+        if (input.type == 'password') {
+            input.type = 'text';
+            this.innerHTML = '🔒';
+        } else {
+            input.type = 'password';
+            this.innerHTML = '👁';
+        }
+    });
+
+    document.getElementById('btnSave').addEventListener('click', function() {
+        // Obtener perfil actual
+        const perfilActual = loadProfile() || {};
+        const auth = window.codify?.getAuth?.() || {};
+
+        // Coger valores del formulario
+        const nombre = document.getElementById('nombre').value.trim();
+        const apellidos = document.getElementById('apellidos').value.trim();
+        const fechaNacimiento = document.getElementById('fecha-nacimiento').value;
+        const username = document.getElementById('username').value.trim();
+        const pass1 = document.getElementById('contraseña').value;
+        const pass2 = document.getElementById('rep-contraseña').value;
+
+        // VALIDAR QUE NO ESTÉN VACÍOS (menos contraseña)
+        if (nombre === '') {
+            showToast("El nombre no puede estar vacío");
+            document.getElementById('nombre').focus();
+            return;
+        }
+
+        if (apellidos === '') {
+            showToast("Los apellidos no pueden estar vacíos");
+            document.getElementById('apellidos').focus();
+            return;
+        }
+
+        if (fechaNacimiento === '') {
+            showToast("La fecha de nacimiento no puede estar vacía");
+            document.getElementById('fecha-nacimiento').focus();
+            return;
+        }
+
+        if (username === '') {
+            showToast("El nombre de usuario no puede estar vacío");
+            document.getElementById('username').focus();
+            return;
+        }
+
+        let partes = fechaNacimiento.split("-");
+        if (partes.length != 3) {
+            showToast("Formato incorrecto. Usa DD-MM-YYYY");
+            return;
+        }
+
+        if (partes[2].length < 4) {
+            showToast("El año debe tener 4 dígitos");
+            return;
+        }
+
+        let fechaNac = new Date(partes[2] + "-" + partes[1] + "-" + partes[0]);
+        if (fechaNac == "Invalid Date") {
+            showToast("Fecha no válida");
+            return;
+        }
+
+        let hoy = new Date();
+        let edad = hoy.getFullYear() - fechaNac.getFullYear();
+
+        if (hoy.getMonth() < fechaNac.getMonth() ||
+            (hoy.getMonth() == fechaNac.getMonth() && hoy.getDate() < fechaNac.getDate())) {
+            edad = edad - 1;
+        }
+
+        if (edad < 18) {
+            showToast("Debes ser mayor de 18 años");
+            return;
+        }
+
+        if (pass1.length > 0 || pass2.length > 0) {
+            if (pass1.length < 6) {
+                showToast("La contraseña debe tener al menos 6 caracteres");
+                return;
+            }
+
+            if (pass1 != pass2) {
+                showToast("Las contraseñas no coinciden");
+                return;
+            }
+        }
+
+        // NUEVO PERFIL
+        const nuevoPerfil = {
+            nombre: nombre,
+            apellidos: apellidos,
+            fullName: (nombre + ' ' + apellidos).trim(),
+            fechaNacimiento: fechaNacimiento,
+            username: username
+        };
+
+        saveProfile(nuevoPerfil);
+
+        // Actualizar auth si cambió el usuario
+        if (username !== auth.username) {
+            window.codify?.setAuth?.({
+                ...auth,
+                loggedIn: true,
+                username: username
+            });
+        }
+
+        let mensaje = "Cambios guardados correctamente";
+        if (pass1.length > 0) {
+            mensaje += " (contraseña actualizada)";
+        }
+        showToast(mensaje);
+
+        setTimeout(() => {
+            window.location.href = 'profile.html';
+        }, 500);
+    });
+</script>
+
+</body>
+</html>

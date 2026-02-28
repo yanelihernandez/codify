@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Inicia Sesión</title>
+    <script src="../index.js"></script>
+    <link rel="stylesheet" href="../styles/sign-in.css">
+    <link rel="stylesheet" href="../styles/header.css">
+    <link rel="stylesheet" href="../styles/footer.css">
+    <link rel="stylesheet" href="../styles/toast.css">
+
+</head>
+<body>
+
+<header class="site-header" xlu-include-file="../templates/header.html"></header>
+
+<main>
+
+    <div class="contenedor">
+        <h1>Inicia Sesión</h1>
+
+        <a class="home-btn" href="home-public.html">
+            <img src="../images/logo.png" alt="Logo">
+        </a>
+
+        <div class="formulario">
+            <div class="form-group">
+                <label for="usuario">Usuario</label>
+                <input class="formulario-input" type="text" id="usuario">
+            </div>
+
+            <div class="form-group">
+                <label for="contraseña">Contraseña</label>
+                <div class="field-wrapper">
+                    <input class="formulario-input" type="password" id="contraseña">
+                    <button type="button" class="toggle-btn">👁</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="botones">
+            <a href="sign-up.html">¿No tienes cuenta? - Regístrate</a>
+            <button id="btnLogin" type="button">Aceptar</button>
+        </div>
+    </div>
+
+</main>
+
+<footer class="site-footer" xlu-include-file="../templates/footer.html"></footer>
+
+</body>
+
+<script>
+    xLuIncludeFile();
+
+    document.querySelector('.toggle-btn')?.addEventListener('click', function() {
+        let input = document.getElementById('contraseña');
+        if (input.type == 'password') {
+            input.type = 'text';
+            this.innerHTML = '🔒';
+        } else {
+            input.type = 'password';
+            this.innerHTML = '👁';
+        }
+    });
+
+    document.getElementById("btnLogin")?.addEventListener("click", () => {
+        const user = document.getElementById("usuario")?.value?.trim() || "Usuario registrado";
+
+        window.codify?.setAuth?.({ loggedIn: true, username: user });
+        window.codify?.toast?.("Sesión iniciada");
+
+        const redirectUrl = sessionStorage.getItem('redirectAfterLogin') || "home.html";
+        sessionStorage.removeItem('redirectAfterLogin');
+
+        setTimeout(() => (window.location.href = redirectUrl), 400);
+    });
+</script>
+
+</html>

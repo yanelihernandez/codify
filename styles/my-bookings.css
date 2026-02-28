@@ -1,0 +1,75 @@
+main {
+    min-height: 100vh;
+    padding: 40px 70px;
+    background-color: #f3f4f6;
+}
+
+
+.title{
+    font-size: 40px;
+    font-weight: bold;
+}
+
+
+.reservation-list {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+    margin-bottom: 80px;
+}
+
+
+.action-bar {
+    position: sticky;
+    bottom: 0;
+
+    width: 100%;
+    background-color: #dcdada;
+    padding: 20px 0;
+
+    border-top: 2px solid black;
+    box-shadow: 0 -4px 12px rgba(0,0,0,0.08);
+
+    display: flex;
+    justify-content: center;
+
+    z-index: 20;
+}
+
+.action-bar-content {
+    width: 100%;
+    max-width: 1100px;
+
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+}
+
+.btn-save,
+.btn-cancel {
+    padding: 12px 30px;
+    font-size: 16px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+.btn-save {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.btn-save:hover {
+    background-color: #3e8e41;
+}
+
+.btn-cancel {
+    background-color: #d30a0a;
+    color: white;
+}
+
+.btn-cancel:hover {
+    background-color: #970404;
+}
+
