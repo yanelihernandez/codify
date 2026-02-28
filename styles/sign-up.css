@@ -43,6 +43,18 @@ main {
     gap: 0;
 }
 
+.fila-doble {
+    display: flex;
+    gap: 15px;
+    width: 100%;
+    margin-bottom: 0;
+}
+
+.mitad {
+    flex: 1;
+    margin-bottom: 20px;
+}
+
 .form-group {
     display: flex;
     flex-direction: column;
@@ -91,13 +103,6 @@ main {
     color: #000;
 }
 
-.nombre-apellidos {
-    display: flex;
-    flex-direction: column;
-    grid-template-columns: 1fr 1fr;
-    gap: 15px;
-}
-
 .botones {
     display: flex;
     justify-content: space-between;
@@ -141,4 +146,41 @@ main {
 
 .field-wrapper.has-error input {
     border-color: #d30a0a;
+}
+
+.mensaje-edad {
+    margin-top: 5px;
+    font-size: 14px;
+    font-weight: bold;
+    padding: 4px 8px;
+    border-radius: 4px;
+}
+
+.ok-mensaje {
+    color: #155724;
+    background-color: #d4edda;
+    border: 1px solid #c3e6cb;
+}
+
+.no-mensaje {
+    color: #721c24;
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+}
+
+.password-hint {
+    font-size: 13px;
+    color: #666;
+    margin: 4px 0 0 0;
+    font-style: italic;
+}
+
+.footer-text {
+    margin-top: 40px;
+    text-align: center;
+    color: #666;
+    font-size: 14px;
+    line-height: 1.5;
+    width: 80%;
+    max-width: 700px;
 }
