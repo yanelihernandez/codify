@@ -36,7 +36,7 @@
                     <input class="formulario-input" type="password" id="contraseña">
                     <button type="button" class="toggle-btn">👁</button>
                 </div>
-                </div>
+            </div>
         </div>
 
         <div class="botones">
@@ -54,11 +54,27 @@
 <script>
     xLuIncludeFile();
 
+    document.querySelector('.toggle-btn')?.addEventListener('click', function() {
+        let input = document.getElementById('contraseña');
+        if (input.type == 'password') {
+            input.type = 'text';
+            this.innerHTML = '🔒';
+        } else {
+            input.type = 'password';
+            this.innerHTML = '👁';
+        }
+    });
+
     document.getElementById("btnLogin")?.addEventListener("click", () => {
         const user = document.getElementById("usuario")?.value?.trim() || "Usuario registrado";
+
         window.codify?.setAuth?.({ loggedIn: true, username: user });
         window.codify?.toast?.("Sesión iniciada");
-        setTimeout(() => (window.location.href = "home.html"), 400);
+
+        const redirectUrl = sessionStorage.getItem('redirectAfterLogin') || "home.html";
+        sessionStorage.removeItem('redirectAfterLogin');
+
+        setTimeout(() => (window.location.href = redirectUrl), 400);
     });
 </script>
 
