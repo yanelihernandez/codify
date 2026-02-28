@@ -164,3 +164,32 @@ html, body {
     gap: 2rem;
     margin: 50px;
 }
+
+.info-dia {
+    background-color: #e6f3ff;
+    border: 2px solid #007bff;
+    border-radius: 12px;
+    padding: 20px;
+    margin-top: 30px;
+    width: 100%;
+    max-width: 600px;
+    transition: transform 0.2s ease;
+}
+
+.info-dia h3 {
+    color: #007bff;
+    margin-top: 0;
+    margin-bottom: 15px;
+    font-size: 18px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.info-dia p {
+    color: #333;
+    margin: 0;
+    line-height: 1.6;
+    font-style: italic;
+}
