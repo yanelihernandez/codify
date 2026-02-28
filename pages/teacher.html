@@ -18,7 +18,7 @@
 <main>
     <div class="profesor-perfil-horizontal">
 
-        <a href="chat.html" class="chat-icon-corner" title="Enviar mensaje">📩</a>
+        <a href="#" onclick="verificarAccesoChat(event)" class="chat-icon-corner" title="Enviar mensaje">📩</a>
 
         <div class="columna-izquierda">
             <div class="profesor-imagen">
@@ -59,8 +59,6 @@
                     <div class="user-opinion" xlu-include-file="../templates/user-opinion.html"></div>
                     <div class="user-opinion" xlu-include-file="../templates/user-opinion.html"></div>
                 </section>
-
-
             </div>
         </div>
 
@@ -94,6 +92,29 @@
 
 <script>
     xLuIncludeFile();
+
+    function verificarAccesoChat(event) {
+        event.preventDefault();
+
+        const auth = window.codify?.getAuth ? window.codify.getAuth() : { loggedIn: false };
+        const usuarioLogueado = auth.loggedIn || false;
+
+        if (!usuarioLogueado) {
+            if (window.codify?.toast) {
+                window.codify.toast("Debes iniciar sesión para chatear con el profesor");
+            } else {
+                alert("Debes iniciar sesión para chatear con el profesor");
+            }
+
+            sessionStorage.setItem('redirectAfterLogin', 'chat.html');
+
+            setTimeout(function() {
+                window.location.href = "sign-in.html";
+            }, 500);
+        } else {
+            window.location.href = "chat.html";
+        }
+    }
 </script>
 
 </html>
