@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
+    <meta charset="UTF-8">
     <title>Chat</title>
 
     <script src="../index.js"></script>
@@ -77,6 +77,31 @@
 
 <script>
     xLuIncludeFile();
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const auth = window.codify?.getAuth ? window.codify.getAuth() : { loggedIn: false };
+        const usuarioLogueado = auth.loggedIn || false;
+
+        if (!usuarioLogueado) {
+            if (window.codify?.toast) {
+                window.codify.toast("No tienes permiso para acceder al chat");
+            }
+
+            setTimeout(function() {
+                window.location.href = "home-public.html";
+            }, 500);
+        }
+    });
+
+    document.querySelector('.send-btn')?.addEventListener('click', function(e) {
+        const auth = window.codify?.getAuth ? window.codify.getAuth() : { loggedIn: false };
+        const usuarioLogueado = auth.loggedIn || false;
+
+        if (!usuarioLogueado) {
+            e.preventDefault();
+            window.location.href = "sign-in.html";
+        }
+    });
 </script>
 
 </html>
