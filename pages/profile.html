@@ -98,8 +98,12 @@
 <script>
     xLuIncludeFile();
 
-    document.addEventListener('DOMContentLoaded', function() {
-        const auth = window.codify?.getAuth?.();
+    window.codify = window.codify || {};
+    window.codify.initCodifyUI = function() {
+        // Actualizar header
+        updateHeader();
+
+        const auth = getAuth();
 
         if (!auth?.loggedIn) {
             window.location.href = 'sign-in.html';
@@ -112,7 +116,6 @@
             const profileData = localStorage.getItem('codify_profile');
             if (profileData) {
                 const profile = JSON.parse(profileData);
-
                 document.getElementById('profileFullName').textContent = profile.fullName || 'Nombre y Apellidos';
                 document.getElementById('profileBirth').textContent = profile.fechaNacimiento
                     ? 'Fecha de nacimiento: ' + profile.fechaNacimiento
@@ -126,8 +129,27 @@
         document.querySelectorAll('.fav-professors-content .fav-btn').forEach(function(btn) {
             btn.classList.add('liked');
             btn.textContent = '♥';
+
+            btn.removeEventListener('click', window.favHandler);
+            btn.addEventListener('click', window.favHandler = function(e) {
+                e.preventDefault();
+                const liked = this.classList.toggle('liked');
+                this.setAttribute('aria-pressed', liked);
+                this.textContent = liked ? '♥' : '♡';
+
+                const inFavSection = this.closest('.fav-professors-content');
+                if (inFavSection && !liked) {
+                    const card = this.closest('.best-professor-card, .card, article');
+                    if (card) {
+                        card.remove();
+                        if (window.codify?.toast) {
+                            window.codify.toast('Eliminado de favoritos');
+                        }
+                    }
+                }
+            });
         });
-    });
+    };
 </script>
 
 </body>
