@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Sing Up</title>
+    <title>Regístrate</title>
     <script src="../index.js"></script>
     <link rel="stylesheet" href="../styles/sign-up.css">
     <link rel="stylesheet" href="../styles/header.css">
@@ -45,7 +45,7 @@
                     <input class="formulario-input" type="password" id="contraseña">
                     <button type="button" class="toggle-btn">👁</button>
                 </div>
-                <p class="error-msg">Contraseña no válida</p>
+                <p class="error-msg" id="passwordError">La contraseña debe tener al menos 6 caracteres</p>
             </div>
 
             <div class="form-group">
@@ -54,7 +54,7 @@
                     <input class="formulario-input" type="password" id="rep-contraseña">
                     <button type="button" class="toggle-btn">👁</button>
                 </div>
-                <p class="error-msg">Las contraseñas no coinciden</p>
+                <p class="error-msg" id="repeatError">Las contraseñas no coinciden</p>
             </div>
 
         </div>
@@ -68,12 +68,49 @@
 
 <footer class="site-footer" xlu-include-file="../templates/footer.html"></footer>
 
-</body>
-
 <script>
     xLuIncludeFile();
 
+    function validatePasswords() {
+        const password = document.getElementById('contraseña');
+        const repeat = document.getElementById('rep-contraseña');
+        const passwordError = document.getElementById('passwordError');
+        const repeatError = document.getElementById('repeatError');
+
+        passwordError.style.display = 'none';
+        repeatError.style.display = 'none';
+
+        password.closest('.field-wrapper')?.classList.remove('has-error');
+        repeat.closest('.field-wrapper')?.classList.remove('has-error');
+        
+        if (password.value.length > 0 && password.value.length < 6) {
+            passwordError.style.display = 'block';
+            password.closest('.field-wrapper').classList.add('has-error');
+        }
+        
+        if (repeat.value.length > 0 && password.value !== repeat.value) {
+            repeatError.style.display = 'block';
+            repeat.closest('.field-wrapper').classList.add('has-error');
+        }
+    }
+
+    document.getElementById('contraseña')?.addEventListener('input', validatePasswords);
+    document.getElementById('rep-contraseña')?.addEventListener('input', validatePasswords);
+
     document.getElementById("btnSignup")?.addEventListener("click", () => {
+        const password = document.getElementById('contraseña')?.value;
+        const repeat = document.getElementById('rep-contraseña')?.value;
+
+        if (!password || password.length < 6) {
+            window.codify?.toast?.("La contraseña debe tener al menos 6 caracteres");
+            return;
+        }
+
+        if (password !== repeat) {
+            window.codify?.toast?.("Las contraseñas no coinciden");
+            return;
+        }
+
         const name = document.getElementById("nombre")?.value?.trim() || "Usuario";
         window.codify?.setAuth?.({ loggedIn: true, username: name });
         window.codify?.toast?.("Registro completado");
@@ -81,4 +118,5 @@
     });
 </script>
 
+</body>
 </html>
