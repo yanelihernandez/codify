@@ -1,139 +1,143 @@
 body {
     margin: 0;
-    height: 100vh;
+    font-family: Arial, sans-serif;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
-    background-color: #f5f5f5;
-    font-family: Arial, sans-serif;
+    min-height: 100vh;
 }
 
 main {
     flex: 1;
+    padding: 20px;
+    background-color: #ecf0f1;
+}
+
+.bloque_inicio {
     display: flex;
-    justify-content: center;
-    align-items: center;
+    align-items: start;
+    gap: 40px;
+    padding: 20px;
 }
 
-.contenedor {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 100%;
-    max-width: 1200px;
-    padding: 30px;
-}
-
-.contenedor h1 {
-    font-size: 40px;
-}
-
-.contenedor img {
-    height: 180px;
+.imagen_main img {
+    height: 350px;
     width: auto;
+}
+
+.texto_main {
+    flex: 1;
+    line-height: 1.8;
+}
+
+.profesores-mejor-valorados {
+    padding: 20px;
+}
+
+.profesores-mejor-valorados h2 {
+    margin-bottom: 15px;
+}
+
+.lista-profesores {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    padding: 20px;
+    background-color: #87ab69;
     border-radius: 10px;
-    margin-bottom: 30px;
 }
 
-.formulario {
+.about-us {
     display: flex;
     flex-direction: column;
-    width: 80%;
-    max-width: 700px;
-    gap: 0;
+    gap: 30px;
+    margin: 40px;
 }
 
-.form-group {
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-    margin-bottom: 20px;
-    width: 100%;
+.about-us-intro {
+    margin-left: -20px;
+    margin-right: -20px;
+    background-color: #595f60;
+    color: white;
+    text-align: center;
 }
 
-.form-group label {
-    margin: 0;
-    font-size: 17px;
+.about-us-title {
+    font-size: 30px;
     font-weight: bold;
 }
 
-.formulario-input {
-    width: 100%;
-    box-sizing: border-box;
-    height: 40px;
-    padding: 8px 40px 8px 12px;
-    font-size: 16px;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-}
-
-.field-wrapper {
-    position: relative;
-    width: 100%;
+.history {
     display: flex;
-    align-items: center;
+    gap: 20px;
 }
 
-.toggle-btn {
-    position: absolute;
-    right: 10px;
-    background: none;
-    border: none;
-    cursor: pointer;
-    font-size: 18px;
-    padding: 0;
+.history-text {
+    flex: 7;
+    padding: 20px;
+    background: #f5f5f5;
+    border-radius: 12px;
+}
+
+.history-media {
+    flex: 3;
+    background: #ddd;
+    border: 2px dashed #999;
+    border-radius: 12px;
+    height: 200px;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #666;
-}
-.toggle-btn:hover {
-    color: #000;
 }
 
-.nombre-apellidos {
-    display: flex;
-    flex-direction: column;
-    grid-template-columns: 1fr 1fr;
-    gap: 15px;
+.contact {
+    padding: 20px;
+    background: #ddd;
+    border-radius: 12px;
+    text-align: center;
+    line-height: 1.2;
 }
 
-.botones {
+.public-cta {
+    margin: 16px auto;
+    max-width: 1100px;
     display: flex;
     justify-content: space-between;
-    width: 80%;
-    max-width: 700px;
-    margin-top: 20px;
+    align-items: center;
+    gap: 16px;
+    padding: 16px 18px;
+    border: 1px solid #d9e6d0;
+    border-radius: 14px;
+    background: #ffffff;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
 }
 
-.botones button {
-    background: #87ab69;
-    color: white;
-    border: none;
-    padding: 12px 25px;
-    font-size: 16px;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: 0.3s;
+.public-cta h1 {
+    margin: 0 0 6px;
 }
 
-.botones button:hover {
-    background: #49752c;
-}
-
-.botones a {
-    text-decoration: none;
-    color: #007bff;
-    font-size: 15px;
-}
-
-.botones a:hover {
-    text-decoration: underline;
-}
-
-.error-msg{
-    /*display: none;*/      /* para activar/desactivar */
-    font-size: 15px;
-    color: red;
+.public-cta p {
     margin: 0;
+    color: #3b3b3b;
+}
+
+.cta-buttons {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.cta-buttons a {
+    text-decoration: none;
+    padding: 10px 14px;
+    border-radius: 10px;
+}
+
+.btn-signin {
+    background: #25510a;
+    color: #fff;
+}
+
+.btn-signup {
+    background: #007bff;
+    color: #fff;
 }
