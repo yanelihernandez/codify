@@ -29,15 +29,33 @@
     border-radius: 10px;
     cursor: pointer;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
-
     font-size: 20px;
     line-height: 1;
     color: #d11a2a;
+    position: relative;
 }
 
 .fav-btn:hover{
     transform: scale(1.12);
     box-shadow: 0 4px 10px rgba(0,0,0,0.12);
+}
+
+.fav-btn.guest-mode {
+    color: #999;
+    border-color: #ddd;
+}
+
+.fav-btn.guest-mode:hover::after {
+    content: "Inicia sesión";
+    position: absolute;
+    background: #333;
+    color: white;
+    font-size: 12px;
+    padding: 4px 8px;
+    border-radius: 4px;
+    transform: translateY(-30px);
+    white-space: nowrap;
+    pointer-events: none;
 }
 
 .fav-btn.liked{ }
