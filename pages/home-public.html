@@ -74,6 +74,36 @@
 
 <script>
     xLuIncludeFile();
+
+    function redirectToLogin() {
+        if (window.codify?.toast) {
+            window.codify.toast("Debes iniciar sesión para guardar favoritos");
+        } else {
+            alert("Debes iniciar sesión para guardar favoritos");
+        }
+
+        setTimeout(function() {
+            window.location.href = "sign-in.html";
+        }, 500);
+    }
+
+    function setupGuestMode() {
+        const favBtns = document.querySelectorAll('.fav-btn');
+        favBtns.forEach(btn => {
+            btn.classList.add('guest-mode');
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', setupGuestMode);
+    setTimeout(setupGuestMode, 500);
+    setTimeout(setupGuestMode, 1000);
+
+    document.addEventListener('click', function(e) {
+        if (e.target.classList.contains('fav-btn')) {
+            e.preventDefault();
+            redirectToLogin();
+        }
+    });
 </script>
 
 </body>
