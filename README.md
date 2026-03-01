@@ -46,15 +46,17 @@ El proyecto se compone de **nueve páginas** principales alojadas en la carpeta 
 
 | Página | Descripción |
 | :--- | :--- |
-| **Home** | Página de inicio, presentación y bienvenida a la plataforma. |
+| **Home** | Vista principal personalizada para usuarios autenticados con acceso rápido a sus funciones. |
+| **Public Home** | Página de inicio, presentación y bienvenida a la plataforma para usuarios no registrados; presenta la propuesta de valor y acceso al registro. |
 | **Sign In** | Formulario de acceso para usuarios ya registrados. |
-| **Sign Up** | Formulario de registro con validaciones de seguridad y edad. |
+| **Sign Up** | Formulario de registro con validaciones de seguridad, identidad y edad. |
 | **List of Teachers** | Resultados de búsqueda filtrados según el **lenguaje de programación** seleccionado. |
 | **Teacher** | Vista con información detallada, experiencia y tarifas del tutor. |
 | **Booking** | Interfaz dedicada para la selección de fechas y horarios disponibles. |
 | **Chat** | Sistema de mensajería privada (disponible solo para usuarios logueados). |
 | **Profile** | Panel de control personal y ajustes de cuenta. |
-| **My Bookings** | Sección de gestión de clases donde se pueden visualizar o cancelar las citas. |
+| **Edit Profile** | Interfaz de actualización de datos, preferencias y credenciales del usuario. |
+| **My Bookings** | Historial y gestión de clases donde el usuario puede monitorear o cancelar citas. |
 
 ---
 
