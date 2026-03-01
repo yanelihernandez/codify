@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="./images/logo.png" alt="Logo de Codify" width="200"/>
+  <img src="./images/logo_verde.png" alt="Logo de Codify" width="200"/>
 </p>
 
 # Codify -  Sprint 1
