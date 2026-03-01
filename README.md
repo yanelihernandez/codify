@@ -11,8 +11,7 @@ Codify es una plataforma web diseñada para conectar a estudiantes con profesore
 ## Estructura de Ramas
 Este repositorio utiliza ramas para organizar las entregas del proyecto:
 
-```text
-.
+-
 ├── main: Rama Actual
 │   └── 📄 README.md (Inicio y documentación general)
 │
