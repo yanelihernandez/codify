@@ -5,6 +5,7 @@
     <title>Perfil del Profesor</title>
 
     <script src="../index.js"></script>
+    <script src="../src/loader.js"></script>
 
     <link rel="stylesheet" href="../styles/header.css">
     <link rel="stylesheet" href="../styles/footer.css">
@@ -13,7 +14,7 @@
 
 <body>
 
-<header class="site-header" xlu-include-file="../templates/header.html"></header>
+<header id="site-header" xlu-include-file="../templates/header.html"></header>
 
 <main>
     <div class="profesor-perfil-horizontal">
@@ -54,10 +55,12 @@
             <div class="opiniones">
                 <h2>Opiniones</h2>
 
-                <section>
+                <section id="opinions">
+                    <!--
                     <div class="user-opinion" xlu-include-file="../templates/user-opinion.html"></div>
                     <div class="user-opinion" xlu-include-file="../templates/user-opinion.html"></div>
                     <div class="user-opinion" xlu-include-file="../templates/user-opinion.html"></div>
+                    -->
                 </section>
             </div>
         </div>
@@ -86,12 +89,36 @@
     </div>
 </main>
 
-<footer class="site-footer" xlu-include-file="../templates/footer.html"></footer>
+<footer id="site-footer" xlu-include-file="../templates/footer.html"></footer>
 
 </body>
 
 <script>
-    xLuIncludeFile();
+    async function init() {
+        await loadHTML('../templates/header.html', 'site-header');
+        await loadHTML('../templates/footer.html', 'site-footer');
+
+        await loadHTML('../templates/user-opinion.html');
+
+        loadComments();
+    }
+
+    document.addEventListener('DOMContentLoaded', init);
+
+    function loadComments() {
+        fetch('../data/professors.json')
+            .then(res => res.json())
+            .then(professors => {
+                const container = document.querySelector('#opinions');
+                const template = document.getElementById('user-opinion-template');
+
+                professors.forEach(professor => {
+                    const clone = template.content.cloneNode(true);
+                    clone.querySelector('.opinion-usuario').textContent = professor.name;
+                    container.appendChild(clone);
+                });
+            });
+    }
 
     function verificarAccesoChat(event) {
         event.preventDefault();
