@@ -1,0 +1,26 @@
+[
+  {
+    "id": 1,
+    "image": "/images/juan_manuel.png",
+    "name": "Juan Manuel",
+    "info": "JM - Lorem ipsum dolor sit amet, consectetur adipiscing elit blandit eu, accumsan gravida interdum. Ut eros aptent nec mi fringilla integer risus tortor pretium venenatis, parturient habitasse erat dui at diam facilisi faucibus himenaeos habitant, tristique tempor cubilia vitae cum blandit nam nisi porttitor. Sagittis platea fusce molestie nec est pellentesque nam auctor ullamcorper bibendum interdum, nisl ad felis enim sociis iaculis sapien eu lobortis.",
+    "speciality": "Python",
+    "stars": 4.4
+  },
+  {
+    "id": 2,
+    "image": "/images/maria.png",
+    "name": "Maria",
+    "info": "M - Lorem ipsum dolor sit amet, consectetur adipiscing elit blandit eu, accumsan gravida interdum. Ut eros aptent nec mi fringilla integer risus tortor pretium venenatis, parturient habitasse erat dui at diam facilisi faucibus himenaeos habitant, tristique tempor cubilia vitae cum blandit nam nisi porttitor. Sagittis platea fusce molestie nec est pellentesque nam auctor ullamcorper bibendum interdum, nisl ad felis enim sociis iaculis sapien eu lobortis.",
+    "speciality": "Java",
+    "stars": 4.8
+  },
+  {
+    "id": 3,
+    "image": "/images/juan_manuel.png",
+    "name": "Fernando",
+    "info": "F - Lorem ipsum dolor sit amet, consectetur adipiscing elit blandit eu, accumsan gravida interdum. Ut eros aptent nec mi fringilla integer risus tortor pretium venenatis, parturient habitasse erat dui at diam facilisi faucibus himenaeos habitant, tristique tempor cubilia vitae cum blandit nam nisi porttitor. Sagittis platea fusce molestie nec est pellentesque nam auctor ullamcorper bibendum interdum, nisl ad felis enim sociis iaculis sapien eu lobortis.",
+    "speciality": "C",
+    "stars": 4.7
+  }
+]
