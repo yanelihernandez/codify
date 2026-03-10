@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>Invitado</title>
     <script src="../index.js"></script>
+    <script src="../src/loader.js"></script>
     <link rel="stylesheet" href="../styles/home.css">
     <link rel="stylesheet" href="../styles/header.css">
     <link rel="stylesheet" href="../styles/footer.css">
@@ -12,7 +13,7 @@
 </head>
 <body>
 
-<header class="site-header" xlu-include-file="../templates/header.html"></header>
+<header id="site-header" xlu-include-file="../templates/header.html"></header>
 
 <main>
     <h1 class="welcome-title">Bienvenido a Codify</h1>
@@ -36,8 +37,7 @@
     <section class="profesores-mejor-valorados">
         <h2>Profesores mejor valorados</h2>
         <div class="lista-profesores">
-            <div class="best-professor-card" xlu-include-file="../templates/best-professor-card.html"></div>
-            <div class="best-professor-card" xlu-include-file="../templates/best-professor-card.html"></div>
+            <!-- templates de profesores mejor valorados -->
         </div>
     </section>
 
@@ -70,10 +70,42 @@
     </section>
 </main>
 
-<footer class="site-footer" xlu-include-file="../templates/footer.html"></footer>
+<footer id="site-footer" xlu-include-file="../templates/footer.html"></footer>
 
 <script>
-    xLuIncludeFile();
+    async function init() {
+        await loadHTML('../templates/header.html', 'site-header');
+        await loadHTML('../templates/footer.html', 'site-footer');
+
+        await loadHTML('../templates/best-professor-card.html');
+
+        loadBestProfessors();
+    }
+
+    document.addEventListener('DOMContentLoaded', init);
+
+    function loadBestProfessors() {
+        fetch('../data/professors.json')
+            .then(res => res.json())
+            .then(professors => {
+
+                professors.sort((a, b) => b.stars - a.stars);
+
+                const container = document.querySelector('.lista-profesores');
+                const template = document.getElementById('best-professor-card-template');
+
+                professors.forEach(professor => {
+                    const clone = template.content.cloneNode(true);
+
+                    clone.querySelector('.stars').textContent = `${professor.stars} ☆`;
+                    clone.querySelector('img').src = professor.image;
+                    clone.querySelector('.professor-name').textContent = professor.name;
+                    clone.querySelector('.professor-speciality').textContent = `Especialidad: ${professor.speciality}`;
+
+                    container.appendChild(clone);
+                });
+            });
+    }
 
     function redirectToLogin() {
         if (window.codify?.toast) {
