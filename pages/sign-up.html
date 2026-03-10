@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <title>Regístrate</title>
     <script src="../index.js"></script>
+    <script src="../src/loader.js"></script>
     <link rel="stylesheet" href="../styles/sign-up.css">
     <link rel="stylesheet" href="../styles/header.css">
     <link rel="stylesheet" href="../styles/footer.css">
@@ -13,7 +14,7 @@
 
 <body>
 
-<header class="site-header" xlu-include-file="../templates/header.html"></header>
+<header id="site-header" xlu-include-file="../templates/header.html"></header>
 
 <main>
     <div class="contenedor">
@@ -76,10 +77,14 @@
     </div>
 </main>
 
-<footer class="site-footer" xlu-include-file="../templates/footer.html"></footer>
+<footer id="site-footer" xlu-include-file="../templates/footer.html"></footer>
 
 <script>
-    xLuIncludeFile();
+    async function init() {
+        await loadHTML('../templates/header.html', 'site-header');
+        await loadHTML('../templates/footer.html', 'site-footer');
+    }
+    document.addEventListener('DOMContentLoaded', init);
 
     // función para comprobar la edad
     function comprobarEdad() {

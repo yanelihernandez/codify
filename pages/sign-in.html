@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <title>Inicia Sesión</title>
     <script src="../index.js"></script>
+    <script src="../src/loader.js"></script>
     <link rel="stylesheet" href="../styles/sign-in.css">
     <link rel="stylesheet" href="../styles/header.css">
     <link rel="stylesheet" href="../styles/footer.css">
@@ -13,7 +14,7 @@
 </head>
 <body>
 
-<header class="site-header" xlu-include-file="../templates/header.html"></header>
+<header id="site-header" xlu-include-file="../templates/header.html"></header>
 
 <main>
 
@@ -47,12 +48,16 @@
 
 </main>
 
-<footer class="site-footer" xlu-include-file="../templates/footer.html"></footer>
+<footer id="site-footer" xlu-include-file="../templates/footer.html"></footer>
 
 </body>
 
 <script>
-    xLuIncludeFile();
+    async function init() {
+        await loadHTML('../templates/header.html', 'site-header');
+        await loadHTML('../templates/footer.html', 'site-footer');
+    }
+    document.addEventListener('DOMContentLoaded', init);
 
     document.querySelector('.toggle-btn')?.addEventListener('click', function() {
         let input = document.getElementById('contraseña');
