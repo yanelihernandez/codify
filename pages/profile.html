@@ -5,6 +5,7 @@
     <title>Perfil</title>
 
     <script src="../index.js"></script>
+    <script src="../src/loader.js"></script>
 
     <link rel="stylesheet" href="../styles/profile.css">
     <link rel="stylesheet" href="../styles/header.css">
@@ -16,7 +17,7 @@
 
 <body>
 
-<header class="site-header" xlu-include-file="../templates/header.html"></header>
+<header id="site-header" xlu-include-file="../templates/header.html"></header>
 
 <main>
     <div class="contenedor">
@@ -74,8 +75,7 @@
             <h2>Mis Chats</h2>
 
             <section class="chats-section">
-                <div class="chat-card" xlu-include-file="../templates/chat-card.html"></div>
-                <div class="chat-card" xlu-include-file="../templates/chat-card.html"></div>
+                <!-- templates de chat -->
             </section>
         </div>
 
@@ -87,17 +87,67 @@
         </div>
 
         <div class="fav-professors-content">
-            <div class="best-professor-card" xlu-include-file="../templates/best-professor-card.html"></div>
-            <div class="best-professor-card" xlu-include-file="../templates/best-professor-card.html"></div>
+            <!-- templates de profesores favoritos -->
         </div>
     </div>
 
 </main>
 
-<footer class="site-footer" xlu-include-file="../templates/footer.html"></footer>
+<footer id="site-footer" xlu-include-file="../templates/footer.html"></footer>
 
 <script>
-    xLuIncludeFile();
+    async function init() {
+        await loadHTML('../templates/header.html', 'site-header');
+        await loadHTML('../templates/footer.html', 'site-footer');
+
+        await loadHTML('../templates/best-professor-card.html');
+        await loadHTML('../templates/chat-card.html');
+
+        loadChats();
+        loadFavProfessors();
+    }
+
+    document.addEventListener('DOMContentLoaded', init);
+
+    function loadFavProfessors() {
+        fetch('../data/professors.json')
+            .then(res => res.json())
+            .then(professors => {
+
+                const container = document.querySelector('.fav-professors-content');
+                const template = document.getElementById('best-professor-card-template');
+
+                professors.forEach(professor => {
+                    const clone = template.content.cloneNode(true);
+
+                    clone.querySelector('.stars').textContent = `${professor.stars} ☆`;
+                    clone.querySelector('img').src = professor.image;
+                    clone.querySelector('.professor-name').textContent = professor.name;
+                    clone.querySelector('.professor-speciality').textContent = `Especialidad: ${professor.speciality}`;
+
+                    container.appendChild(clone);
+                });
+            });
+    }
+
+    function loadChats() {
+        fetch('../data/professors.json')
+            .then(res => res.json())
+            .then(professors => {
+
+                const container = document.querySelector('.chats-section');
+                const template = document.getElementById('chat-template');
+
+                professors.forEach(professor => {
+                    const clone = template.content.cloneNode(true);
+
+                    clone.querySelector('img').src = professor.image;
+                    clone.querySelector('.professor-name').textContent = professor.name;
+
+                    container.appendChild(clone);
+                });
+            });
+    }
 
     window.codify = window.codify || {};
     window.codify.initCodifyUI = function() {
