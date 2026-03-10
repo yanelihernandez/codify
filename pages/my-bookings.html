@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>Reservas</title>
     <script src="../index.js"></script>
+    <script src="../src/loader.js"></script>
     <link rel="stylesheet" href="../styles/professors-programming-language.css">
     <link rel="stylesheet" href="../styles/reservation-card.css">
     <link rel="stylesheet" href="../styles/header.css">
@@ -13,16 +14,13 @@
 </head>
 <body>
 
-<header class="site-header" xlu-include-file="../templates/header.html"></header>
+<header id="site-header" xlu-include-file="../templates/header.html"></header>
 
 <main>
     <h1 class="page-title">Mis Reservas</h1>
 
     <section class="reservation-list">
-        <div class="reservation-card" xlu-include-file="../templates/reservation-card.html"></div>
-        <div class="reservation-card" xlu-include-file="../templates/reservation-card.html"></div>
-        <div class="reservation-card" xlu-include-file="../templates/reservation-card.html"></div>
-        <div class="reservation-card" xlu-include-file="../templates/reservation-card.html"></div>
+        <!-- templates de tarjetas de reservas -->
     </section>
 </main>
 
@@ -33,10 +31,39 @@
     </div>
 </div>
 
-<footer class="site-footer" xlu-include-file="../templates/footer.html"></footer>
+<footer id="site-footer" xlu-include-file="../templates/footer.html"></footer>
 
 <script>
-    xLuIncludeFile();
+    async function init() {
+        await loadHTML('../templates/header.html', 'site-header');
+        await loadHTML('../templates/footer.html', 'site-footer');
+
+        await loadHTML('../templates/reservation-card.html');
+
+        loadBookings();
+    }
+
+    function loadBookings() {
+        fetch('../data/professors.json')
+            .then(res => res.json())
+            .then(professors => {
+
+                const container = document.querySelector('.reservation-list');
+                const template = document.getElementById('reservation-card-template');
+
+                professors.forEach(professor => {
+                    const clone = template.content.cloneNode(true);
+
+                    clone.querySelector('img').src = professor.image;
+                    clone.querySelector('.professor-name').textContent = professor.name;
+                    clone.querySelector('.reservation-info').textContent = `Reserva con ${professor.name}`;
+
+                    container.appendChild(clone);
+                });
+            });
+    }
+
+    document.addEventListener('DOMContentLoaded', init);
 
     if (window.codify?.initCodifyUI) {
         window.codify.initCodifyUI();
