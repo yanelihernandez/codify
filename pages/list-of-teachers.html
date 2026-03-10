@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>Python</title>
     <script src="../index.js"></script>
+    <script src="../src/loader.js"></script>
     <link rel="stylesheet" href="../styles/professors-programming-language.css">
     <link rel="stylesheet" href="../styles/professor-card.css">
     <link rel="stylesheet" href="../styles/header.css">
@@ -11,7 +12,7 @@
 </head>
 <body>
 
-<header class="site-header" xlu-include-file="../templates/header.html"></header>
+<header id="site-header" xlu-include-file="../templates/header.html"></header>
 
 <main>
 
@@ -27,26 +28,50 @@
     </div>
 
     <section class="professors-list">
-        <div class="professor-card" xlu-include-file="../templates/professor-card.html"></div>
-        <div class="professor-card" xlu-include-file="../templates/professor-card.html"></div>
-        <div class="professor-card" xlu-include-file="../templates/professor-card.html"></div>
-        <div class="professor-card" xlu-include-file="../templates/professor-card.html"></div>
-        <div class="professor-card" xlu-include-file="../templates/professor-card.html"></div>
-        <div class="professor-card" xlu-include-file="../templates/professor-card.html"></div>
-        <div class="professor-card" xlu-include-file="../templates/professor-card.html"></div>
-
+        <!-- Templates de tarjetas de profesor -->
     </section>
 
 </main>
 
-<footer class="site-footer" xlu-include-file="../templates/footer.html"></footer>
-
-
+<footer id="site-footer" xlu-include-file="../templates/footer.html"></footer>
 
 </body>
 
 <script>
-    xLuIncludeFile();
+
+    document.addEventListener('DOMContentLoaded', init);
+
+    async function init() {
+        await loadHTML('../templates/header.html', 'site-header');
+        await loadHTML('../templates/footer.html', 'site-footer');
+
+        await loadHTML('../templates/professor-card.html');
+
+        addProfessors();
+    }
+
+    function addProfessors() {
+        fetch('../data/professors.json')
+            .then(res => res.json())
+            .then(professors => {
+
+                const container = document.querySelector('.professors-list');
+                const template = document.getElementById('professor-card-template');
+
+                professors.forEach(p => {
+                    const clone = template.content.cloneNode(true);
+
+                    clone.querySelector('img').src = p.image;
+                    clone.querySelector('.professor-name').innerText = p.name;
+                    clone.querySelector('.professor-info').innerText = p.info;
+
+                    container.appendChild(clone);
+                });
+            })
+            .catch((err) => console.error(err));
+    }
+
+
 </script>
 
 </html>
