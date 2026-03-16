@@ -68,7 +68,7 @@
 
         <div class="toggle-row">
           <label class="switch">
-            <input type="checkbox" />
+            <input type="checkbox" id="groupToggle" />
             <span class="slider"></span>
           </label>
           <span class="toggle-label">individual / en grupo</span>
@@ -106,6 +106,13 @@
 
   document.addEventListener('DOMContentLoaded', init);
 
+  const hoursSelect = document.getElementById("hours");
+  const toggle = document.getElementById("groupToggle");
+
+  hoursSelect.addEventListener("change", updatePrice);
+  toggle.addEventListener("change", updatePrice);
+
+
   function loadProfessor() {
     fetch("../data/professors.json")
             .then(res => res.json())
@@ -122,6 +129,17 @@
               updatePrice();
 
             });
+  }
+
+  function updatePrice() {
+    const hours = parseInt(document.getElementById("hours").value);
+    const isGroup = document.getElementById("groupToggle").checked;
+
+    let price = hours * pricePerHour;
+
+    if (isGroup) price *= (1 - groupDiscount/100);
+
+    document.querySelector(".price-value").textContent = price + "€";
   }
 
 
