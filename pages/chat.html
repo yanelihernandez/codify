@@ -80,8 +80,31 @@
     async function init() {
         await loadHTML('../templates/header.html', 'site-header');
         await loadHTML('../templates/footer.html', 'site-footer');
+        loadData();
     }
+
+    const params = new URLSearchParams(window.location.search);
+    const id = Number(params.get("id"));
+
     document.addEventListener('DOMContentLoaded', init);
+
+    function loadData(){
+        fetch("../data/professors.json")
+            .then(res => res.json())
+            .then(data => {
+
+                const prof = data.find(p => p.id === id);
+
+                document.querySelector('.chat-header-info img').src = prof.image;
+                document.querySelector('.chat-header h2').textContent = prof.name;
+
+                const profesorImages = document.querySelectorAll('.message.profesor img');
+                profesorImages.forEach(img => {
+                    img.src = prof.image;
+                });
+
+            });
+    }
 
     document.addEventListener('DOMContentLoaded', function() {
         const auth = window.codify?.getAuth ? window.codify.getAuth() : { loggedIn: false };

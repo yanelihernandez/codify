@@ -143,6 +143,7 @@
 
                     clone.querySelector('img').src = professor.image;
                     clone.querySelector('.professor-name').textContent = professor.name;
+                    clone.querySelector('a').href = `chat.html?id=${professor.id}`
 
                     container.appendChild(clone);
                 });

@@ -5,6 +5,7 @@
     <title>Home</title>
     <script src="../index.js"></script>
     <script src="../src/loader.js"></script>
+    <script src="../src/utils.js"></script>
     <link rel="stylesheet" href="../styles/home.css">
     <link rel="stylesheet" href="../styles/header.css">
     <link rel="stylesheet" href="../styles/footer.css">
@@ -83,32 +84,31 @@
 
         await loadHTML('../templates/best-professor-card.html');
 
-        loadBestProfessors();
+        await loadBestProfessors();
     }
 
     document.addEventListener('DOMContentLoaded', init);
 
-    function loadBestProfessors() {
-        fetch('../data/professors.json')
-            .then(res => res.json())
-            .then(professors => {
+    async function loadBestProfessors() {
+        const resProfessors = await fetch('../data/professors.json');
+        const professors = await resProfessors.json();
 
-                professors.sort((a, b) => b.stars - a.stars);
+        professors.sort((a, b) => b.stars - a.stars);
 
-                const container = document.querySelector('.lista-profesores');
-                const template = document.getElementById('best-professor-card-template');
+        const container = document.querySelector('.lista-profesores');
+        const template = document.getElementById('best-professor-card-template');
 
-                professors.forEach(professor => {
-                    const clone = template.content.cloneNode(true);
+        professors.forEach(professor => {
+            const clone = template.content.cloneNode(true);
 
-                    clone.querySelector('.stars').textContent = `${professor.stars} ☆`;
-                    clone.querySelector('img').src = professor.image;
-                    clone.querySelector('.professor-name').textContent = professor.name;
-                    clone.querySelector('.professor-speciality').textContent = `Especialidad: ${professor.speciality}`;
+            clone.querySelector('.stars').textContent = `${professor.stars} ☆`;
+            clone.querySelector('img').src = professor.image;
+            clone.querySelector('.professor-name').textContent = professor.name;
+            clone.querySelector('.professor-speciality').textContent = `Especialidad: ${professor.speciality}`;
+            clone.querySelector('.see-profile').href = `teacher.html?id=${professor.id}`;
 
-                    container.appendChild(clone);
-                });
-            });
+            container.appendChild(clone);
+        });
     }
 
 </script>

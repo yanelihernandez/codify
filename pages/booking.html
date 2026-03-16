@@ -19,11 +19,11 @@
 <main class="booking-page">
   <section class="booking-card">
     <h1 class="booking-title">Reserva con Profesor</h1>
-    <p class="booking-teacher-name">Juan Manuel González</p>
+    <p class="booking-teacher-name"></p>
 
     <div class="booking-top">
       <div class="booking-photo">
-        <img src="../images/juan_manuel.png" alt="Profesor Juan Manuel" />
+        <img src="" alt="" />
       </div>
 
       <div class="booking-about">
@@ -94,8 +94,37 @@
   async function init() {
     await loadHTML('../templates/header.html', 'site-header');
     await loadHTML('../templates/footer.html', 'site-footer');
+
+    loadProfessor();
   }
+
+  const params = new URLSearchParams(window.location.search);
+  const id = Number(params.get("id"));
+
+  let pricePerHour;
+  let groupDiscount;
+
   document.addEventListener('DOMContentLoaded', init);
+
+  function loadProfessor() {
+    fetch("../data/professors.json")
+            .then(res => res.json())
+            .then(data => {
+
+              const prof = data.find(p => p.id === id);
+
+              document.querySelector('.btn-cancel').href = `../pages/teacher.html?id=${prof.id}`;
+              document.querySelector('.booking-teacher-name').textContent = prof.name;
+              document.querySelector('.booking-photo img').src = prof.image;
+
+              pricePerHour = prof.hour_price;
+              groupDiscount = prof.group_discount;
+              updatePrice();
+
+            });
+  }
+
+
 </script>
 </body>
 </html>

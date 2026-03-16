@@ -64,6 +64,7 @@
                     clone.querySelector('img').src = p.image;
                     clone.querySelector('.professor-name').innerText = p.name;
                     clone.querySelector('.professor-info').innerText = p.info;
+                    clone.querySelector('a').href = `../pages/teacher.html?id=${p.id}`;
 
                     container.appendChild(clone);
                 });
