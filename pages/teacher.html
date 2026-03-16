@@ -98,6 +98,7 @@
         await loadHTML('../templates/user-opinion.html');
 
         loadProfessor();
+        loadComments();
     }
 
     const params = new URLSearchParams(window.location.search);
@@ -126,6 +127,28 @@
 
                 document.querySelector('.reserva-container a').href = `booking.html?id=${prof.id}`;
 
+            });
+    }
+
+    function loadComments() {
+        fetch('../data/opinions.json')
+            .then(res => res.json())
+            .then(opiniones => {
+                const container = document.querySelector('#opinions');
+                const template = document.getElementById('user-opinion-template');
+
+                const opinionesProfesor = opiniones
+                    .filter(o => o.professor_id === Number(id))
+                    .sort((a, b) => b.rating - a.rating)
+                    .slice(0, 3);
+
+                opinionesProfesor.forEach(op => {
+                    const clone = template.content.cloneNode(true);
+                    clone.querySelector('.opinion-usuario').textContent = op.user;
+                    clone.querySelector('.opinion-rating').textContent = op.rating + "★";
+                    clone.querySelector('.opinion-texto').textContent = op.comment;
+                    container.appendChild(clone);
+                });
             });
     }
 
