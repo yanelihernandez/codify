@@ -1,0 +1,44 @@
+[
+  {
+    "id": 1,
+    "professor_id": 1,
+    "user": "Ana",
+    "rating": 5,
+    "comment": "Explica muy bien"
+  },
+  {
+    "id": 2,
+    "professor_id": 1,
+    "user": "Carlos",
+    "rating": 4,
+    "comment": "Buen profesor"
+  },
+  {
+  "id": 3,
+  "professor_id": 1,
+  "user": "Juan",
+  "rating": 4.5,
+  "comment": "Excelente trato!"
+  },
+  {
+  "id": 4,
+  "professor_id": 2,
+  "user": "Carlos",
+  "rating": 4,
+  "comment": "He aprendido mucho"
+  },
+  {
+    "id": 5,
+    "professor_id": 2,
+    "user": "Juan",
+    "rating": 5,
+    "comment": "Le sobran conocimientos!"
+  },
+  {
+    "id": 6,
+    "professor_id": 3,
+    "user": "Ana",
+    "rating": 5,
+    "comment": "Buen servicio"
+  }
+]
