@@ -5,7 +5,11 @@
     "name": "Juan Manuel",
     "info": "JM - Lorem ipsum dolor sit amet, consectetur adipiscing elit blandit eu, accumsan gravida interdum. Ut eros aptent nec mi fringilla integer risus tortor pretium venenatis, parturient habitasse erat dui at diam facilisi faucibus himenaeos habitant, tristique tempor cubilia vitae cum blandit nam nisi porttitor. Sagittis platea fusce molestie nec est pellentesque nam auctor ullamcorper bibendum interdum, nisl ad felis enim sociis iaculis sapien eu lobortis.",
     "speciality": "Python",
-    "stars": 4.4
+    "hour_price": 25,
+    "group_discount": 10,
+    "response_time": 2,
+    "students": 127,
+    "stars": 4.2
   },
   {
     "id": 2,
@@ -13,14 +17,22 @@
     "name": "Maria",
     "info": "M - Lorem ipsum dolor sit amet, consectetur adipiscing elit blandit eu, accumsan gravida interdum. Ut eros aptent nec mi fringilla integer risus tortor pretium venenatis, parturient habitasse erat dui at diam facilisi faucibus himenaeos habitant, tristique tempor cubilia vitae cum blandit nam nisi porttitor. Sagittis platea fusce molestie nec est pellentesque nam auctor ullamcorper bibendum interdum, nisl ad felis enim sociis iaculis sapien eu lobortis.",
     "speciality": "Java",
-    "stars": 4.8
+    "hour_price": 30,
+    "group_discount": 15,
+    "response_time": 1,
+    "students": 200,
+    "stars": 5
   },
   {
     "id": 3,
-    "image": "/images/juan_manuel.png",
+    "image": "/images/fernando.jpg",
     "name": "Fernando",
     "info": "F - Lorem ipsum dolor sit amet, consectetur adipiscing elit blandit eu, accumsan gravida interdum. Ut eros aptent nec mi fringilla integer risus tortor pretium venenatis, parturient habitasse erat dui at diam facilisi faucibus himenaeos habitant, tristique tempor cubilia vitae cum blandit nam nisi porttitor. Sagittis platea fusce molestie nec est pellentesque nam auctor ullamcorper bibendum interdum, nisl ad felis enim sociis iaculis sapien eu lobortis.",
     "speciality": "C",
-    "stars": 4.7
+    "hour_price": 20,
+    "group_discount": 20,
+    "response_time": 4,
+    "students": 100,
+    "stars": 4.5
   }
 ]
