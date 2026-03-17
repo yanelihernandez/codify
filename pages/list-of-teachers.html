@@ -17,14 +17,9 @@
 <main>
 
     <div class="introduction">
-        <p class="introduction-title">Profesores de Lenguaje</p>
+        <p class="introduction-title">
         <p class="language-introduction">
         <p class="language-introduction">
-            Python es un lenguaje de alto nivel, sencillo pero versátil y con mucho potencial. Gracias a su constante desarrollo
-            y aporte de la comunidad es posible hacer todo lo que pienses. <br>
-            Sus aplicaciones fundamentales son: Ciencia de datos, inteligencia artificial, desarrollo web y automatización. <br>
-            ¡Sumérgete en el aprendizaje con nuestros profesionales educativos!
-        </p>
     </div>
 
     <section class="professors-list">
@@ -47,7 +42,26 @@
 
         await loadHTML('../templates/professor-card.html');
 
+        await loadLanguage();
         addProfessors();
+    }
+
+    const params = new URLSearchParams(window.location.search);
+    const language_id = Number(params.get("language"));
+    let page_language;
+
+    async function loadLanguage() {
+        const res = await fetch('../data/languages.json');
+        const languages = await res.json();
+
+        const language = languages.find(l => l.id === language_id);
+        page_language = language.name;
+
+        document.querySelector(".introduction-title").innerText =
+            "Profesores de " + language.name;
+
+        document.querySelector(".language-introduction").innerText =
+            language.introduction;
     }
 
     function addProfessors() {
@@ -58,15 +72,17 @@
                 const container = document.querySelector('.professors-list');
                 const template = document.getElementById('professor-card-template');
 
-                professors.forEach(p => {
-                    const clone = template.content.cloneNode(true);
+                professors
+                    .filter(professor => professor.speciality === page_language)
+                    .forEach(p => {
+                        const clone = template.content.cloneNode(true);
 
-                    clone.querySelector('img').src = p.image;
-                    clone.querySelector('.professor-name').innerText = p.name;
-                    clone.querySelector('.professor-info').innerText = p.info;
-                    clone.querySelector('a').href = `../pages/teacher.html?id=${p.id}`;
+                        clone.querySelector('img').src = p.image;
+                        clone.querySelector('.professor-name').innerText = p.name;
+                        clone.querySelector('.professor-info').innerText = p.info;
+                        clone.querySelector('a').href = `../pages/teacher.html?id=${p.id}`;
 
-                    container.appendChild(clone);
+                        container.appendChild(clone);
                 });
             })
             .catch((err) => console.error(err));
