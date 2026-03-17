@@ -129,6 +129,7 @@
                     clone.querySelector('img').src = professor.image;
                     clone.querySelector('.professor-name').textContent = professor.name;
                     clone.querySelector('.professor-speciality').textContent = `Especialidad: ${professor.speciality}`;
+                    clone.querySelector('.see-profile').href = `teacher.html?id=${professor.id}`;
 
                     container.appendChild(clone);
                 });
