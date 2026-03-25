@@ -102,3 +102,10 @@ main {
         flex-direction: column;
     }
 }
+
+@media (max-width: 700px) {
+    .bloque_inicio img{
+        width: 100%;
+        height: auto;
+    }
+}
