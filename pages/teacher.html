@@ -6,13 +6,17 @@
     <link rel="icon" type="image/png" href="../images/logo_web.png">
     <script src="../index.js"></script>
     <script src="../src/loader.js"></script>
+    <script src="../src/utils.js"></script>
     <link rel="stylesheet" href="../styles/header.css">
+    <link rel="stylesheet" href="../styles/aside-nav.css">
     <link rel="stylesheet" href="../styles/footer.css">
     <link rel="stylesheet" href="../styles/professor-profile.css">
 </head>
 <body>
 
 <header id="site-header" xlu-include-file="../templates/header.html"></header>
+
+<aside id="aside-nav"></aside>
 
 <main>
     <div class="profesor-perfil-horizontal">
@@ -78,6 +82,8 @@
 <script>
     async function init() {
         await loadHTML('../templates/header.html', 'site-header');
+        await loadHTML('../templates/aside.html', 'aside-nav');
+        setupAsideNavBar();
         await loadHTML('../templates/footer.html', 'site-footer');
         await loadHTML('../templates/user-opinion.html');
         loadProfessor();
