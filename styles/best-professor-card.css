@@ -3,12 +3,18 @@
     border-radius: 14px;
     padding: 12px;
     width: 220px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
     text-align: center;
     background-color: white;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-.best-professor-card p{
+.best-professor-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+}
+
+.best-professor-card p {
     margin: 10px 5px;
 }
 
@@ -16,78 +22,105 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    margin-bottom: 10px;
 }
 
-.fav-btn{
+.stars {
+    font-size: 1rem;
+    color: #f59e0b;
+    font-weight: 600;
+}
+
+.fav-btn {
     width: 36px;
     height: 36px;
     display: inline-flex;
     align-items: center;
     justify-content: center;
     background: #fff;
-    border: 1px solid rgba(0,0,0,0.08);
-    border-radius: 10px;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    border-radius: 50%;
     cursor: pointer;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
-    font-size: 20px;
+    font-size: 1.3rem;
     line-height: 1;
     color: #d11a2a;
     position: relative;
 }
 
-.fav-btn:hover{
+.fav-btn:hover {
     transform: scale(1.12);
-    box-shadow: 0 4px 10px rgba(0,0,0,0.12);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
 }
 
 .fav-btn.guest-mode {
-    color: #999;
-    border-color: #ddd;
+    color: #9ca3af;
+    border-color: #e5e7eb;
+    background: #f9fafb;
+}
+
+.fav-btn.guest-mode:hover {
+    color: #6b7280;
 }
 
 .fav-btn.guest-mode:hover::after {
     content: "Inicia sesión";
     position: absolute;
-    background: #333;
+    background: #1f2937;
     color: white;
-    font-size: 12px;
-    padding: 4px 8px;
-    border-radius: 4px;
-    transform: translateY(-30px);
+    font-size: 0.7rem;
+    padding: 5px 10px;
+    border-radius: 20px;
     white-space: nowrap;
     pointer-events: none;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    margin-bottom: 10px;
+    z-index: 10;
 }
 
-.fav-btn.liked{ }
+.fav-btn.liked {
+    background: #ffe5e8;
+    color: #dc2626;
+}
 
 .best-professor-card img {
     width: 150px;
     height: 150px;
     object-fit: cover;
     border-radius: 50%;
+    margin: 10px 0;
+    border: 3px solid #e5e7eb;
 }
 
 .professor-name {
     font-size: 1.2rem;
     font-weight: bold;
+    margin: 10px 0 5px;
+    color: #1f2937;
 }
 
-.professor-especiality {
-    font-size: 0.9em;
-    color: grey;
+.professor-speciality {
+    font-size: 0.85rem;
+    color: #6b7280;
+    margin-bottom: 12px;
 }
 
 .best-professor-card a {
     display: inline-block;
     text-decoration: none;
     color: #fff;
-    background-color: #007bff;
-    padding: 8px 12px;
-    border-radius: 10px;
-    transition: 0.2s ease;
+    background-color: #25510a;
+    padding: 8px 16px;
+    border-radius: 25px;
+    transition: all 0.2s ease;
+    font-size: 0.85rem;
+    font-weight: 600;
 }
 
 .best-professor-card a:hover {
-    transform: translateY(-1px);
-    background-color: #0056b3;
+    transform: translateY(-2px);
+    background-color: #1d3f08;
+    box-shadow: 0 4px 10px rgba(37, 81, 10, 0.3);
 }
