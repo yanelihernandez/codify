@@ -92,6 +92,7 @@
                     const clone = template.content.cloneNode(true);
                     clone.querySelector('.stars').textContent = `${professor.stars} ☆`;
                     clone.querySelector('img').src = professor.image;
+                    clone.querySelector('img').alt = professor.name;
                     clone.querySelector('.professor-name').textContent = professor.name;
                     clone.querySelector('.professor-speciality').textContent = `Especialidad: ${professor.speciality}`;
                     clone.querySelector('.see-profile').href = `teacher.html?id=${professor.id}`;
@@ -100,6 +101,7 @@
             });
     }
 
+    // Si el usuario no está logueado y hace clic en un corazón, lo mandamos al login
     function redirectToLogin() {
         if (window.codify?.toast) {
             window.codify.toast("Debes iniciar sesión para guardar favoritos");
