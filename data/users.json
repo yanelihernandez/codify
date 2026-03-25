@@ -1,0 +1,76 @@
+{
+  "users": [
+    {
+      "nombre": "María",
+      "apellidos": "García Pérez",
+      "fullName": "María García Pérez",
+      "fechaNacimiento": "15-08-2001",
+      "username": "mariagarcia",
+      "password": "12345678"
+    },
+    {
+      "nombre": "Carlos",
+      "apellidos": "López Martínez",
+      "fullName": "Carlos López Martínez",
+      "fechaNacimiento": "23-05-1999",
+      "username": "carloslopez",
+      "password": "12345678"
+    },
+    {
+      "nombre": "Ana",
+      "apellidos": "Fernández Ruiz",
+      "fullName": "Ana Fernández Ruiz",
+      "fechaNacimiento": "07-11-2000",
+      "username": "anafernandez",
+      "password": "12345678"
+    },
+    {
+      "nombre": "Javier",
+      "apellidos": "Sánchez Gómez",
+      "fullName": "Javier Sánchez Gómez",
+      "fechaNacimiento": "12-03-1998",
+      "username": "javiersanchez",
+      "password": "12345678"
+    },
+    {
+      "nombre": "Laura",
+      "apellidos": "Díaz Rodríguez",
+      "fullName": "Laura Díaz Rodríguez",
+      "fechaNacimiento": "29-09-2002",
+      "username": "lauradiaz",
+      "password": "12345678"
+    },
+    {
+      "nombre": "David",
+      "apellidos": "Moreno Jiménez",
+      "fullName": "David Moreno Jiménez",
+      "fechaNacimiento": "04-07-1997",
+      "username": "davidmoreno",
+      "password": "12345678"
+    },
+    {
+      "nombre": "Elena",
+      "apellidos": "Álvarez Castro",
+      "fullName": "Elena Álvarez Castro",
+      "fechaNacimiento": "18-12-2003",
+      "username": "elenaalvarez",
+      "password": "12345678"
+    },
+    {
+      "nombre": "Pablo",
+      "apellidos": "Romero Navarro",
+      "fullName": "Pablo Romero Navarro",
+      "fechaNacimiento": "30-01-1996",
+      "username": "pabloromero",
+      "password": "12345678"
+    },
+    {
+      "nombre": "Sara",
+      "apellidos": "Torres Muñoz",
+      "fullName": "Sara Torres Muñoz",
+      "fechaNacimiento": "22-06-2004",
+      "username": "saratorres",
+      "password": "12345678"
+    }
+  ]
+}
