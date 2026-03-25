@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Perfil</title>
+    <link rel="icon" type="image/png" href="../images/logo_web.png">
 
     <script src="../index.js"></script>
     <script src="../src/loader.js"></script>
@@ -15,45 +16,40 @@
     <link rel="stylesheet" href="../styles/best-professor-card.css">
     <link rel="stylesheet" href="../styles/toast.css">
 </head>
-
 <body>
 
 <header id="site-header" xlu-include-file="../templates/header.html"></header>
 
 <main>
     <div class="contenedor">
-
         <div class="izquierda">
             <h1>Mi Perfil</h1>
+            <img id="profileImage" src="../images/perfil.jpg" alt="Foto de perfil">
 
-            <img src="../images/perfil.jpg" alt="Foto de perfil">
-
-            <p id="profileUsername">Invitado</p>
-
-            <p>
-                <span id="profileFullName">Nombre y Apellidos</span><br>
-                <span id="profileBirth">Fecha de nacimiento</span><br>
-                <span id="profileMore">Mas info...</span>
-            </p>
+            <div class="info-tarjeta">
+                <p id="profileUsername" class="username-bold">Invitado</p>
+                <div class="info-detalles">
+                    <p><span>Nombre:</span> <span id="profileName">Nombre</span></p>
+                    <p><span>Apellidos:</span> <span id="profileSurname">Apellidos</span></p>
+                    <p><span>Nacimiento:</span> <span id="profileBirth">Fecha de nacimiento</span></p>
+                </div>
+            </div>
 
             <div class="buttons">
-                <a href="edit-profile.html">Modificar perfil</a>
-                <a href="my-bookings.html">Ver Reservas</a>
+                <a href="./edit-profile.html">Modificar perfil</a>
+                <a href="./my-bookings.html">Ver Reservas</a>
             </div>
 
             <section class="calendar-section">
                 <div class="calendar-placeholder">
-
                     <div class="mini-calendar">
                         <div class="mini-cal-header">
                             <button type="button" class="mini-cal-nav">&lt;</button>
                             <strong>Febrero 2026</strong>
                             <button type="button" class="mini-cal-nav">&gt;</button>
                         </div>
-
                         <div class="mini-cal-grid">
                             <div class="dow">L</div><div class="dow">M</div><div class="dow">X</div><div class="dow">J</div><div class="dow">V</div><div class="dow">S</div><div class="dow">D</div>
-
                             <div class="day muted">26</div><div class="day muted">27</div><div class="day muted">28</div><div class="day muted">29</div><div class="day muted">30</div><div class="day muted">31</div><div class="day">1</div>
                             <div class="day">2</div><div class="day">3</div><div class="day">4</div><div class="day">5</div><div class="day">6</div><div class="day">7</div><div class="day">8</div>
                             <div class="day">9</div><div class="day">10</div><div class="day">11</div><div class="day">12</div><div class="day">13</div><div class="day">14</div><div class="day">15</div>
@@ -61,37 +57,27 @@
                             <div class="day">23</div><div class="day">24</div><div class="day today">25</div><div class="day">26</div><div class="day">27</div><div class="day">28</div><div class="day muted">1</div>
                         </div>
                     </div>
-
                 </div>
 
                 <div class="info-dia">
-                    <h3> Información del día seleccionado</h3>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+                    <h3>Información del día seleccionado</h3>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
                 </div>
             </section>
-
         </div>
 
         <div class="derecha">
             <h2>Mis Chats</h2>
-
-            <section class="chats-section">
-                <!-- templates de chat -->
-            </section>
+            <section class="chats-section"></section>
         </div>
-
     </div>
 
     <div class="fav-professors">
         <div class="fav-professors-title">
             <h2>Mis favoritos</h2>
         </div>
-
-        <div class="fav-professors-content">
-            <!-- templates de profesores favoritos -->
-        </div>
+        <div class="fav-professors-content"></div>
     </div>
-
 </main>
 
 <footer id="site-footer" xlu-include-file="../templates/footer.html"></footer>
@@ -106,6 +92,7 @@
 
         loadChats();
         await loadFavProfessors();
+        window.codify?.initCodifyUI?.();
     }
 
     document.addEventListener('DOMContentLoaded', init);
@@ -117,7 +104,6 @@
         fetch('../data/professors.json')
             .then(res => res.json())
             .then(professors => {
-
                 const container = document.querySelector('.fav-professors-content');
                 const template = document.getElementById('best-professor-card-template');
 
@@ -127,6 +113,7 @@
                     professor.rating = calculateRating(professor.id, opinions);
                     clone.querySelector('.stars').textContent = `${professor.rating} ☆`;
                     clone.querySelector('img').src = professor.image;
+                    clone.querySelector('img').alt = professor.name;
                     clone.querySelector('.professor-name').textContent = professor.name;
                     clone.querySelector('.professor-speciality').textContent = `Especialidad: ${professor.speciality}`;
                     clone.querySelector('.see-profile').href = `teacher.html?id=${professor.id}`;
@@ -140,16 +127,17 @@
         fetch('../data/professors.json')
             .then(res => res.json())
             .then(professors => {
-
                 const container = document.querySelector('.chats-section');
                 const template = document.getElementById('chat-template');
+                if (!template) return;
+                container.innerHTML = '';
 
                 professors.forEach(professor => {
                     const clone = template.content.cloneNode(true);
-
                     clone.querySelector('img').src = professor.image;
+                    clone.querySelector('img').alt = professor.name;
                     clone.querySelector('.professor-name').textContent = professor.name;
-                    clone.querySelector('a').href = `chat.html?id=${professor.id}`
+                    clone.querySelector('a').href = `chat.html?id=${professor.id}`;
 
                     container.appendChild(clone);
                 });
@@ -157,11 +145,12 @@
     }
 
     window.codify = window.codify || {};
+    const originalInit = window.codify.initCodifyUI;
+
     window.codify.initCodifyUI = function() {
-        updateHeader();
+        if (originalInit) originalInit();
 
-        const auth = getAuth();
-
+        const auth = window.codify?.getAuth ? window.codify.getAuth() : null;
         if (!auth?.loggedIn) {
             window.location.href = 'sign-in.html';
             return;
@@ -169,43 +158,37 @@
 
         document.getElementById('profileUsername').textContent = auth.username || 'Usuario';
 
+        let profile = null;
         try {
             const profileData = localStorage.getItem('codify_profile');
-            if (profileData) {
-                const profile = JSON.parse(profileData);
-                document.getElementById('profileFullName').textContent = profile.fullName || 'Nombre y Apellidos';
-                document.getElementById('profileBirth').textContent = profile.fechaNacimiento
-                    ? 'Fecha de nacimiento: ' + profile.fechaNacimiento
-                    : 'Fecha de nacimiento';
-                document.getElementById('profileMore').textContent = profile.masInfo || 'Mas info...';
-            }
-        } catch (e) {
-            console.log('Error al cargar el perfil');
-        }
+            if (profileData) profile = JSON.parse(profileData);
+        } catch (e) {}
 
-        document.querySelectorAll('.fav-professors-content .fav-btn').forEach(function(btn) {
-            btn.classList.add('liked');
-            btn.textContent = '♥';
+        let userData = null;
+        try {
+            const usersData = JSON.parse(localStorage.getItem('codify_users')) || { users: [] };
+            userData = usersData.users.find(u => u.username === auth.username);
+        } catch (e) {}
 
-            btn.removeEventListener('click', window.favHandler);
-            btn.addEventListener('click', window.favHandler = function(e) {
-                e.preventDefault();
-                const liked = this.classList.toggle('liked');
-                this.setAttribute('aria-pressed', liked);
-                this.textContent = liked ? '♥' : '♡';
+        const name = userData?.nombre || profile?.nombre || auth.nombre || 'Nombre';
+        const surname = userData?.apellidos || profile?.apellidos || auth.apellidos || 'Apellidos';
+        const birth = userData?.fechaNacimiento || profile?.fechaNacimiento || auth.fechaNacimiento || 'No especificada';
 
-                const inFavSection = this.closest('.fav-professors-content');
-                if (inFavSection && !liked) {
-                    const card = this.closest('.best-professor-card, .card, article');
-                    if (card) {
-                        card.remove();
-                        if (window.codify?.toast) {
-                            window.codify.toast('Eliminado de favoritos');
-                        }
-                    }
-                }
+        document.getElementById('profileName').textContent = name;
+        document.getElementById('profileSurname').textContent = surname;
+        document.getElementById('profileBirth').textContent = birth;
+
+        if (window.codify?.setAuth && (userData || profile)) {
+            window.codify.setAuth({
+                ...auth,
+                loggedIn: true,
+                username: auth.username,
+                fullName: `${name} ${surname}`.trim(),
+                nombre: name,
+                apellidos: surname,
+                fechaNacimiento: birth !== 'No especificada' ? birth : auth.fechaNacimiento
             });
-        });
+        }
     };
 </script>
 
