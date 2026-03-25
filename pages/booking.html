@@ -98,11 +98,52 @@
 <footer id="site-footer" xlu-include-file="../templates/footer.html"></footer>
 
 <script>
+  function showToast(message) {
+    if (window.codify && typeof window.codify.toast === 'function') {
+      window.codify.toast(message);
+    } else {
+      const toast = document.createElement('div');
+      toast.className = 'toast';
+      toast.textContent = message;
+      toast.style.cssText = `
+                position: fixed;
+                left: 50%;
+                bottom: 18px;
+                transform: translateX(-50%) translateY(20px);
+                padding: 10px 14px;
+                border-radius: 12px;
+                background: rgba(20,20,20,0.95);
+                color: #fff;
+                font-size: 0.95rem;
+                opacity: 0;
+                pointer-events: none;
+                transition: opacity 0.25s ease, transform 0.25s ease;
+                z-index: 9999;
+            `;
+      document.body.appendChild(toast);
+      setTimeout(() => toast.style.opacity = '1', 10);
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        setTimeout(() => toast.remove(), 250);
+      }, 2200);
+    }
+  }
+
   async function init() {
     await loadHTML('../templates/header.html', 'site-header');
     await loadHTML('../templates/footer.html', 'site-footer');
     loadProfessor();
     setupEventListeners();
+
+    const auth = window.codify?.getAuth ? window.codify.getAuth() : { loggedIn: false };
+    if (!auth.loggedIn) {
+      showToast("Debes iniciar sesión para reservar");
+      setTimeout(() => {
+        sessionStorage.setItem('redirectAfterLogin', window.location.href);
+        window.location.href = "sign-in.html";
+      }, 1000);
+    }
+
     hideAllErrors();
   }
 
@@ -118,9 +159,11 @@
   function setupEventListeners() {
     const hoursSelect = document.getElementById("hours");
     const toggle = document.getElementById("groupToggle");
+    const acceptBtn = document.getElementById("acceptBtn");
 
     if (hoursSelect) hoursSelect.addEventListener("change", updatePrice);
     if (toggle) toggle.addEventListener("change", updatePrice);
+    if (acceptBtn) acceptBtn.addEventListener("click", validateAndSaveBooking);
 
     const inputs = document.querySelectorAll('#fullName, #date, #time, #hours');
     inputs.forEach(input => {
@@ -204,6 +247,77 @@
     if (isGroup && groupDiscount) price *= (1 - groupDiscount / 100);
 
     priceValue.textContent = Math.round(price) + "€";
+  }
+
+  function validateAndSaveBooking() {
+    hideAllErrors();
+
+    const fullName = document.getElementById("fullName")?.value.trim() || "";
+    const date = document.getElementById("date")?.value || "";
+    const time = document.getElementById("time")?.value || "";
+    const hours = document.getElementById("hours")?.value || "";
+
+    let hasError = false;
+
+    if (fullName === "") {
+      const errorEl = document.getElementById("errorFullName");
+      if (errorEl) errorEl.style.display = 'block';
+      document.getElementById("fullName")?.classList.add('input-error');
+      hasError = true;
+    }
+
+    if (date === "") {
+      const errorEl = document.getElementById("errorDate");
+      if (errorEl) errorEl.style.display = 'block';
+      document.getElementById("date")?.classList.add('input-error');
+      hasError = true;
+    } else {
+      const selectedDate = new Date(date);
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+
+      if (selectedDate < today) {
+        const errorDate = document.getElementById("errorDate");
+        if (errorDate) {
+          errorDate.textContent = "No puedes reservar en una fecha pasada";
+          errorDate.style.display = 'block';
+        }
+        document.getElementById("date")?.classList.add('input-error');
+        hasError = true;
+      }
+    }
+
+    if (time === "") {
+      const errorEl = document.getElementById("errorTime");
+      if (errorEl) errorEl.style.display = 'block';
+      document.getElementById("time")?.classList.add('input-error');
+      hasError = true;
+    }
+
+    if (hours === "") {
+      const errorEl = document.getElementById("errorHours");
+      if (errorEl) errorEl.style.display = 'block';
+      document.getElementById("hours")?.classList.add('input-error');
+      hasError = true;
+    }
+
+    if (hasError) {
+      showToast("Por favor, rellena todos los campos obligatorios");
+      return;
+    }
+
+    const auth = window.codify?.getAuth ? window.codify.getAuth() : { loggedIn: false };
+
+    if (!auth.loggedIn) {
+      showToast("Debes iniciar sesión para hacer una reserva");
+      setTimeout(() => {
+        sessionStorage.setItem('redirectAfterLogin', window.location.href);
+        window.location.href = "sign-in.html";
+      }, 500);
+      return;
+    }
+
+    showToast("Reserva validada correctamente");
   }
 </script>
 
