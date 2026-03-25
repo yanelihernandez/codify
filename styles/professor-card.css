@@ -4,33 +4,55 @@
     justify-content: flex-start;
     gap: 40px;
     height: 180px;
-
     border-radius: 14px;
     border: 1px solid #ccc;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
     background-color: #b3cf99;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-.professor-card img{
+.professor-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+}
+
+.professor-card img {
     width: 180px;
     height: 180px;
     object-fit: cover;
     border-radius: 50%;
-    border: 2px solid white;
+    border: 3px solid white;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
-.professor-name{
-    font-size: 1.2rem;
+.professor-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.professor-name {
+    font-size: 1.3rem;
     font-weight: bold;
+    color: #1a2f0a;
+    margin-bottom: 8px;
 }
 
-.professor-card-buttons{
+.professor-info {
+    font-size: 0.95rem;
+    color: #2d3748;
+    line-height: 1.4;
+}
+
+.professor-card-buttons {
     margin-left: auto;
     height: 100%;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    align-items: end;
+    align-items: flex-end;
+    gap: 12px;
 }
 
 .see-profile-btn {
@@ -38,38 +60,78 @@
     text-decoration: none;
     color: #fff;
     background-color: #25510a;
-    padding: 8px 12px;
-    border-radius: 10px;
-    transition: 0.2s ease;
+    padding: 8px 16px;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+    font-weight: 600;
+    font-size: 0.85rem;
+    white-space: nowrap;
 }
 
 .see-profile-btn:hover {
-    transform: translateY(-1px);
+    transform: translateY(-2px);
     background-color: #1d3f08;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
-.fav-btn{
-    width: 36px;
-    height: 36px;
+.fav-btn {
+    width: 40px;
+    height: 40px;
     display: inline-flex;
     align-items: center;
     justify-content: center;
     background: #fff;
-    border: 1px solid rgba(0,0,0,0.08);
-    border-radius: 10px;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 50%;
     cursor: pointer;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-
-    font-size: 20px;
+    transition: all 0.2s ease;
+    font-size: 1.4rem;
     line-height: 1;
     color: #d11a2a;
+    position: relative;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
 }
 
-.fav-btn:hover{
-    transform: scale(1.12);
-    box-shadow: 0 4px 10px rgba(0,0,0,0.12);
+.fav-btn:hover {
+    transform: scale(1.1);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
 }
 
-.fav-btn.liked{
+.fav-btn.guest-mode {
+    color: #9ca3af;
+    border-color: #e5e7eb;
+    background: #f9fafb;
+}
+
+.fav-btn.guest-mode:hover {
+    color: #6b7280;
+}
+
+.fav-btn.guest-mode:hover::after {
+    content: "Inicia sesión";
+    position: absolute;
+    background: #1f2937;
+    color: white;
+    font-size: 0.7rem;
+    padding: 5px 10px;
+    border-radius: 20px;
+    white-space: nowrap;
+    pointer-events: none;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    margin-bottom: 10px;
+    z-index: 10;
+}
+
+.fav-btn.liked {
     background: #ffe5e8;
+    color: #dc2626;
+    border-color: #fecaca;
+    box-shadow: 0 2px 8px rgba(220, 38, 38, 0.2);
+}
+
+.fav-btn.liked:hover {
+    background: #ffd6da;
+    transform: scale(1.1);
 }
