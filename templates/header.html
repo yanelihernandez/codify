@@ -1,21 +1,26 @@
-<a class="home-btn" id="homeLink" href="../pages/home-public.html">
+<a class="home-btn" id="homeLink" href="home-public.html">
     <img src="../images/logo.png" alt="Logo">
 </a>
 
 <section>
     <nav>
         <ul class="nav-bar">
-            <li><a href="../pages/list-of-teachers.html?language=1">Python</a></li>
-            <li><a href="../pages/list-of-teachers.html?language=2">Java</a></li>
-            <li><a href="../pages/list-of-teachers.html?language=3">C</a></li>
-            <li><a href="../pages/list-of-teachers.html?language=4">Assembly</a></li>
+            <li><a href="list-of-teachers.html?language=1">Python</a></li>
+            <li><a href="list-of-teachers.html?language=2">Java</a></li>
+            <li><a href="list-of-teachers.html?language=3">C</a></li>
+            <li><a href="list-of-teachers.html?language=4">Assembly</a></li>
         </ul>
     </nav>
 </section>
 
-<div class="profile">
-    <a href="../pages/profile.html" id="profileLink" class="profile-link">
-        <img src="../images/perfil.jpg" alt="perfil">
+<div class="profile" id="profileDropdown">
+    <a href="#" id="profileLink" class="profile-link">
+        <img src="../images/perfil.jpg" alt="perfil" id="headerProfileImg">
     </a>
     <span class="username" id="headerUsername">Invitado</span>
+
+    <div class="dropdown-menu" id="dropdownMenu">
+        <a href="profile.html" id="profileLinkMenu">Mi Perfil</a>
+        <a href="#" id="logoutBtn">Cerrar Sesión</a>
+    </div>
 </div>
