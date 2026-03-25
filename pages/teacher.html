@@ -90,12 +90,23 @@
 
     document.addEventListener('DOMContentLoaded', init);
 
+    function showToastMessage(message) {
+        if (window.codify && typeof window.codify.toast === 'function') {
+            window.codify.toast(message);
+        } else {
+            alert(message);
+        }
+    }
+
     function loadProfessor() {
         fetch("../data/professors.json")
             .then(res => res.json())
             .then(data => {
                 currentProfessor = data.find(p => p.id === id);
                 if (!currentProfessor) return;
+
+                const chatBtn = document.querySelector('.chat-icon-corner');
+                const reservarBtn = document.getElementById('reservarBtn');
 
                 document.querySelector('.profesor-imagen img').src = currentProfessor.image;
                 document.querySelector('.profesor-imagen img').alt = currentProfessor.name;
@@ -105,6 +116,9 @@
                 document.getElementById("students").textContent = currentProfessor.students;
                 document.querySelector('.sobre-profesor h2').textContent = `Sobre ${currentProfessor.name}`;
                 document.querySelector('.video h2').textContent = `Video ${currentProfessor.name}`;
+
+                if (chatBtn) chatBtn.dataset.professorId = currentProfessor.id;
+                if (reservarBtn) reservarBtn.dataset.professorId = currentProfessor.id;
             });
     }
 
