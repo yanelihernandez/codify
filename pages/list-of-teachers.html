@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="../styles/professor-card.css">
     <link rel="stylesheet" href="../styles/header.css">
     <link rel="stylesheet" href="../styles/footer.css">
+    <link rel="stylesheet" href="../styles/toast.css">
 </head>
 <body>
 
@@ -35,6 +36,30 @@
 <script>
     document.addEventListener('DOMContentLoaded', init);
 
+    // Función para mostrar toast usando el mismo estilo que window.codify.toast
+    function showToast(message) {
+        if (window.codify && typeof window.codify.toast === 'function') {
+            window.codify.toast(message);
+            return;
+        }
+
+        const toast = document.createElement('div');
+        toast.className = 'toast';
+        toast.textContent = message;
+        document.body.appendChild(toast);
+
+        setTimeout(() => {
+            toast.classList.add('show');
+        }, 10);
+
+        setTimeout(() => {
+            toast.classList.remove('show');
+            setTimeout(() => {
+                toast.remove();
+            }, 250);
+        }, 2200);
+    }
+
     async function init() {
         await loadHTML('../templates/header.html', 'site-header');
         await loadHTML('../templates/footer.html', 'site-footer');
@@ -43,6 +68,12 @@
 
         await loadLanguage();
         addProfessors();
+
+        setTimeout(() => {
+            if (window.codify?.initCodifyUI) {
+                window.codify.initCodifyUI();
+            }
+        }, 200);
     }
 
     const params = new URLSearchParams(window.location.search);
@@ -88,6 +119,26 @@
 
                         const profileLink = clone.querySelector('.see-profile-btn');
                         profileLink.href = `../pages/teacher.html?id=${professor.id}`;
+
+                        const favBtn = clone.querySelector('.fav-btn');
+                        if (favBtn) {
+                            favBtn.dataset.professorId = professor.id;
+
+                            const auth = window.codify?.getAuth ? window.codify.getAuth() : { loggedIn: false };
+
+                            if (!auth.loggedIn) {
+                                favBtn.classList.add('guest-mode');
+                                favBtn.textContent = '♡';
+                            } else {
+                                const isFav = window.codify?.isFavorite ? window.codify.isFavorite(professor.id) : false;
+                                if (isFav) {
+                                    favBtn.classList.add('liked');
+                                    favBtn.textContent = '♥';
+                                } else {
+                                    favBtn.textContent = '♡';
+                                }
+                            }
+                        }
 
                         container.appendChild(clone);
                     });
