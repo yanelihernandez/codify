@@ -24,6 +24,12 @@ html, body {
     display: flex;
     flex-direction: column;
     gap: 1rem;
+    width: 100%;
+}
+
+.chat-card {
+    width: 100%;
+    max-width: 500px;
 }
 
 .izquierda img {
@@ -52,7 +58,7 @@ html, body {
     border-radius: 8px;
     border: none;
     text-decoration: none;
-    box-shadow: 0 3px 6px rgba(0,0,0,0.2);
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
     transition: all 0.3s ease;
     cursor: pointer;
 }
@@ -60,7 +66,7 @@ html, body {
 .buttons a:hover,
 .buttons button:hover {
     background-color: #4b7e09;
-    box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
 }
 
 .calendar-section {
@@ -75,25 +81,25 @@ html, body {
     border-radius: 8px;
 }
 
-.mini-calendar{
+.mini-calendar {
     background: #fff;
     border: 1px solid #d1d5db;
     border-radius: 10px;
     padding: 12px;
 }
 
-.mini-cal-header{
+.mini-cal-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
     margin-bottom: 10px;
 }
 
-.mini-cal-header strong{
+.mini-cal-header strong {
     font-size: 14px;
 }
 
-.mini-cal-nav{
+.mini-cal-nav {
     width: 30px;
     height: 30px;
     border-radius: 8px;
@@ -103,13 +109,13 @@ html, body {
     font-weight: 700;
 }
 
-.mini-cal-grid{
+.mini-cal-grid {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
     gap: 6px;
 }
 
-.dow{
+.dow {
     font-size: 12px;
     font-weight: 700;
     color: #6b7280;
@@ -117,7 +123,7 @@ html, body {
     padding: 6px 0;
 }
 
-.day{
+.day {
     height: 32px;
     display: flex;
     align-items: center;
@@ -128,11 +134,11 @@ html, body {
     color: #111827;
 }
 
-.day.muted{
-    opacity: .45;
+.day.muted {
+    opacity: 0.45;
 }
 
-.day.today{
+.day.today {
     background: #1f4d0b;
     color: #fff;
     font-weight: 800;
@@ -192,4 +198,121 @@ html, body {
     margin: 0;
     line-height: 1.6;
     font-style: italic;
+}
+
+.info-tarjeta {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 20px;
+    margin: 20px 0;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    border: 1px solid #eaeaea;
+    width: 100%;
+    max-width: 280px;
+}
+
+.username-bold {
+    font-weight: bold;
+    font-size: 1.5rem;
+    color: #25510a;
+    margin: 0 0 15px 0;
+    text-align: center;
+    border-bottom: 2px solid #f0f0f0;
+    padding-bottom: 12px;
+}
+
+.info-detalles p {
+    margin: 12px 0;
+    font-size: 15px;
+    color: #555;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.info-detalles p span:first-child {
+    font-weight: bold;
+    color: #333;
+}
+
+.upload-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-top: 15px;
+    margin-bottom: 20px;
+}
+
+.camera-icon-wrapper {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #6b8c5c, #4a6741);
+    color: white;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 10px rgba(74, 103, 65, 0.3);
+}
+
+.camera-icon-wrapper:hover {
+    transform: scale(1.1);
+    background: linear-gradient(135deg, #4a6741, #2f4528);
+    box-shadow: 0 6px 15px rgba(75, 85, 99, 0.4);
+}
+
+.camera-icon {
+    font-size: 1.6rem;
+    line-height: 1;
+}
+
+.camera-tooltip {
+    position: absolute;
+    background: #1f2937;
+    color: white;
+    font-size: 0.75rem;
+    font-weight: normal;
+    padding: 6px 12px;
+    border-radius: 20px;
+    white-space: nowrap;
+    pointer-events: none;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    margin-bottom: 12px;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    z-index: 10;
+}
+
+.camera-icon-wrapper:hover .camera-tooltip {
+    opacity: 1;
+}
+
+.camera-tooltip::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 5px;
+    border-style: solid;
+    border-color: #1f2937 transparent transparent transparent;
+}
+
+#fileName {
+    font-size: 0.85rem;
+    color: #6b7280;
+    background: #f3f4f6;
+    padding: 8px 15px;
+    border-radius: 20px;
+    max-width: 200px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
