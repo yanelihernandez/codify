@@ -18,7 +18,7 @@ main {
     background-color: white;
     padding: 40px;
     border-radius: 12px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     position: relative;
     display: flex;
     flex-wrap: wrap;
@@ -41,14 +41,14 @@ main {
     line-height: 50px;
     text-align: center;
     transition: all 0.3s ease;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
     z-index: 10;
 }
 
 .chat-icon-corner:hover {
     background-color: #3c6703;
     transform: scale(1.1);
-    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
 }
 
 .columna-izquierda {
@@ -93,7 +93,7 @@ main {
     padding: 10px;
     background-color: white;
     border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
 }
 
 .estadistica-valor {
@@ -225,7 +225,7 @@ main {
     justify-content: center;
     border-radius: 8px;
     font-size: 0.9rem;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 .reserva-container {
@@ -243,7 +243,7 @@ main {
     text-decoration: none;
     border-radius: 8px;
     transition: all 0.3s ease;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
     width: 100%;
     box-sizing: border-box;
 }
@@ -251,4 +251,39 @@ main {
 .btn-reservar:hover {
     background-color: #3c6703;
     transform: scale(1.02);
+}
+
+.btn-reservar {
+    position: relative;
+}
+
+.chat-icon-corner.guest-mode:hover::after,
+.btn-reservar.guest-mode:hover::after {
+    content: "Inicia sesión";
+    position: absolute;
+    background: #333;
+    color: white;
+    font-size: 12px;
+    font-weight: normal;
+    line-height: 1.2;
+    padding: 4px 8px;
+    border-radius: 4px;
+    white-space: nowrap;
+    pointer-events: none;
+    z-index: 100;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.chat-icon-corner.guest-mode:hover::after {
+    top: -35px;
+}
+
+.btn-reservar.guest-mode:hover::after {
+    top: -40px;
+}
+
+.btn-reservar.guest-mode {
+    background-color: #999;
+    border-color: #888;
 }
