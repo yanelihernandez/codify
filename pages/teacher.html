@@ -3,32 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <title>Perfil del Profesor</title>
-
+    <link rel="icon" type="image/png" href="../images/logo_web.png">
     <script src="../index.js"></script>
     <script src="../src/loader.js"></script>
-
     <link rel="stylesheet" href="../styles/header.css">
     <link rel="stylesheet" href="../styles/footer.css">
     <link rel="stylesheet" href="../styles/professor-profile.css">
 </head>
-
 <body>
 
 <header id="site-header" xlu-include-file="../templates/header.html"></header>
 
 <main>
     <div class="profesor-perfil-horizontal">
-
         <a href="#" class="chat-icon-corner" title="Enviar mensaje">📩</a>
-        <!-- onclick="verificarAccesoChat(event)"-->
 
         <div class="columna-izquierda">
             <div class="profesor-imagen">
                 <img src="" alt="">
             </div>
-
             <h1 id="main-name"></h1>
-
             <div class="estadisticas-vertical">
                 <div class="estadistica-item">
                     <span class="estadistica-valor" id="hour-price"></span>
@@ -52,13 +46,9 @@
                     Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
                 </p>
             </div>
-
             <div class="opiniones">
                 <h2>Opiniones</h2>
-
-                <section id="opinions">
-                    <!-- templates de opiniones de usuarios -->
-                </section>
+                <section id="opinions"></section>
             </div>
         </div>
 
@@ -70,39 +60,33 @@
                 </p>
                 <p class="descuento"><strong>10% en cada hora</strong></p>
             </div>
-
             <div class="video">
                 <h2>Video </h2>
                 <div class="video-placeholder">
                     <p>[Video URL]</p>
                 </div>
             </div>
-
             <div class="reserva-container">
-                <a href="booking.html" class="btn-reservar">Reservar</a>
+                <a href="#" class="btn-reservar" id="reservarBtn">Reservar</a>
             </div>
         </div>
-
     </div>
 </main>
 
 <footer id="site-footer" xlu-include-file="../templates/footer.html"></footer>
 
-</body>
-
 <script>
     async function init() {
         await loadHTML('../templates/header.html', 'site-header');
         await loadHTML('../templates/footer.html', 'site-footer');
-
         await loadHTML('../templates/user-opinion.html');
-
         loadProfessor();
         loadComments();
     }
 
     const params = new URLSearchParams(window.location.search);
     const id = Number(params.get("id"));
+    let currentProfessor = null;
 
     document.addEventListener('DOMContentLoaded', init);
 
@@ -110,23 +94,17 @@
         fetch("../data/professors.json")
             .then(res => res.json())
             .then(data => {
+                currentProfessor = data.find(p => p.id === id);
+                if (!currentProfessor) return;
 
-                const prof = data.find(p => p.id === id);
-
-                const chatBtn = document.querySelector('.chat-icon-corner');
-                chatBtn.href = `chat.html?id=${prof.id}`;
-                chatBtn.addEventListener("click", verificarAccesoChat);
-
-                document.querySelector('.profesor-imagen img').src = prof.image;
-                document.getElementById("main-name").textContent = prof.name;
-                document.getElementById("hour-price").textContent = prof.hour_price + "€";
-                document.getElementById("response-time").textContent = `< ${prof.response_time}h`;
-                document.getElementById("students").textContent = prof.students;
-                document.querySelector('.sobre-profesor h2').textContent = `Sobre ${prof.name}`;
-                document.querySelector('.video h2').textContent = `Video ${prof.name}`;
-
-                document.querySelector('.reserva-container a').href = `booking.html?id=${prof.id}`;
-
+                document.querySelector('.profesor-imagen img').src = currentProfessor.image;
+                document.querySelector('.profesor-imagen img').alt = currentProfessor.name;
+                document.getElementById("main-name").textContent = currentProfessor.name;
+                document.getElementById("hour-price").textContent = currentProfessor.hour_price + "€";
+                document.getElementById("response-time").textContent = `< ${currentProfessor.response_time}h`;
+                document.getElementById("students").textContent = currentProfessor.students;
+                document.querySelector('.sobre-profesor h2').textContent = `Sobre ${currentProfessor.name}`;
+                document.querySelector('.video h2').textContent = `Video ${currentProfessor.name}`;
             });
     }
 
@@ -136,6 +114,7 @@
             .then(opiniones => {
                 const container = document.querySelector('#opinions');
                 const template = document.getElementById('user-opinion-template');
+                if (!template) return;
 
                 const opinionesProfesor = opiniones
                     .filter(o => o.professor_id === Number(id))
@@ -151,29 +130,7 @@
                 });
             });
     }
-
-    function verificarAccesoChat(event) {
-        event.preventDefault();
-
-        const auth = window.codify?.getAuth ? window.codify.getAuth() : { loggedIn: false };
-        const usuarioLogueado = auth.loggedIn || false;
-
-        if (!usuarioLogueado) {
-            if (window.codify?.toast) {
-                window.codify.toast("Debes iniciar sesión para chatear con el profesor");
-            } else {
-                alert("Debes iniciar sesión para chatear con el profesor");
-            }
-
-            sessionStorage.setItem('redirectAfterLogin', event.currentTarget.href);
-
-            setTimeout(function() {
-                window.location.href = "sign-in.html";
-            }, 500);
-        } else {
-            window.location.href = event.currentTarget.href;
-        }
-    }
 </script>
 
+</body>
 </html>
