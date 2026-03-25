@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="../styles/header.css">
     <link rel="stylesheet" href="../styles/footer.css">
     <link rel="stylesheet" href="../styles/best-professor-card.css">
+    <link rel="icon" type="image/png" href="../images/logo_web.png">
 </head>
 <body>
 
@@ -21,7 +22,6 @@
         <div class="imagen_main">
             <img src="../images/home.jpg" alt="Descripción">
         </div>
-
         <div class="texto_main">
             <p>
                 Impulsa tu carrera tecnológica con clases personalizadas impartidas por expertos en los principales lenguajes de programación.
@@ -35,14 +35,10 @@
 
     <section class="profesores-mejor-valorados">
         <h2>Profesores mejor valorados</h2>
-        <div class="lista-profesores">
-            <!-- tarjetas de profesores mejor valorados (templates) -->
-        </div>
-
+        <div class="lista-profesores"></div>
     </section>
 
     <section class="about-us">
-
         <div class="about-us-intro">
             <p class="about-us-title">Acerca de Codify</p>
             <p class="about-us-text">¿Quiénes somos? ¿Qué hemos hecho? Descúbrelo aquí:</p>
@@ -68,22 +64,16 @@
                 Escríbenos codify@gmail.com
             </p>
         </div>
-
     </section>
-
 </main>
 
 <footer id="site-footer" xlu-include-file="../templates/footer.html"></footer>
-
-</body>
 
 <script>
     async function init() {
         await loadHTML('../templates/header.html', 'site-header');
         await loadHTML('../templates/footer.html', 'site-footer');
-
         await loadHTML('../templates/best-professor-card.html');
-
         await loadBestProfessors();
     }
 
@@ -92,14 +82,12 @@
     async function loadBestProfessors() {
         const resOpinions = await fetch('../data/opinions.json');
         const opinions = await resOpinions.json();
-
         const resProfessors = await fetch('../data/professors.json');
         const professors = await resProfessors.json();
 
         professors.forEach(professor => {
             professor.rating = calculateRating(professor.id, opinions);
         });
-
         professors.sort((a, b) => b.rating - a.rating);
 
         const container = document.querySelector('.lista-profesores');
@@ -107,17 +95,14 @@
 
         professors.forEach(professor => {
             const clone = template.content.cloneNode(true);
-
             clone.querySelector('.stars').textContent = `${professor.rating} ☆`;
             clone.querySelector('img').src = professor.image;
             clone.querySelector('.professor-name').textContent = professor.name;
             clone.querySelector('.professor-speciality').textContent = `Especialidad: ${professor.speciality}`;
             clone.querySelector('.see-profile').href = `teacher.html?id=${professor.id}`;
-
             container.appendChild(clone);
         });
     }
-
 </script>
 
 </html>
