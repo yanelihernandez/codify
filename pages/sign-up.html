@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="../styles/header.css">
     <link rel="stylesheet" href="../styles/footer.css">
     <link rel="stylesheet" href="../styles/toast.css">
+    <link rel="icon" type="image/png" href="../images/logo_web.png">
 </head>
 
 <body>
@@ -27,45 +28,51 @@
         <div class="formulario">
             <div class="fila-doble">
                 <div class="form-group mitad">
-                    <label for="nombre">nombre</label>
-                    <input class="formulario-input" type="text" id="nombre" placeholder="Ingresa tu nombre">
+                    <label for="nombre">Nombre</label>
+                    <input class="formulario-input req-input" type="text" id="nombre" placeholder="Ingresa tu nombre">
+                    <p class="error-msg-empty">Por favor, rellena este campo</p>
                 </div>
 
                 <div class="form-group mitad">
-                    <label for="apellidos">apellidos</label>
-                    <input class="formulario-input" type="text" id="apellidos" placeholder="Ingresa tus apellidos">
+                    <label for="apellidos">Apellidos</label>
+                    <input class="formulario-input req-input" type="text" id="apellidos" placeholder="Ingresa tus apellidos">
+                    <p class="error-msg-empty">Por favor, rellena este campo</p>
                 </div>
             </div>
 
             <div class="form-group">
-                <label for="fecha-nacimiento">fecha de nacimiento</label>
-                <input class="formulario-input" type="text" id="fecha-nacimiento" placeholder="DD-MM-YYYY (ejemplo: 24-03-2000)">
+                <label for="fecha-nacimiento">Fecha de Nacimiento</label>
+                <input class="formulario-input req-input" type="text" id="fecha-nacimiento" placeholder="DD-MM-YYYY (ejemplo: 24-03-2000)">
+                <p class="error-msg-empty">Por favor, rellena este campo</p>
+                <p class="error-msg" id="fechaError" style="display: none;"></p>
                 <div id="mensajeEdad" class="mensaje-edad"></div>
             </div>
 
             <div class="form-group">
-                <label for="username">nombre usuario</label>
-                <input class="formulario-input" type="text" id="username" placeholder="Ingresa un nombre de usuario">
+                <label for="username">Nombre de Usuario</label>
+                <input class="formulario-input req-input" type="text" id="username" placeholder="Ingresa un nombre de usuario">
+                <p class="error-msg-empty">Por favor, rellena este campo</p>
             </div>
 
             <div class="form-group">
-                <label for="contraseña">contraseña</label>
+                <label for="contraseña">Contraseña</label>
                 <div class="field-wrapper">
-                    <input class="formulario-input" type="password" id="contraseña" placeholder="********">
+                    <input class="formulario-input req-input" type="password" id="contraseña" placeholder="********">
                     <button type="button" class="toggle-btn" id="btnVer1">👁</button>
                 </div>
                 <p class="password-hint">Mínimo 8 caracteres</p>
-                <p class="error-msg" id="passwordError">La contraseña debe tener al menos 8 caracteres</p>
+                <p class="error-msg-empty">Por favor, rellena este campo</p>
+                <p class="error-msg" id="passwordError" style="display: none;">La contraseña debe tener al menos 8 caracteres</p>
             </div>
 
             <div class="form-group">
-                <label for="rep-contraseña">repetir contraseña</label>
+                <label for="rep-contraseña">Repetir Contraseña</label>
                 <div class="field-wrapper">
-                    <input class="formulario-input" type="password" id="rep-contraseña" placeholder="********">
+                    <input class="formulario-input req-input" type="password" id="rep-contraseña" placeholder="********">
                     <button type="button" class="toggle-btn" id="btnVer2">👁</button>
                 </div>
-                <p class="password-hint">Confirma tu contraseña</p>
-                <p class="error-msg" id="repeatError">Las contraseñas no coinciden</p>
+                <p class="error-msg-empty">Por favor, rellena este campo</p>
+                <p class="error-msg" id="repeatError" style="display: none;">Las contraseñas no coinciden</p>
             </div>
         </div>
 
@@ -86,41 +93,41 @@
     }
     document.addEventListener('DOMContentLoaded', init);
 
-    // función para comprobar la edad
     function comprobarEdad() {
-        let fecha = document.getElementById('fecha-nacimiento').value;
+        let inputFecha = document.getElementById('fecha-nacimiento');
+        let fecha = inputFecha.value.trim();
         let mensaje = document.getElementById('mensajeEdad');
+        let errorFecha = document.getElementById('fechaError');
 
-        if (fecha == "") {
-            mensaje.innerHTML = "";
-            return;
-        }
+        errorFecha.style.display = 'none';
+        inputFecha.classList.remove('input-error');
+        mensaje.innerHTML = "";
+        mensaje.className = "mensaje-edad";
+
+        if (fecha === "") return;
 
         let partes = fecha.split("-");
-        if (partes.length != 3) {
-            mensaje.innerHTML = "";
+
+        if (partes.length != 3 || partes[2].length < 4) {
+            errorFecha.innerText = "Formato incorrecto. Usa DD-MM-YYYY";
+            errorFecha.style.display = 'block';
+            inputFecha.classList.add('input-error');
             return;
         }
 
         let año = partes[2];
-
-        if (año.length < 4) {
-            mensaje.innerHTML = "";
-            return;
-        }
-
         let fechaNac = new Date(año + "-" + partes[1] + "-" + partes[0]);
 
-        if (fechaNac == "Invalid Date") {
-            mensaje.innerHTML = "";
+        if (fechaNac == "Invalid Date" || isNaN(fechaNac.getTime())) {
+            errorFecha.innerText = "Fecha no válida";
+            errorFecha.style.display = 'block';
+            inputFecha.classList.add('input-error');
             return;
         }
 
         let hoy = new Date();
         let edad = hoy.getFullYear() - fechaNac.getFullYear();
-
-        if (hoy.getMonth() < fechaNac.getMonth() ||
-            (hoy.getMonth() == fechaNac.getMonth() && hoy.getDate() < fechaNac.getDate())) {
+        if (hoy.getMonth() < fechaNac.getMonth() || (hoy.getMonth() == fechaNac.getMonth() && hoy.getDate() < fechaNac.getDate())) {
             edad = edad - 1;
         }
 
@@ -133,7 +140,6 @@
         }
     }
 
-    // función para comprobar contraseñas
     function comprobarPass() {
         let pass1 = document.getElementById('contraseña');
         let pass2 = document.getElementById('rep-contraseña');
@@ -142,31 +148,29 @@
 
         error1.style.display = 'none';
         error2.style.display = 'none';
-
-        if (pass1.closest('.field-wrapper')) {
-            pass1.closest('.field-wrapper').classList.remove('has-error');
-        }
-        if (pass2.closest('.field-wrapper')) {
-            pass2.closest('.field-wrapper').classList.remove('has-error');
-        }
+        pass1.classList.remove('input-error');
+        pass2.classList.remove('input-error');
 
         if (pass1.value.length > 0 && pass1.value.length < 8) {
             error1.style.display = 'block';
-            pass1.closest('.field-wrapper').classList.add('has-error');
+            pass1.classList.add('input-error');
         }
 
-        if (pass2.value.length > 0 && pass1.value != pass2.value) {
+        if (pass2.value.length > 0 && pass1.value !== pass2.value) {
             error2.style.display = 'block';
-            pass2.closest('.field-wrapper').classList.add('has-error');
+            pass2.classList.add('input-error');
         }
     }
 
-    // event listeners
-    document.getElementById('fecha-nacimiento').addEventListener('input', comprobarEdad);
     document.getElementById('contraseña').addEventListener('input', comprobarPass);
     document.getElementById('rep-contraseña').addEventListener('input', comprobarPass);
+    document.getElementById('fecha-nacimiento').addEventListener('input', comprobarEdad);
 
-    // botones para ver contraseña
+    function showToast(message) {
+        if (window.codify?.toast) window.codify.toast(message);
+        else alert(message);
+    }
+
     document.getElementById('btnVer1').addEventListener('click', function() {
         let input = document.getElementById('contraseña');
         if (input.type == 'password') {
@@ -189,77 +193,76 @@
         }
     });
 
-    document.getElementById("btnSignup").addEventListener("click", function() {
-        let nombre = document.getElementById('nombre').value;
-        let apellidos = document.getElementById('apellidos').value;
-        let usuario = document.getElementById('username').value;
-        let fecha = document.getElementById('fecha-nacimiento').value;
-        let pass1 = document.getElementById('contraseña').value;
-        let pass2 = document.getElementById('rep-contraseña').value;
+    document.getElementById('btnSignup').addEventListener('click', function() {
+        let hasErrors = false;
 
-        nombre = nombre.trim();
-        usuario = usuario.trim();
+        document.querySelectorAll('.req-input').forEach(input => {
+            if (input.value.trim() === '') {
+                input.classList.add('input-error');
+                const errorMsg = input.parentElement.querySelector('.error-msg-empty') || input.parentElement.parentElement.querySelector('.error-msg-empty');
+                if (errorMsg) errorMsg.style.display = 'block';
+                hasErrors = true;
+            }
+        });
 
-        if (nombre == "") {
-            window.codify?.toast?.("Ingresa tu nombre");
+        if (hasErrors) {
+            showToast("Por favor, rellena todos los campos");
             return;
         }
 
-        if (usuario == "") {
-            window.codify?.toast?.("Ingresa un nombre de usuario");
-            return;
-        }
+        const nombre = document.getElementById('nombre').value.trim();
+        const apellidos = document.getElementById('apellidos').value.trim();
+        const fechaNacimiento = document.getElementById('fecha-nacimiento').value;
+        const username = document.getElementById('username').value.trim();
+        const pass1 = document.getElementById('contraseña').value;
+        const pass2 = document.getElementById('rep-contraseña').value;
 
-        if (fecha == "") {
-            window.codify?.toast?.("Ingresa tu fecha de nacimiento");
-            return;
-        }
-
-        let partes = fecha.split("-");
-        if (partes.length != 3) {
-            window.codify?.toast?.("Formato incorrecto. Usa DD-MM-YYYY");
-            return;
-        }
-
-        if (partes[2].length < 4) {
-            window.codify?.toast?.("El año debe tener 4 dígitos");
+        let partes = fechaNacimiento.split("-");
+        if (partes.length != 3 || partes[2].length < 4) {
+            showToast("Formato de fecha incorrecto. Usa DD-MM-YYYY");
+            document.getElementById('fecha-nacimiento').classList.add('input-error');
+            document.getElementById('fechaError').innerText = "Formato incorrecto. Usa DD-MM-YYYY";
+            document.getElementById('fechaError').style.display = 'block';
             return;
         }
 
         let fechaNac = new Date(partes[2] + "-" + partes[1] + "-" + partes[0]);
-        if (fechaNac == "Invalid Date") {
-            window.codify?.toast?.("Fecha no válida");
+        if (fechaNac == "Invalid Date" || isNaN(fechaNac.getTime())) {
+            showToast("Fecha no válida");
+            document.getElementById('fecha-nacimiento').classList.add('input-error');
+            document.getElementById('fechaError').innerText = "Fecha no válida";
+            document.getElementById('fechaError').style.display = 'block';
             return;
         }
 
         let hoy = new Date();
         let edad = hoy.getFullYear() - fechaNac.getFullYear();
-
-        if (hoy.getMonth() < fechaNac.getMonth() ||
-            (hoy.getMonth() == fechaNac.getMonth() && hoy.getDate() < fechaNac.getDate())) {
+        if (hoy.getMonth() < fechaNac.getMonth() || (hoy.getMonth() == fechaNac.getMonth() && hoy.getDate() < fechaNac.getDate())) {
             edad = edad - 1;
         }
 
         if (edad < 18) {
-            window.codify?.toast?.("Debes ser mayor de 18 años para registrarte");
+            showToast("Debes ser mayor de 18 años para registrarte");
             return;
         }
 
         if (pass1.length < 8) {
-            window.codify?.toast?.("La contraseña debe tener al menos 8 caracteres");
+            showToast("La contraseña debe tener al menos 8 caracteres");
+            document.getElementById('contraseña').classList.add('input-error');
             return;
         }
 
         if (pass1 != pass2) {
-            window.codify?.toast?.("Las contraseñas no coinciden");
+            showToast("Las contraseñas no coinciden");
+            document.getElementById('rep-contraseña').classList.add('input-error');
             return;
         }
 
         window.codify?.setAuth?.({ loggedIn: true, username: nombre });
-        window.codify?.toast?.("Registro completado con éxito");
+        showToast("Registro completado con éxito");
 
-        setTimeout(function() {
-            window.location.href = "sign-in.html";
+        setTimeout(() => {
+            window.location.href = 'sign-in.html';
         }, 450);
     });
 </script>
