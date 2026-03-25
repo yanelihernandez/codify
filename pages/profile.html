@@ -36,18 +36,26 @@
                 <input type="file" id="inputImage" accept="image/*" style="display: none;">
             </div>
 
-            <div class="info-tarjeta">
-                <p id="profileUsername" class="username-bold">Invitado</p>
-                <div class="info-detalles">
-                    <p><span>Nombre:</span> <span id="profileName">Nombre</span></p>
-                    <p><span>Apellidos:</span> <span id="profileSurname">Apellidos</span></p>
-                    <p><span>Nacimiento:</span> <span id="profileBirth">Fecha de nacimiento</span></p>
-                </div>
-            </div>
+            <div id="profile-section">
+                <div id="profile-left-section">
+                    <div class="info-tarjeta">
+                        <p id="profileUsername" class="username-bold">Invitado</p>
+                        <div class="info-detalles">
+                            <p><span>Nombre:</span> <span id="profileName">Nombre</span></p>
+                            <p><span>Apellidos:</span> <span id="profileSurname">Apellidos</span></p>
+                            <p><span>Nacimiento:</span> <span id="profileBirth">Fecha de nacimiento</span></p>
+                        </div>
+                    </div>
 
-            <div class="buttons">
-                <a href="./edit-profile.html">Modificar perfil</a>
-                <a href="./my-bookings.html">Ver Reservas</a>
+                    <div class="buttons">
+                        <a href="./edit-profile.html">Modificar perfil</a>
+                        <a href="./my-bookings.html">Ver Reservas</a>
+                    </div>
+                </div>
+                <div id="profile-right-section">
+                    <a href="#derecha">📩</a>
+                    <a href="#fav-professors">❤️</a>
+                </div>
             </div>
 
             <section class="calendar-section">
@@ -75,13 +83,13 @@
             </section>
         </div>
 
-        <div class="derecha">
+        <div id="derecha">
             <h2>Mis Chats</h2>
             <section class="chats-section"></section>
         </div>
     </div>
 
-    <div class="fav-professors">
+    <div id="fav-professors">
         <div class="fav-professors-title">
             <h2>Mis favoritos</h2>
         </div>
