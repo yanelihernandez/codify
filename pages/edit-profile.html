@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="../styles/footer.css">
     <link rel="stylesheet" href="../styles/sign-up.css">
     <link rel="stylesheet" href="../styles/toast.css">
+    <link rel="icon" type="image/png" href="../images/logo_web.png">
 </head>
 
 <body>
@@ -23,45 +24,46 @@
         <h1>Modificar perfil</h1>
 
         <a class="home-btn" href="../pages/home.html">
-            <img src="../images/logo.png" alt="Logo" width="180" height="auto">
+            <img src="../images/logo_verde.png" alt="Logo" width="180" height="auto">
         </a>
 
         <div class="formulario">
             <div class="fila-doble">
                 <div class="form-group mitad">
-                    <label for="nombre">nombre</label>
+                    <label for="nombre">Nombre</label>
                     <input class="formulario-input" type="text" id="nombre" placeholder="Tu nombre">
                 </div>
 
                 <div class="form-group mitad">
-                    <label for="apellidos">apellidos</label>
+                    <label for="apellidos">Apellidos</label>
                     <input class="formulario-input" type="text" id="apellidos" placeholder="Tus apellidos">
                 </div>
             </div>
 
             <div class="form-group">
-                <label for="fecha-nacimiento">fecha de nacimiento</label>
+                <label for="fecha-nacimiento">Fecha de Nacimiento</label>
                 <input class="formulario-input" type="text" id="fecha-nacimiento" placeholder="DD-MM-YYYY (ejemplo: 24-03-2000)">
+                <p class="error-msg" id="fechaError" style="display: none;"></p>
                 <div id="mensajeEdad" class="mensaje-edad"></div>
             </div>
 
             <div class="form-group">
-                <label for="username">nombre usuario</label>
+                <label for="username">Nombre de Usuario</label>
                 <input class="formulario-input" type="text" id="username" placeholder="Nombre de usuario">
             </div>
 
             <div class="form-group">
-                <label for="contraseña">nueva contraseña</label>
+                <label for="contraseña">Nueva Contraseña</label>
                 <div class="field-wrapper">
                     <input class="formulario-input" type="password" id="contraseña" placeholder="********">
                     <button type="button" class="toggle-btn" id="btnVer1">👁</button>
                 </div>
-                <p class="password-hint">Mínimo 6 caracteres - Déjalo en blanco para no cambiar</p>
-                <p class="error-msg" id="passwordError">La contraseña debe tener al menos 6 caracteres</p>
+                <p class="password-hint">Mínimo 8 caracteres - Déjalo en blanco para no cambiar</p>
+                <p class="error-msg" id="passwordError">La contraseña debe tener al menos 8 caracteres</p>
             </div>
 
             <div class="form-group">
-                <label for="rep-contraseña">repetir nueva contraseña</label>
+                <label for="rep-contraseña">Repetir Nueva Contraseña</label>
                 <div class="field-wrapper">
                     <input class="formulario-input" type="password" id="rep-contraseña" placeholder="********">
                     <button type="button" class="toggle-btn" id="btnVer2">👁</button>
@@ -87,33 +89,35 @@
     }
     document.addEventListener('DOMContentLoaded', init);
 
-    // función para comprobar la edad
     function comprobarEdad() {
-        let fecha = document.getElementById('fecha-nacimiento').value;
+        let inputFecha = document.getElementById('fecha-nacimiento');
+        let fecha = inputFecha.value.trim();
         let mensaje = document.getElementById('mensajeEdad');
+        let errorFecha = document.getElementById('fechaError');
 
-        if (fecha == "") {
-            mensaje.innerHTML = "";
-            return;
-        }
+        errorFecha.style.display = 'none';
+        inputFecha.classList.remove('input-error');
+        mensaje.innerHTML = "";
+        mensaje.className = "mensaje-edad";
+
+        if (fecha === "") return;
 
         let partes = fecha.split("-");
-        if (partes.length != 3) {
-            mensaje.innerHTML = "";
+
+        if (partes.length != 3 || partes[2].length < 4) {
+            errorFecha.innerText = "Formato incorrecto. Usa DD-MM-YYYY";
+            errorFecha.style.display = 'block';
+            inputFecha.classList.add('input-error');
             return;
         }
 
         let año = partes[2];
-
-        if (año.length < 4) {
-            mensaje.innerHTML = "";
-            return;
-        }
-
         let fechaNac = new Date(año + "-" + partes[1] + "-" + partes[0]);
 
-        if (fechaNac == "Invalid Date") {
-            mensaje.innerHTML = "";
+        if (fechaNac == "Invalid Date" || isNaN(fechaNac.getTime())) {
+            errorFecha.innerText = "Fecha no válida";
+            errorFecha.style.display = 'block';
+            inputFecha.classList.add('input-error');
             return;
         }
 
@@ -134,7 +138,6 @@
         }
     }
 
-    // función para comprobar contraseñas
     function comprobarPass() {
         let pass1 = document.getElementById('contraseña');
         let pass2 = document.getElementById('rep-contraseña');
@@ -151,9 +154,8 @@
             pass2.closest('.field-wrapper').classList.remove('has-error');
         }
 
-        // Solo validar si se está intentando cambiar la contraseña
         if (pass1.value.length > 0) {
-            if (pass1.value.length < 6) {
+            if (pass1.value.length < 8) {
                 error1.style.display = 'block';
                 pass1.closest('.field-wrapper').classList.add('has-error');
             }
@@ -196,24 +198,20 @@
 
         const profile = loadProfile() || {};
 
-        // Cargar TODOS los datos existentes en los campos
         document.getElementById('nombre').value = profile.nombre || '';
         document.getElementById('apellidos').value = profile.apellidos || '';
         document.getElementById('fecha-nacimiento').value = profile.fechaNacimiento || '';
         document.getElementById('username').value = profile.username || auth.username || '';
 
-        // Comprobar edad
         if (profile.fechaNacimiento) {
             comprobarEdad();
         }
     });
 
-    // event listeners
     document.getElementById('fecha-nacimiento').addEventListener('input', comprobarEdad);
     document.getElementById('contraseña').addEventListener('input', comprobarPass);
     document.getElementById('rep-contraseña').addEventListener('input', comprobarPass);
 
-    // botones para ver contraseña
     document.getElementById('btnVer1').addEventListener('click', function() {
         let input = document.getElementById('contraseña');
         if (input.type == 'password') {
@@ -237,11 +235,9 @@
     });
 
     document.getElementById('btnSave').addEventListener('click', function() {
-        // Obtener perfil actual
         const perfilActual = loadProfile() || {};
         const auth = window.codify?.getAuth?.() || {};
 
-        // Coger valores del formulario
         const nombre = document.getElementById('nombre').value.trim();
         const apellidos = document.getElementById('apellidos').value.trim();
         const fechaNacimiento = document.getElementById('fecha-nacimiento').value;
@@ -249,7 +245,6 @@
         const pass1 = document.getElementById('contraseña').value;
         const pass2 = document.getElementById('rep-contraseña').value;
 
-        // VALIDAR QUE NO ESTÉN VACÍOS (menos contraseña)
         if (nombre === '') {
             showToast("El nombre no puede estar vacío");
             document.getElementById('nombre').focus();
@@ -275,18 +270,13 @@
         }
 
         let partes = fechaNacimiento.split("-");
-        if (partes.length != 3) {
+        if (partes.length != 3 || partes[2].length < 4) {
             showToast("Formato incorrecto. Usa DD-MM-YYYY");
             return;
         }
 
-        if (partes[2].length < 4) {
-            showToast("El año debe tener 4 dígitos");
-            return;
-        }
-
         let fechaNac = new Date(partes[2] + "-" + partes[1] + "-" + partes[0]);
-        if (fechaNac == "Invalid Date") {
+        if (fechaNac == "Invalid Date" || isNaN(fechaNac.getTime())) {
             showToast("Fecha no válida");
             return;
         }
@@ -305,8 +295,8 @@
         }
 
         if (pass1.length > 0 || pass2.length > 0) {
-            if (pass1.length < 6) {
-                showToast("La contraseña debe tener al menos 6 caracteres");
+            if (pass1.length < 8) {
+                showToast("La contraseña debe tener al menos 8 caracteres");
                 return;
             }
 
@@ -316,7 +306,6 @@
             }
         }
 
-        // NUEVO PERFIL
         const nuevoPerfil = {
             nombre: nombre,
             apellidos: apellidos,
@@ -327,7 +316,6 @@
 
         saveProfile(nuevoPerfil);
 
-        // Actualizar auth si cambió el usuario
         if (username !== auth.username) {
             window.codify?.setAuth?.({
                 ...auth,
