@@ -25,6 +25,10 @@
             <img src="../images/logo_verde.png" alt="Logo" width="180" height="auto">
         </a>
 
+        <div class="progress-container">
+            <div class="progress-bar-fill" id="formProgress"></div>
+        </div>
+
         <div class="formulario">
             <div class="fila-doble">
                 <div class="form-group mitad">
@@ -92,6 +96,37 @@
         await loadHTML('../templates/footer.html', 'site-footer');
     }
     document.addEventListener('DOMContentLoaded', init);
+
+    const requiredInputs = document.querySelectorAll('.req-input');
+    const progressBar = document.getElementById('formProgress');
+
+    function updateProgress() {
+        let filledCount = 0;
+        requiredInputs.forEach(input => {
+            if (input.value.trim() !== '') {
+                filledCount++;
+            }
+        });
+
+        const percentage = (filledCount / requiredInputs.length) * 100;
+        progressBar.style.width = percentage + '%';
+
+        if (percentage === 100) {
+            progressBar.style.backgroundColor = '#25510a';
+        } else {
+            progressBar.style.backgroundColor = '#87ab69';
+        }
+    }
+
+    requiredInputs.forEach(input => {
+        input.addEventListener('input', updateProgress);
+
+        input.addEventListener('input', function() {
+            this.classList.remove('input-error');
+            const errorMsg = this.parentElement.querySelector('.error-msg-empty') || this.parentElement.parentElement.querySelector('.error-msg-empty');
+            if (errorMsg) errorMsg.style.display = 'none';
+        });
+    });
 
     function comprobarEdad() {
         let inputFecha = document.getElementById('fecha-nacimiento');
@@ -196,7 +231,7 @@
     document.getElementById('btnSignup').addEventListener('click', function() {
         let hasErrors = false;
 
-        document.querySelectorAll('.req-input').forEach(input => {
+        requiredInputs.forEach(input => {
             if (input.value.trim() === '') {
                 input.classList.add('input-error');
                 const errorMsg = input.parentElement.querySelector('.error-msg-empty') || input.parentElement.parentElement.querySelector('.error-msg-empty');
@@ -258,7 +293,6 @@
             return;
         }
 
-        window.codify?.setAuth?.({ loggedIn: true, username: nombre });
         showToast("Registro completado con éxito");
 
         setTimeout(() => {
