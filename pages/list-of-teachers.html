@@ -38,16 +38,19 @@
 
     // Función para mostrar toast usando el mismo estilo que window.codify.toast
     function showToast(message) {
+        // Intentar usar window.codify.toast primero
         if (window.codify && typeof window.codify.toast === 'function') {
             window.codify.toast(message);
             return;
         }
 
+        // Si no está disponible, crear toast manualmente con los mismos estilos
         const toast = document.createElement('div');
         toast.className = 'toast';
         toast.textContent = message;
         document.body.appendChild(toast);
 
+        // Forzar reflow para que la animación funcione
         setTimeout(() => {
             toast.classList.add('show');
         }, 10);
@@ -69,6 +72,7 @@
         await loadLanguage();
         addProfessors();
 
+        // Inicializar favoritos después de cargar las tarjetas
         setTimeout(() => {
             if (window.codify?.initCodifyUI) {
                 window.codify.initCodifyUI();
@@ -95,6 +99,7 @@
         fetch('../data/professors.json')
             .then(res => res.json())
             .then(professors => {
+
                 const container = document.querySelector('.professors-list');
                 const template = document.getElementById('professor-card-template');
 
@@ -138,6 +143,44 @@
                                     favBtn.textContent = '♡';
                                 }
                             }
+
+                            // Evento click del corazón
+                            favBtn.onclick = function(e) {
+                                e.preventDefault();
+                                e.stopPropagation();
+
+                                const currentAuth = window.codify?.getAuth ? window.codify.getAuth() : { loggedIn: false };
+
+                                // Si NO está logueado
+                                if (!currentAuth.loggedIn) {
+                                    // Mostrar toast usando nuestra función local
+                                    showToast("Debes iniciar sesión para guardar favoritos");
+
+                                    setTimeout(function() {
+                                        sessionStorage.setItem('redirectAfterLogin', window.location.href);
+                                        window.location.href = "sign-in.html";
+                                    }, 800);
+                                    return;
+                                }
+
+                                // Si está logueado, toggle favorito
+                                const professorId = parseInt(this.dataset.professorId);
+                                const currentlyLiked = this.classList.contains('liked');
+
+                                if (currentlyLiked) {
+                                    if (window.codify?.removeFavorite) window.codify.removeFavorite(professorId);
+                                    this.classList.remove('liked');
+                                    this.textContent = '♡';
+                                    showToast("Eliminado de favoritos");
+                                } else {
+                                    if (window.codify?.addFavorite) window.codify.addFavorite(professorId);
+                                    this.classList.add('liked');
+                                    this.textContent = '♥';
+                                    showToast("Añadido a favoritos");
+                                }
+
+                                window.dispatchEvent(new CustomEvent('favorites:updated'));
+                            };
                         }
 
                         container.appendChild(clone);
