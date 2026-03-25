@@ -270,3 +270,21 @@ body {
 .field select.input-error {
   border-color: #d30a0a;
 }
+
+@media (max-width: 630px) {
+  .booking-top {
+    grid-template-columns: 1fr;
+    gap: 12px;
+    justify-items: start;
+  }
+  .booking-about{
+    min-height: 0;
+  }
+  .booking-form {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  .booking-form > * {
+    grid-column: 1 / -1;
+  }
+}
