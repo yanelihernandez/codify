@@ -98,6 +98,38 @@
         }
     }
 
+    // Si el usuario no está logueado, lo mandamos al login antes de chatear
+    function verificarAccesoChat(event, professorId, professorName) {
+        event.preventDefault();
+        const auth = window.codify?.getAuth ? window.codify.getAuth() : { loggedIn: false };
+
+        if (!auth.loggedIn) {
+            showToastMessage("Debes iniciar sesión para chatear con el profesor");
+            sessionStorage.setItem('redirectAfterLogin', `chat.html?id=${professorId}`);
+            setTimeout(() => window.location.href = "sign-in.html", 800);
+        } else {
+            localStorage.setItem('returnToProfile', 'true');
+            localStorage.setItem('lastProfileUrl', window.location.href);
+            localStorage.setItem('currentChatId', professorId);
+            localStorage.setItem('currentChatName', professorName);
+            window.location.href = `chat.html?id=${professorId}`;
+        }
+    }
+
+    // Lo mismo para reservar
+    function verificarAccesoReserva(event, professorId) {
+        event.preventDefault();
+        const auth = window.codify?.getAuth ? window.codify.getAuth() : { loggedIn: false };
+
+        if (!auth.loggedIn) {
+            showToastMessage("Debes iniciar sesión para reservar una clase");
+            sessionStorage.setItem('redirectAfterLogin', `booking.html?id=${professorId}`);
+            setTimeout(() => window.location.href = "sign-in.html", 800);
+        } else {
+            window.location.href = `booking.html?id=${professorId}`;
+        }
+    }
+
     function loadProfessor() {
         fetch("../data/professors.json")
             .then(res => res.json())
@@ -108,6 +140,16 @@
                 const chatBtn = document.querySelector('.chat-icon-corner');
                 const reservarBtn = document.getElementById('reservarBtn');
 
+                chatBtn.addEventListener("click", (e) => {
+                    verificarAccesoChat(e, currentProfessor.id, currentProfessor.name);
+                });
+
+                if (reservarBtn) {
+                    reservarBtn.addEventListener("click", (e) => {
+                        verificarAccesoReserva(e, currentProfessor.id);
+                    });
+                }
+
                 document.querySelector('.profesor-imagen img').src = currentProfessor.image;
                 document.querySelector('.profesor-imagen img').alt = currentProfessor.name;
                 document.getElementById("main-name").textContent = currentProfessor.name;
@@ -116,9 +158,6 @@
                 document.getElementById("students").textContent = currentProfessor.students;
                 document.querySelector('.sobre-profesor h2').textContent = `Sobre ${currentProfessor.name}`;
                 document.querySelector('.video h2').textContent = `Video ${currentProfessor.name}`;
-
-                if (chatBtn) chatBtn.dataset.professorId = currentProfessor.id;
-                if (reservarBtn) reservarBtn.dataset.professorId = currentProfessor.id;
             });
     }
 
