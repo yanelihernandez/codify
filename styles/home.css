@@ -109,3 +109,13 @@ main {
         height: auto;
     }
 }
+
+@media (max-width: 900px) {
+    .history{
+        flex-direction: column;
+    }
+    .history-media{
+        flex: none;
+        height: 200px;
+    }
+}
