@@ -160,10 +160,12 @@
     const hoursSelect = document.getElementById("hours");
     const toggle = document.getElementById("groupToggle");
     const acceptBtn = document.getElementById("acceptBtn");
+    const cancelBtn = document.getElementById("cancelBtn");
 
     if (hoursSelect) hoursSelect.addEventListener("change", updatePrice);
     if (toggle) toggle.addEventListener("change", updatePrice);
     if (acceptBtn) acceptBtn.addEventListener("click", validateAndSaveBooking);
+    if (cancelBtn) cancelBtn.addEventListener("click", goBack);
 
     const inputs = document.querySelectorAll('#fullName, #date, #time, #hours');
     inputs.forEach(input => {
@@ -256,6 +258,8 @@
     const date = document.getElementById("date")?.value || "";
     const time = document.getElementById("time")?.value || "";
     const hours = document.getElementById("hours")?.value || "";
+    const isGroup = document.getElementById("groupToggle")?.checked || false;
+    const price = document.getElementById("priceValue")?.textContent || "0€";
 
     let hasError = false;
 
@@ -317,7 +321,44 @@
       return;
     }
 
-    showToast("Reserva validada correctamente");
+    const booking = {
+      id: Date.now(),
+      professorId: currentProfessor.id,
+      professorName: currentProfessor.name,
+      professorImage: currentProfessor.image,
+      studentName: fullName,
+      studentUsername: auth.username,
+      date: date,
+      time: time,
+      hours: parseInt(hours),
+      isGroup: isGroup,
+      price: price,
+      bookingDate: new Date().toISOString(),
+      status: "active"
+    };
+
+    saveBooking(booking);
+
+    showToast("¡Reserva confirmada!");
+
+    setTimeout(() => {
+      window.location.href = "my-bookings.html";
+    }, 1000);
+  }
+
+  function saveBooking(booking) {
+    const auth = window.codify?.getAuth ? window.codify.getAuth() : { loggedIn: false };
+    if (!auth.loggedIn) return;
+
+    const storageKey = `codify_bookings_${auth.username}`;
+    let bookings = JSON.parse(localStorage.getItem(storageKey)) || [];
+    bookings.push(booking);
+    localStorage.setItem(storageKey, JSON.stringify(bookings));
+  }
+
+  function goBack(e) {
+    if (e) e.preventDefault();
+    window.history.back();
   }
 </script>
 
