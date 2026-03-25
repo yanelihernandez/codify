@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Python</title>
+    <link rel="icon" type="image/png" href="../images/logo_web.png">
     <script src="../index.js"></script>
     <script src="../src/loader.js"></script>
     <link rel="stylesheet" href="../styles/professors-programming-language.css">
@@ -17,9 +18,8 @@
 <main>
 
     <div class="introduction">
-        <p class="introduction-title">
-        <p class="language-introduction">
-        <p class="language-introduction">
+        <p class="introduction-title"></p>
+        <p class="language-introduction"></p>
     </div>
 
     <section class="professors-list">
@@ -33,7 +33,6 @@
 </body>
 
 <script>
-
     document.addEventListener('DOMContentLoaded', init);
 
     async function init() {
@@ -57,38 +56,44 @@
         const language = languages.find(l => l.id === language_id);
         page_language = language.name;
 
-        document.querySelector(".introduction-title").innerText =
-            "Profesores de " + language.name;
-
-        document.querySelector(".language-introduction").innerText =
-            language.introduction;
+        document.querySelector(".introduction-title").innerText = "Profesores de " + language.name;
+        document.querySelector(".language-introduction").innerText = language.introduction;
     }
 
     function addProfessors() {
         fetch('../data/professors.json')
             .then(res => res.json())
             .then(professors => {
-
                 const container = document.querySelector('.professors-list');
                 const template = document.getElementById('professor-card-template');
 
+                if (!template) return;
+
+                container.innerHTML = '';
+
                 professors
                     .filter(professor => professor.speciality === page_language)
-                    .forEach(p => {
+                    .forEach(professor => {
                         const clone = template.content.cloneNode(true);
 
-                        clone.querySelector('img').src = p.image;
-                        clone.querySelector('.professor-name').innerText = p.name;
-                        clone.querySelector('.professor-info').innerText = p.info;
-                        clone.querySelector('a').href = `../pages/teacher.html?id=${p.id}`;
+                        const img = clone.querySelector('img');
+                        img.src = professor.image;
+                        img.alt = professor.name;
+
+                        const nameEl = clone.querySelector('.professor-name');
+                        nameEl.textContent = professor.name;
+
+                        const infoEl = clone.querySelector('.professor-info');
+                        infoEl.textContent = professor.info;
+
+                        const profileLink = clone.querySelector('.see-profile-btn');
+                        profileLink.href = `../pages/teacher.html?id=${professor.id}`;
 
                         container.appendChild(clone);
-                });
+                    });
             })
             .catch((err) => console.error(err));
     }
-
-
 </script>
 
 </html>
