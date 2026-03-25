@@ -50,27 +50,100 @@
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
 }
 
-#site-header .profile{
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  margin: 0;
-  padding: 0;
+#site-header .profile {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    margin: 0;
+    padding: 0;
+    cursor: pointer;
 }
 
-#site-header .profile img{
-  width: 56px;
-  height: 56px;
-  border-radius: 50%;
-  object-fit: cover;
-  display: block;
+#site-header .profile img {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    object-fit: cover;
+    display: block;
 }
 
-#site-header .username{
-  margin: 0;
-  padding: 0;
-  font-size: 12px;
-  color: white;
+#site-header .username {
+    margin: 0;
+    padding: 0;
+    font-size: 12px;
+    color: white;
+}
+
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background-color: #ffffff;
+    min-width: 150px;
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+    z-index: 1000;
+    overflow: hidden;
+}
+
+.dropdown-menu a {
+    color: #333;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    font-size: 14px;
+    transition: background-color 0.3s ease;
+}
+
+.dropdown-menu a:hover {
+    background-color: #f1f1f1;
+}
+
+.dropdown-menu a#logoutBtn {
+    color: #dc3545;
+    border-top: 1px solid #eee;
+}
+
+.dropdown-menu a#logoutBtn:hover {
+    background-color: #fff1f0;
+}
+
+.show-dropdown {
+    display: block;
+}
+
+.profile-link {
+    display: block;
+    text-decoration: none;
+}
+
+#profileDropdown {
+    position: relative;
+    cursor: pointer;
+}
+
+#profileDropdown.guest-mode:hover::after {
+    content: "Inicia sesión";
+    position: absolute;
+    background: #333;
+    color: white;
+    font-size: 12px;
+    font-weight: normal;
+    line-height: 1.2;
+    text-transform: none;
+    letter-spacing: normal;
+    font-style: normal;
+    padding: 4px 8px;
+    border-radius: 4px;
+    white-space: nowrap;
+    pointer-events: none;
+    z-index: 1000;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    margin-top: 10px;
 }
