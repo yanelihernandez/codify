@@ -74,7 +74,10 @@
 
         <div class="botones">
             <button type="button" onclick="window.location.href='profile.html'">Cancelar</button>
-            <button id="btnSave" type="button">Guardar cambios</button>
+            <button id="btnSave" type="button">
+                <span id="btnText">Guardar cambios</span>
+                <div id="btnSpinner" class="spinner"></div>
+            </button>
         </div>
 
     </div>
@@ -186,6 +189,25 @@
 
         const usersData = JSON.parse(localStorage.getItem('codify_users')) || { users: [] };
         return usersData.users.find(u => u.username === auth.username);
+    }
+
+    function updateUser(updatedUser) {
+        const auth = window.codify?.getAuth?.();
+        if (!auth?.loggedIn) return false;
+
+        const usersData = JSON.parse(localStorage.getItem('codify_users')) || { users: [] };
+        const userIndex = usersData.users.findIndex(u => u.username === auth.username);
+
+        if (userIndex !== -1) {
+            if (!updatedUser.password) {
+                updatedUser.password = usersData.users[userIndex].password;
+            }
+
+            usersData.users[userIndex] = updatedUser;
+            localStorage.setItem('codify_users', JSON.stringify(usersData));
+            return true;
+        }
+        return false;
     }
 
     function showToast(message) {
@@ -322,6 +344,16 @@
             }
         }
 
+        const btn = document.getElementById('btnSave');
+        const btnText = document.getElementById('btnText');
+        const spinner = document.getElementById('btnSpinner');
+
+        btn.disabled = true;
+        btn.style.backgroundColor = "#ccc";
+        btn.style.cursor = "not-allowed";
+        btnText.style.display = "none";
+        spinner.style.display = "block";
+
         const nuevoPerfil = {
             nombre: nombre,
             apellidos: apellidos,
@@ -344,24 +376,35 @@
             masInfo: nuevoPerfil.masInfo
         });
 
-        if (username !== auth.username) {
-            window.codify?.setAuth?.({
-                ...auth,
-                loggedIn: true,
-                username: username,
-                fullName: nuevoPerfil.fullName
-            });
-        }
+        const actualizado = updateUser(nuevoPerfil);
 
-        let mensaje = "Cambios guardados correctamente";
-        if (pass1.length > 0) {
-            mensaje += " (contraseña actualizada)";
-        }
-        showToast(mensaje);
+        if (actualizado || !userData) {
+            if (username !== auth.username) {
+                window.codify?.setAuth?.({
+                    ...auth,
+                    loggedIn: true,
+                    username: username,
+                    fullName: nuevoPerfil.fullName
+                });
+            }
 
-        setTimeout(() => {
-            window.location.href = 'profile.html';
-        }, 500);
+            let mensaje = "Cambios guardados correctamente";
+            if (pass1.length > 0) {
+                mensaje += " (contraseña actualizada)";
+            }
+            showToast(mensaje);
+
+            setTimeout(() => {
+                window.location.href = 'profile.html';
+            }, 500);
+        } else {
+            showToast("Error al guardar los cambios");
+            btn.disabled = false;
+            btn.style.backgroundColor = "";
+            btn.style.cursor = "";
+            btnText.style.display = "inline";
+            spinner.style.display = "none";
+        }
     });
 </script>
 
