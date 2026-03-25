@@ -35,14 +35,14 @@
             <div class="message profesor">
                 <img src="../images/juan_manuel.png" alt="Juan Manuel" class="message-avatar">
                 <div class="message-content">
-                    <p>¡Hola! ¿En qué puedo ayudarte con Python?</p>
+                    <p class="teacher-message-intro">¡Hola! ¿En qué puedo ayudarte con Python?</p>
                     <span class="message-time">10:30</span>
                 </div>
             </div>
 
             <div class="message alumno">
                 <div class="message-content alumno">
-                    <p>Hola, soy de ingeniería informática y tengo un proyecto con Django</p>
+                    <p class="student-message-intro">Hola, soy de ingeniería informática y tengo un proyecto con Django</p>
                     <span class="message-time">10:32</span>
                 </div>
                 <img src="../images/perfil.jpg" alt="Mi perfil" class="message-avatar alumno-avatar">
@@ -51,7 +51,7 @@
             <div class="message profesor">
                 <img src="../images/juan_manuel.png" alt="Juan Manuel" class="message-avatar">
                 <div class="message-content">
-                    <p>Cuéntame, ¿qué es lo que se te complica?</p>
+                    <p class="teacher-message-followup">Cuéntame, ¿qué es lo que se te complica?</p>
                     <span class="message-time">10:33</span>
                 </div>
             </div>
@@ -99,11 +99,24 @@
                 document.querySelector('.chat-header-info img').alt = prof.name;
                 document.querySelector('.chat-header h2').textContent = prof.name;
 
+                localStorage.setItem('currentChatId', prof.id);
+                localStorage.setItem('currentChatName', prof.name);
+
                 const profesorImages = document.querySelectorAll('.message.profesor img');
                 profesorImages.forEach(img => {
                     img.src = prof.image;
                     img.alt = prof.name;
                 });
+
+                const studentIntro = document.querySelector('.student-message-intro');
+                if (studentIntro) {
+                    studentIntro.textContent = `Hola ${prof.name}, soy de ingeniería informática y tengo un proyecto con Django`;
+                }
+
+                const teacherIntro = document.querySelector('.teacher-message-intro');
+                if (teacherIntro) {
+                    teacherIntro.textContent = `¡Hola! ¿En qué puedo ayudarte con ${prof.speciality}?`;
+                }
             });
     }
 
