@@ -4,11 +4,9 @@
     <meta charset="UTF-8">
     <title>Perfil</title>
     <link rel="icon" type="image/png" href="../images/logo_web.png">
-
     <script src="../index.js"></script>
     <script src="../src/loader.js"></script>
     <script src="../src/utils.js"></script>
-
     <link rel="stylesheet" href="../styles/profile.css">
     <link rel="stylesheet" href="../styles/header.css">
     <link rel="stylesheet" href="../styles/footer.css">
@@ -67,7 +65,6 @@
                         </div>
                     </div>
                 </div>
-
                 <div class="info-dia">
                     <h3>Información del día seleccionado</h3>
                     <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
@@ -95,10 +92,8 @@
     async function init() {
         await loadHTML('../templates/header.html', 'site-header');
         await loadHTML('../templates/footer.html', 'site-footer');
-
         await loadHTML('../templates/best-professor-card.html');
         await loadHTML('../templates/chat-card.html');
-
         loadChats();
         await loadFavProfessors();
         setupProfileImage();
@@ -107,6 +102,7 @@
 
     document.addEventListener('DOMContentLoaded', init);
 
+    // Actualiza la foto en el header cuando se cambia desde el perfil
     function updateHeaderImage(imageSrc) {
         const headerImg = document.querySelector('#site-header .profile img');
         if (headerImg) headerImg.src = imageSrc;
@@ -147,29 +143,59 @@
     }
 
     async function loadFavProfessors() {
+        const auth = window.codify?.getAuth?.();
+        if (!auth?.loggedIn) return;
+
+        const favoriteIds = window.codify?.getFavorites?.() || [];
         const resOpinions = await fetch('../data/opinions.json');
         const opinions = await resOpinions.json();
+        const resProfessors = await fetch('../data/professors.json');
+        const professors = await resProfessors.json();
 
-        fetch('../data/professors.json')
-            .then(res => res.json())
-            .then(professors => {
-                const container = document.querySelector('.fav-professors-content');
-                const template = document.getElementById('best-professor-card-template');
+        const container = document.querySelector('.fav-professors-content');
+        const template = document.getElementById('best-professor-card-template');
+        if (!template) return;
 
-                professors.forEach(professor => {
-                    const clone = template.content.cloneNode(true);
+        container.innerHTML = '';
+        const favoriteProfessors = professors.filter(p => favoriteIds.includes(Number(p.id)));
 
-                    professor.rating = calculateRating(professor.id, opinions);
-                    clone.querySelector('.stars').textContent = `${professor.rating} ☆`;
-                    clone.querySelector('img').src = professor.image;
-                    clone.querySelector('img').alt = professor.name;
-                    clone.querySelector('.professor-name').textContent = professor.name;
-                    clone.querySelector('.professor-speciality').textContent = `Especialidad: ${professor.speciality}`;
-                    clone.querySelector('.see-profile').href = `teacher.html?id=${professor.id}`;
+        if (favoriteProfessors.length === 0) {
+            container.innerHTML = '<p>No tienes profesores favoritos aún.</p>';
+            return;
+        }
 
-                    container.appendChild(clone);
+        favoriteProfessors.forEach(professor => {
+            const clone = template.content.cloneNode(true);
+            professor.rating = calculateRating(professor.id, opinions);
+            clone.querySelector('.stars').textContent = `${professor.rating} ☆`;
+            clone.querySelector('img').src = professor.image;
+            clone.querySelector('img').alt = professor.name;
+            clone.querySelector('.professor-name').textContent = professor.name;
+            clone.querySelector('.professor-speciality').textContent = `Especialidad: ${professor.speciality}`;
+            clone.querySelector('.see-profile').href = `teacher.html?id=${professor.id}`;
+
+            const favBtn = clone.querySelector('.fav-btn');
+            if (favBtn) {
+                favBtn.classList.add('liked');
+                favBtn.textContent = '♥';
+                favBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    if (window.codify?.removeFavorite) {
+                        window.codify.removeFavorite(professor.id);
+                        window.codify?.toast?.('Eliminado de favoritos');
+                        const card = favBtn.closest('.best-professor-card');
+                        if (card) card.remove();
+                        const remaining = document.querySelectorAll('.fav-professors-content .best-professor-card');
+                        if (remaining.length === 0) {
+                            document.querySelector('.fav-professors-content').innerHTML = '<p>No tienes profesores favoritos aún.</p>';
+                        }
+                        window.dispatchEvent(new CustomEvent('favorites:updated'));
+                    }
                 });
-            });
+            }
+            container.appendChild(clone);
+        });
     }
 
     function loadChats() {
@@ -183,22 +209,37 @@
 
                 professors.forEach(professor => {
                     const clone = template.content.cloneNode(true);
+                    const chatLink = clone.querySelector('.access');
                     clone.querySelector('img').src = professor.image;
                     clone.querySelector('img').alt = professor.name;
                     clone.querySelector('.professor-name').textContent = professor.name;
-                    clone.querySelector('a').href = `chat.html?id=${professor.id}`;
 
+                    chatLink.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        const auth = window.codify?.getAuth ? window.codify.getAuth() : { loggedIn: false };
+                        if (!auth.loggedIn) {
+                            window.codify?.toast?.('Debes iniciar sesión para acceder al chat');
+                            setTimeout(() => window.location.href = 'sign-in.html', 500);
+                        } else {
+                            localStorage.removeItem('returnToProfile');
+                            localStorage.removeItem('lastProfileUrl');
+                            localStorage.setItem('currentChatId', professor.id);
+                            localStorage.setItem('currentChatName', professor.name);
+                            window.location.href = `chat.html?id=${professor.id}`;
+                        }
+                    });
                     container.appendChild(clone);
                 });
             });
     }
+
+    window.addEventListener('favorites:updated', () => loadFavProfessors());
 
     window.codify = window.codify || {};
     const originalInit = window.codify.initCodifyUI;
 
     window.codify.initCodifyUI = function() {
         if (originalInit) originalInit();
-
         const auth = window.codify?.getAuth ? window.codify.getAuth() : null;
         if (!auth?.loggedIn) {
             window.location.href = 'sign-in.html';
