@@ -10,8 +10,9 @@
     <link rel="stylesheet" href="../styles/header.css">
     <link rel="stylesheet" href="../styles/footer.css">
     <link rel="stylesheet" href="../styles/toast.css">
-
+    <link rel="icon" type="image/png" href="../images/logo_web.png">
 </head>
+
 <body>
 
 <header id="site-header" xlu-include-file="../templates/header.html"></header>
@@ -29,6 +30,8 @@
             <div class="form-group">
                 <label for="usuario">Usuario</label>
                 <input class="formulario-input" type="text" id="usuario">
+                <p class="error-msg" id="errorUsuario" style="display: none;">Por favor, rellena este campo</p>
+                <p class="error-msg" id="errorUsuarioNoExiste" style="display: none; color: #dc3545;">El usuario no existe</p>
             </div>
 
             <div class="form-group">
@@ -37,49 +40,174 @@
                     <input class="formulario-input" type="password" id="contraseña">
                     <button type="button" class="toggle-btn">👁</button>
                 </div>
+                <p class="error-msg" id="errorPass" style="display: none;">Por favor, rellena este campo</p>
+                <p class="error-msg" id="errorPassIncorrecta" style="display: none; color: #dc3545;">Contraseña incorrecta</p>
             </div>
         </div>
+
+        <progress id="loginProgress" style="display: none; width: 100%; margin-bottom: 15px; height: 8px; accent-color: #25510a;"></progress>
 
         <div class="botones">
             <a href="sign-up.html">¿No tienes cuenta? - Regístrate</a>
             <button id="btnLogin" type="button">Aceptar</button>
         </div>
+
     </div>
 
 </main>
 
 <footer id="site-footer" xlu-include-file="../templates/footer.html"></footer>
 
-</body>
-
 <script>
     async function init() {
         await loadHTML('../templates/header.html', 'site-header');
         await loadHTML('../templates/footer.html', 'site-footer');
+
+        document.querySelector('.toggle-btn')?.addEventListener('click', function() {
+            let input = document.getElementById('contraseña');
+            if (input.type == 'password') {
+                input.type = 'text';
+                this.innerHTML = '🔒';
+            } else {
+                input.type = 'password';
+                this.innerHTML = '👁';
+            }
+        });
+
+        document.getElementById('usuario')?.addEventListener('keypress', presionarEnter);
+        document.getElementById('contraseña')?.addEventListener('keypress', presionarEnter);
+        document.getElementById("usuario")?.addEventListener("input", limpiarErrores);
+        document.getElementById("contraseña")?.addEventListener("input", limpiarErrores);
     }
+
     document.addEventListener('DOMContentLoaded', init);
 
-    document.querySelector('.toggle-btn')?.addEventListener('click', function() {
-        let input = document.getElementById('contraseña');
-        if (input.type == 'password') {
-            input.type = 'text';
-            this.innerHTML = '🔒';
-        } else {
-            input.type = 'password';
-            this.innerHTML = '👁';
+    function limpiarErrores() {
+        const inputUsuario = document.getElementById("usuario");
+        const inputPass = document.getElementById("contraseña");
+        const errorUsuario = document.getElementById("errorUsuario");
+        const errorUsuarioNoExiste = document.getElementById("errorUsuarioNoExiste");
+        const errorPass = document.getElementById("errorPass");
+        const errorPassIncorrecta = document.getElementById("errorPassIncorrecta");
+
+        inputUsuario.classList.remove("input-error");
+        inputPass.classList.remove("input-error");
+        errorUsuario.style.display = "none";
+        errorUsuarioNoExiste.style.display = "none";
+        errorPass.style.display = "none";
+        errorPassIncorrecta.style.display = "none";
+    }
+
+    function presionarEnter(event) {
+        if (event.key === 'Enter') {
+            event.preventDefault();
+            document.getElementById('btnLogin').click();
         }
-    });
+    }
 
-    document.getElementById("btnLogin")?.addEventListener("click", () => {
-        const user = document.getElementById("usuario")?.value?.trim() || "Usuario registrado";
+    async function buscarUsuario(username) {
+        const usersLocalStorage = JSON.parse(localStorage.getItem('codify_users')) || { users: [] };
+        let usuario = usersLocalStorage.users.find(u => u.username === username);
 
-        window.codify?.setAuth?.({ loggedIn: true, username: user });
-        window.codify?.toast?.("Sesión iniciada");
+        if (usuario) return usuario;
 
-        const redirectUrl = sessionStorage.getItem('redirectAfterLogin') || "home.html";
-        sessionStorage.removeItem('redirectAfterLogin');
+        try {
+            const response = await fetch('../data/users.json');
+            if (response.ok) {
+                const usersPrueba = await response.json();
+                usuario = usersPrueba.users.find(u => u.username === username);
 
-        setTimeout(() => (window.location.href = redirectUrl), 400);
+                if (usuario) {
+                    usersLocalStorage.users.push(usuario);
+                    localStorage.setItem('codify_users', JSON.stringify(usersLocalStorage));
+                }
+
+                return usuario;
+            }
+        } catch (error) {
+            console.log('Error cargando users.json');
+        }
+
+        return null;
+    }
+
+    document.getElementById("btnLogin")?.addEventListener("click", async () => {
+        const inputUsuario = document.getElementById("usuario");
+        const inputPass = document.getElementById("contraseña");
+        const errorUsuario = document.getElementById("errorUsuario");
+        const errorUsuarioNoExiste = document.getElementById("errorUsuarioNoExiste");
+        const errorPass = document.getElementById("errorPass");
+        const errorPassIncorrecta = document.getElementById("errorPassIncorrecta");
+
+        const user = inputUsuario.value.trim();
+        const pass = inputPass.value.trim();
+
+        limpiarErrores();
+
+        let tieneErrores = false;
+
+        if (user === "") {
+            inputUsuario.classList.add("input-error");
+            errorUsuario.style.display = "block";
+            tieneErrores = true;
+        }
+
+        if (pass === "") {
+            inputPass.classList.add("input-error");
+            errorPass.style.display = "block";
+            tieneErrores = true;
+        }
+
+        if (tieneErrores) return;
+
+        const btn = document.getElementById("btnLogin");
+        const progress = document.getElementById("loginProgress");
+
+        btn.disabled = true;
+        btn.textContent = "Verificando...";
+        progress.style.display = "block";
+
+        const usuarioEncontrado = await buscarUsuario(user);
+
+        setTimeout(() => {
+            if (!usuarioEncontrado) {
+                progress.style.display = "none";
+                btn.disabled = false;
+                btn.textContent = "Aceptar";
+                inputUsuario.classList.add("input-error");
+                errorUsuarioNoExiste.style.display = "block";
+                window.codify?.toast?.("El usuario no existe");
+                return;
+            }
+
+            if (usuarioEncontrado.password !== pass) {
+                progress.style.display = "none";
+                btn.disabled = false;
+                btn.textContent = "Aceptar";
+                inputPass.classList.add("input-error");
+                errorPassIncorrecta.style.display = "block";
+                window.codify?.toast?.("Contraseña incorrecta");
+                return;
+            }
+
+            window.codify?.setAuth?.({
+                loggedIn: true,
+                username: usuarioEncontrado.username,
+                fullName: usuarioEncontrado.fullName,
+                fechaNacimiento: usuarioEncontrado.fechaNacimiento,
+                nombre: usuarioEncontrado.nombre,
+                apellidos: usuarioEncontrado.apellidos
+            });
+
+            window.codify?.toast?.("¡Bienvenido " + usuarioEncontrado.fullName + "!");
+
+            const redirectUrl = sessionStorage.getItem('redirectAfterLogin') || "home.html";
+            sessionStorage.removeItem('redirectAfterLogin');
+
+            setTimeout(() => {
+                window.location.href = redirectUrl;
+            }, 1500);
+        }, 800);
     });
 </script>
 
