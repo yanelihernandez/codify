@@ -10,6 +10,8 @@
     <link rel="stylesheet" href="../styles/header.css">
     <link rel="stylesheet" href="../styles/footer.css">
     <link rel="stylesheet" href="../styles/chat.css">
+    <link rel="icon" type="image/png" href="../images/logo_web.png">
+
 </head>
 <body>
 
@@ -19,7 +21,7 @@
     <div class="chat-container">
 
         <div class="chat-header">
-            <a href="teacher.html" class="back-btn" title="Volver al perfil del profesor">←</a>
+            <a href="#" id="backButton" class="back-btn" title="Volver">←</a>
             <div class="chat-header-info">
                 <img src="../images/juan_manuel.png" alt="Juan Manuel" class="chat-avatar">
                 <div>
@@ -30,7 +32,6 @@
         </div>
 
         <div class="chat-messages">
-
             <div class="message profesor">
                 <img src="../images/juan_manuel.png" alt="Juan Manuel" class="message-avatar">
                 <div class="message-content">
@@ -41,7 +42,7 @@
 
             <div class="message alumno">
                 <div class="message-content alumno">
-                    <p>Hola Juan Manuel, soy de ingeniería informática y tengo un proyecto con Django</p>
+                    <p>Hola, soy de ingeniería informática y tengo un proyecto con Django</p>
                     <span class="message-time">10:32</span>
                 </div>
                 <img src="../images/perfil.jpg" alt="Mi perfil" class="message-avatar alumno-avatar">
@@ -74,13 +75,12 @@
 
 <footer id="site-footer" xlu-include-file="../templates/footer.html"></footer>
 
-</body>
-
 <script>
     async function init() {
         await loadHTML('../templates/header.html', 'site-header');
         await loadHTML('../templates/footer.html', 'site-footer');
         loadData();
+        setupBackButton();
     }
 
     const params = new URLSearchParams(window.location.search);
@@ -88,22 +88,32 @@
 
     document.addEventListener('DOMContentLoaded', init);
 
-    function loadData(){
+    function loadData() {
         fetch("../data/professors.json")
             .then(res => res.json())
             .then(data => {
-
                 const prof = data.find(p => p.id === id);
+                if (!prof) return;
 
                 document.querySelector('.chat-header-info img').src = prof.image;
+                document.querySelector('.chat-header-info img').alt = prof.name;
                 document.querySelector('.chat-header h2').textContent = prof.name;
 
                 const profesorImages = document.querySelectorAll('.message.profesor img');
                 profesorImages.forEach(img => {
                     img.src = prof.image;
+                    img.alt = prof.name;
                 });
-
             });
+    }
+
+    function setupBackButton() {
+        const backBtn = document.getElementById('backButton');
+
+        backBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            window.history.back();
+        });
     }
 
     document.addEventListener('DOMContentLoaded', function() {
@@ -132,4 +142,5 @@
     });
 </script>
 
+</body>
 </html>
