@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="../styles/footer.css">
     <link rel="stylesheet" href="../styles/best-professor-card.css">
     <link rel="stylesheet" href="../styles/toast.css">
+    <link rel="icon" type="image/png" href="../images/logo_web.png">
 </head>
 <body>
 
@@ -22,7 +23,6 @@
         <div class="imagen_main">
             <img src="../images/home.jpg">
         </div>
-
         <div class="texto_main">
             <p>
                 Impulsa tu carrera tecnológica con clases personalizadas impartidas por expertos en los principales lenguajes de programación.
@@ -36,9 +36,7 @@
 
     <section class="profesores-mejor-valorados">
         <h2>Profesores mejor valorados</h2>
-        <div class="lista-profesores">
-            <!-- templates de profesores mejor valorados -->
-        </div>
+        <div class="lista-profesores"></div>
     </section>
 
     <section class="about-us">
@@ -76,9 +74,7 @@
     async function init() {
         await loadHTML('../templates/header.html', 'site-header');
         await loadHTML('../templates/footer.html', 'site-footer');
-
         await loadHTML('../templates/best-professor-card.html');
-
         loadBestProfessors();
     }
 
@@ -88,21 +84,17 @@
         fetch('../data/professors.json')
             .then(res => res.json())
             .then(professors => {
-
                 professors.sort((a, b) => b.stars - a.stars);
-
                 const container = document.querySelector('.lista-profesores');
                 const template = document.getElementById('best-professor-card-template');
 
                 professors.forEach(professor => {
                     const clone = template.content.cloneNode(true);
-
                     clone.querySelector('.stars').textContent = `${professor.stars} ☆`;
                     clone.querySelector('img').src = professor.image;
                     clone.querySelector('.professor-name').textContent = professor.name;
                     clone.querySelector('.professor-speciality').textContent = `Especialidad: ${professor.speciality}`;
                     clone.querySelector('.see-profile').href = `teacher.html?id=${professor.id}`;
-
                     container.appendChild(clone);
                 });
             });
@@ -114,17 +106,12 @@
         } else {
             alert("Debes iniciar sesión para guardar favoritos");
         }
-
-        setTimeout(function() {
-            window.location.href = "sign-in.html";
-        }, 500);
+        setTimeout(() => window.location.href = "sign-in.html", 500);
     }
 
     function setupGuestMode() {
         const favBtns = document.querySelectorAll('.fav-btn');
-        favBtns.forEach(btn => {
-            btn.classList.add('guest-mode');
-        });
+        favBtns.forEach(btn => btn.classList.add('guest-mode'));
     }
 
     document.addEventListener('DOMContentLoaded', setupGuestMode);
