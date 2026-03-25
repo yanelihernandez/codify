@@ -82,7 +82,10 @@
 
         <div class="botones">
             <a href="sign-in.html">¿Ya tienes una cuenta? Inicia sesión</a>
-            <button id="btnSignup" type="button">Registrarse</button>
+            <button id="btnSignup" type="button">
+                <span id="btnText">Registrarse</span>
+                <div id="btnSpinner" class="spinner"></div>
+            </button>
         </div>
 
     </div>
@@ -201,6 +204,19 @@
     document.getElementById('rep-contraseña').addEventListener('input', comprobarPass);
     document.getElementById('fecha-nacimiento').addEventListener('input', comprobarEdad);
 
+    function saveUser(userData) {
+        let usersData = JSON.parse(localStorage.getItem('codify_users')) || { users: [] };
+
+        const userExists = usersData.users.some(u => u.username === userData.username);
+        if (userExists) {
+            return false;
+        }
+
+        usersData.users.push(userData);
+        localStorage.setItem('codify_users', JSON.stringify(usersData));
+        return true;
+    }
+
     function showToast(message) {
         if (window.codify?.toast) window.codify.toast(message);
         else alert(message);
@@ -293,11 +309,54 @@
             return;
         }
 
-        showToast("Registro completado con éxito");
+        const btn = document.getElementById('btnSignup');
+        const btnText = document.getElementById('btnText');
+        const spinner = document.getElementById('btnSpinner');
+
+        btn.disabled = true;
+        btn.style.backgroundColor = "#ccc";
+        btn.style.cursor = "not-allowed";
+        btnText.style.display = "none";
+        spinner.style.display = "block";
+
+        const nuevoUsuario = {
+            nombre: nombre,
+            apellidos: apellidos,
+            fullName: (nombre + ' ' + apellidos).trim(),
+            fechaNacimiento: fechaNacimiento,
+            username: username,
+            password: pass1,
+            masInfo: "Usuario registrado"
+        };
+
+        const guardado = saveUser(nuevoUsuario);
+
+        if (!guardado) {
+            showToast("El nombre de usuario ya está registrado");
+            btn.disabled = false;
+            btn.style.backgroundColor = "";
+            btn.style.cursor = "";
+            btnText.style.display = "inline";
+            spinner.style.display = "none";
+            return;
+        }
+
+        if (window.codify?.setAuth) {
+            window.codify.setAuth({
+                loggedIn: true,
+                username: username,
+                fullName: nuevoUsuario.fullName,
+                fechaNacimiento: nuevoUsuario.fechaNacimiento,
+                nombre: nuevoUsuario.nombre,
+                apellidos: nuevoUsuario.apellidos
+            });
+        }
+
+        showToast("¡Registro completado con éxito!");
 
         setTimeout(() => {
-            window.location.href = 'sign-in.html';
-        }, 450);
+            window.location.href = 'home.html';
+        }, 1200);
     });
 </script>
 
