@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Reserva con Profesor</title>
+  <link rel="icon" type="image/png" href="../images/logo_web.png">
 
   <script src="../index.js"></script>
   <script src="../src/loader.js"></script>
@@ -36,29 +37,35 @@
       </div>
     </div>
 
-    <form class="booking-form">
+    <form class="booking-form" id="bookingForm">
       <div class="field full">
-        <label for="fullName">nombre y apellidos</label>
-        <input id="fullName" type="text" />
+        <label for="fullName">nombre y apellidos *</label>
+        <input id="fullName" type="text" placeholder="Ej: Juan Pérez García" />
+        <p class="error-msg-field" id="errorFullName">Por favor, rellena este campo</p>
       </div>
 
       <div class="field">
-        <label for="date">fecha</label>
+        <label for="date">fecha *</label>
         <input id="date" type="date" />
+        <p class="error-msg-field" id="errorDate">Por favor, rellena este campo</p>
       </div>
 
       <div class="field">
-        <label for="time">hora</label>
+        <label for="time">hora *</label>
         <input id="time" type="time" />
+        <p class="error-msg-field" id="errorTime">Por favor, rellena este campo</p>
       </div>
 
       <div class="field">
-        <label for="hours">nº de horas</label>
+        <label for="hours">nº de horas *</label>
         <select id="hours">
-          <option>1</option>
-          <option>2</option>
-          <option>3</option>
+          <option value="">Selecciona</option>
+          <option value="1">1 hora</option>
+          <option value="2">2 horas</option>
+          <option value="3">3 horas</option>
+          <option value="4">4 horas</option>
         </select>
+        <p class="error-msg-field" id="errorHours">Por favor, rellena este campo</p>
       </div>
 
       <div class="field modality">
@@ -77,12 +84,12 @@
 
       <div class="price-box">
         <p class="price-label">precio</p>
-        <p class="price-value">50€</p>
+        <p class="price-value" id="priceValue">0€</p>
       </div>
 
       <div class="booking-actions">
-        <a class="btn btn-cancel" href="teacher.html">cancelar</a>
-        <a class="btn btn-accept" href="my-bookings.html">aceptar</a>
+        <a class="btn btn-cancel" id="cancelBtn" href="#">cancelar</a>
+        <button type="button" class="btn btn-accept" id="acceptBtn">aceptar</button>
       </div>
     </form>
   </section>
@@ -94,8 +101,9 @@
   async function init() {
     await loadHTML('../templates/header.html', 'site-header');
     await loadHTML('../templates/footer.html', 'site-footer');
-
     loadProfessor();
+    setupEventListeners();
+    hideAllErrors();
   }
 
   const params = new URLSearchParams(window.location.search);
@@ -103,46 +111,101 @@
 
   let pricePerHour;
   let groupDiscount;
+  let currentProfessor = null;
 
   document.addEventListener('DOMContentLoaded', init);
 
-  const hoursSelect = document.getElementById("hours");
-  const toggle = document.getElementById("groupToggle");
+  function setupEventListeners() {
+    const hoursSelect = document.getElementById("hours");
+    const toggle = document.getElementById("groupToggle");
 
-  hoursSelect.addEventListener("change", updatePrice);
-  toggle.addEventListener("change", updatePrice);
+    if (hoursSelect) hoursSelect.addEventListener("change", updatePrice);
+    if (toggle) toggle.addEventListener("change", updatePrice);
 
+    const inputs = document.querySelectorAll('#fullName, #date, #time, #hours');
+    inputs.forEach(input => {
+      input.addEventListener('focus', function() {
+        this.classList.remove('input-error');
+      });
+      input.addEventListener('input', function() {
+        this.classList.remove('input-error');
+        const errorId = this.id === 'fullName' ? 'errorFullName' :
+                this.id === 'date' ? 'errorDate' :
+                        this.id === 'time' ? 'errorTime' :
+                                this.id === 'hours' ? 'errorHours' : null;
+        if (errorId) {
+          const errorEl = document.getElementById(errorId);
+          if (errorEl) errorEl.style.display = 'none';
+        }
+      });
+    });
+  }
+
+  function hideAllErrors() {
+    const errorElements = document.querySelectorAll('.error-msg-field');
+    errorElements.forEach(el => {
+      el.style.display = 'none';
+      if (el.id === "errorDate") {
+        el.textContent = "Por favor, rellena este campo";
+      }
+    });
+
+    const inputs = document.querySelectorAll('#fullName, #date, #time, #hours');
+    inputs.forEach(input => {
+      input.classList.remove('input-error');
+    });
+  }
 
   function loadProfessor() {
     fetch("../data/professors.json")
             .then(res => res.json())
             .then(data => {
+              currentProfessor = data.find(p => p.id === id);
+              if (!currentProfessor) {
+                console.error("Profesor no encontrado con id:", id);
+                return;
+              }
 
-              const prof = data.find(p => p.id === id);
+              const cancelBtn = document.querySelector('.btn-cancel');
+              if (cancelBtn) cancelBtn.href = `teacher.html?id=${currentProfessor.id}`;
 
-              document.querySelector('.btn-cancel').href = `../pages/teacher.html?id=${prof.id}`;
-              document.querySelector('.booking-teacher-name').textContent = prof.name;
-              document.querySelector('.booking-photo img').src = prof.image;
+              const teacherNameEl = document.querySelector('.booking-teacher-name');
+              if (teacherNameEl) teacherNameEl.textContent = currentProfessor.name;
 
-              pricePerHour = prof.hour_price;
-              groupDiscount = prof.group_discount;
+              const photoImg = document.querySelector('.booking-photo img');
+              if (photoImg) {
+                photoImg.src = currentProfessor.image;
+                photoImg.alt = currentProfessor.name;
+              }
+
+              pricePerHour = currentProfessor.hour_price;
+              groupDiscount = currentProfessor.group_discount || 0;
               updatePrice();
-
-            });
+            })
+            .catch(err => console.error("Error cargando profesor:", err));
   }
 
   function updatePrice() {
-    const hours = parseInt(document.getElementById("hours").value);
-    const isGroup = document.getElementById("groupToggle").checked;
+    const hoursSelect = document.getElementById("hours");
+    const toggle = document.getElementById("groupToggle");
+    const priceValue = document.getElementById("priceValue");
+
+    if (!hoursSelect || !priceValue) return;
+
+    const hours = parseInt(hoursSelect.value);
+    const isGroup = toggle ? toggle.checked : false;
+
+    if (isNaN(hours) || hours <= 0) {
+      priceValue.textContent = "0€";
+      return;
+    }
 
     let price = hours * pricePerHour;
+    if (isGroup && groupDiscount) price *= (1 - groupDiscount / 100);
 
-    if (isGroup) price *= (1 - groupDiscount/100);
-
-    document.querySelector(".price-value").textContent = price + "€";
+    priceValue.textContent = Math.round(price) + "€";
   }
-
-
 </script>
+
 </body>
 </html>
