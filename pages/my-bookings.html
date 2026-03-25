@@ -2,9 +2,12 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Reservas</title>
+    <title>Mis Reservas</title>
+    <link rel="icon" type="image/png" href="../images/logo_web.png">
+
     <script src="../index.js"></script>
     <script src="../src/loader.js"></script>
+
     <link rel="stylesheet" href="../styles/professors-programming-language.css">
     <link rel="stylesheet" href="../styles/reservation-card.css">
     <link rel="stylesheet" href="../styles/header.css">
@@ -19,15 +22,20 @@
 <main>
     <h1 class="page-title">Mis Reservas</h1>
 
-    <section class="reservation-list">
-        <!-- templates de tarjetas de reservas -->
+    <div id="noBookingsMessage" class="no-bookings" style="display: none;">
+        <p>No tienes reservas realizadas aún</p>
+        <a href="home.html" class="btn-explore">Explorar profesores</a>
+    </div>
+
+    <section class="reservation-list" id="reservationList">
+
     </section>
 </main>
 
-<div class="action-bar">
+<div class="action-bar" id="actionBar" style="display: none;">
     <div class="action-bar-content">
-        <button class="btn-save">Guardar cambios</button>
-        <button class="btn-cancel">Cancelar</button>
+        <button class="btn-save" id="saveChangesBtn">Guardar cambios</button>
+        <button class="btn-cancel" id="cancelChangesBtn">Cancelar</button>
     </div>
 </div>
 
@@ -38,94 +46,107 @@
         await loadHTML('../templates/header.html', 'site-header');
         await loadHTML('../templates/footer.html', 'site-footer');
 
-        await loadHTML('../templates/reservation-card.html');
-
         loadBookings();
-    }
 
-    function loadBookings() {
-        fetch('../data/professors.json')
-            .then(res => res.json())
-            .then(professors => {
-
-                const container = document.querySelector('.reservation-list');
-                const template = document.getElementById('reservation-card-template');
-
-                professors.forEach(professor => {
-                    const clone = template.content.cloneNode(true);
-
-                    clone.querySelector('img').src = professor.image;
-                    clone.querySelector('.professor-name').textContent = professor.name;
-                    clone.querySelector('.reservation-info').textContent = `Reserva con ${professor.name}`;
-
-                    container.appendChild(clone);
-                });
-            });
+        window.codify?.initCodifyUI?.();
     }
 
     document.addEventListener('DOMContentLoaded', init);
 
-    if (window.codify?.initCodifyUI) {
-        window.codify.initCodifyUI();
-    }
+    function getBookings() {
+        const auth = window.codify?.getAuth ? window.codify.getAuth() : { loggedIn: false };
 
-    const actionBar = document.querySelector('.action-bar');
-
-    function hideActionBar() {
-        if (actionBar) actionBar.style.display = 'none';
-    }
-
-    function showActionBar() {
-        if (actionBar) actionBar.style.display = 'block';
-    }
-
-    hideActionBar();
-
-    document.addEventListener('click', function(event) {
-        const btn = event.target.closest('button.cancel');
-        if (!btn) return;
-
-        if (btn.classList.contains('is-cancelled')) return;
-
-        btn.classList.add('is-cancelled');
-        btn.textContent = 'Reserva cancelada';
-        btn.disabled = true;
-
-        showActionBar();
-
-        if (window.codify?.toast) {
-            window.codify.toast('Reserva cancelada');
+        if (!auth.loggedIn) {
+            return [];
         }
-    });
 
-    document.querySelector('.btn-save')?.addEventListener('click', function() {
-        const cancelledCards = document.querySelectorAll('.reservation-card .cancel.is-cancelled');
+        const storageKey = `codify_bookings_${auth.username}`;
+        const bookings = JSON.parse(localStorage.getItem(storageKey)) || [];
 
-        cancelledCards.forEach(function(btn) {
-            const card = btn.closest('.reservation-card');
-            if (card) card.remove();
+        return bookings.filter(booking => booking.status !== 'cancelled');
+    }
+
+    function loadBookings() {
+        const bookings = getBookings();
+        const container = document.getElementById('reservationList');
+        const noBookingsMsg = document.getElementById('noBookingsMessage');
+
+        if (!container) return;
+
+        container.innerHTML = '';
+
+        if (bookings.length === 0) {
+            noBookingsMsg.style.display = 'block';
+            return;
+        }
+
+        noBookingsMsg.style.display = 'none';
+
+        bookings.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+        bookings.forEach(booking => {
+            const card = createBookingCard(booking);
+            container.appendChild(card);
+        });
+    }
+
+    function createBookingCard(booking) {
+        const card = document.createElement('article');
+        card.className = 'reservation-card';
+        card.dataset.bookingId = booking.id;
+
+        const formattedDate = new Date(booking.date).toLocaleDateString('es-ES', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
         });
 
-        if (window.codify?.toast) {
-            window.codify.toast('Cambios guardados');
-        }
-        hideActionBar();
-    });
+        const formattedTime = booking.time.substring(0, 5);
+        const duracionTexto = booking.hours === 1 ? '1 hora' : `${booking.hours} horas`;
 
-    document.querySelector('.btn-cancel')?.addEventListener('click', function() {
-        const cancelledButtons = document.querySelectorAll('.reservation-card .cancel.is-cancelled');
+        card.innerHTML = `
+            <img src="${booking.professorImage}" alt="${booking.professorName}">
+            <div class="reservation-content">
+                <p class="professor-name">${booking.professorName}</p>
+                <div class="reservation-details">
+                    <div class="detail-row">
+                        <span class="detail-label">Fecha:</span>
+                        <span class="detail-value">${formattedDate}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Hora:</span>
+                        <span class="detail-value">${formattedTime}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Duración:</span>
+                        <span class="detail-value">${duracionTexto}</span>
+                    </div>
+                </div>
+            </div>
+            <button class="cancel" data-booking-id="${booking.id}">Cancelar reserva</button>
+        `;
 
-        cancelledButtons.forEach(function(btn) {
-            btn.classList.remove('is-cancelled');
-            btn.textContent = 'Cancelar Reserva';
-            btn.disabled = false;
+        return card;
+    }
+
+    const saveBtn = document.getElementById('saveChangesBtn');
+    if (saveBtn) {
+        saveBtn.addEventListener('click', () => {
+            if (window.codify?.toast) {
+                window.codify.toast('Cambios guardados');
+            }
         });
+    }
 
-        if (window.codify?.toast) {
-            window.codify.toast('Cambios cancelados');
-        }
-        hideActionBar();
-    });
+    const cancelBtn = document.getElementById('cancelChangesBtn');
+    if (cancelBtn) {
+        cancelBtn.addEventListener('click', () => {
+            loadBookings();
+            if (window.codify?.toast) {
+                window.codify.toast('Cambios cancelados');
+            }
+        });
+    }
 </script>
 
 </body>
