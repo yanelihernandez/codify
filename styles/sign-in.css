@@ -87,6 +87,7 @@ main {
     justify-content: center;
     color: #666;
 }
+
 .toggle-btn:hover {
     color: #000;
 }
@@ -124,10 +125,12 @@ main {
     text-decoration: underline;
 }
 
-
-.error-msg{
-    /*display: none;*/      /* para activar/desactivar */
+.error-msg {
     font-size: 15px;
     color: red;
     margin: 0;
+}
+
+.input-error {
+    border: 1px solid red !important;
 }
