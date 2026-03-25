@@ -96,3 +96,9 @@ main {
     text-align: center;
     line-height: 1.2;
 }
+
+@media(max-width: 1210px){
+    .bloque_inicio{
+        flex-direction: column;
+    }
+}
