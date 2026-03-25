@@ -147,3 +147,33 @@
     transform: translateX(-50%);
     margin-top: 10px;
 }
+
+#site-header .menu-toggle {
+    display: none;
+}
+
+@media(max-width:800px){
+    #site-header section {
+        display: none;
+    }
+
+    #site-header .menu-toggle {
+        display: block;
+        background-color: #4b7e07;
+        border-radius: 20%;
+        font-size: 15px;
+        font-weight: bold;
+        transition: 0.3s ease;
+    }
+    #site-header .menu-toggle:hover {
+        background-color: #426e06;
+        transform: scale(1.08);
+    }
+
+    #site-header .header-left{
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 20px;
+    }
+}
