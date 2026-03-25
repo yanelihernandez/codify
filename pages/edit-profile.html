@@ -180,6 +180,14 @@
         localStorage.setItem('codify_profile', JSON.stringify(profile));
     }
 
+    function loadUserData() {
+        const auth = window.codify?.getAuth?.();
+        if (!auth?.loggedIn) return null;
+
+        const usersData = JSON.parse(localStorage.getItem('codify_users')) || { users: [] };
+        return usersData.users.find(u => u.username === auth.username);
+    }
+
     function showToast(message) {
         if (window.codify?.toast) {
             window.codify.toast(message);
@@ -197,13 +205,14 @@
         }
 
         const profile = loadProfile() || {};
+        const userData = loadUserData();
 
-        document.getElementById('nombre').value = profile.nombre || '';
-        document.getElementById('apellidos').value = profile.apellidos || '';
-        document.getElementById('fecha-nacimiento').value = profile.fechaNacimiento || '';
-        document.getElementById('username').value = profile.username || auth.username || '';
+        document.getElementById('nombre').value = userData?.nombre || profile.nombre || '';
+        document.getElementById('apellidos').value = userData?.apellidos || profile.apellidos || '';
+        document.getElementById('fecha-nacimiento').value = userData?.fechaNacimiento || profile.fechaNacimiento || '';
+        document.getElementById('username').value = userData?.username || profile.username || auth.username || '';
 
-        if (profile.fechaNacimiento) {
+        if ((userData?.fechaNacimiento || profile.fechaNacimiento)) {
             comprobarEdad();
         }
     });
@@ -237,6 +246,7 @@
     document.getElementById('btnSave').addEventListener('click', function() {
         const perfilActual = loadProfile() || {};
         const auth = window.codify?.getAuth?.() || {};
+        const userData = loadUserData();
 
         const nombre = document.getElementById('nombre').value.trim();
         const apellidos = document.getElementById('apellidos').value.trim();
@@ -272,12 +282,18 @@
         let partes = fechaNacimiento.split("-");
         if (partes.length != 3 || partes[2].length < 4) {
             showToast("Formato incorrecto. Usa DD-MM-YYYY");
+            document.getElementById('fecha-nacimiento').classList.add('input-error');
+            document.getElementById('fechaError').innerText = "Formato incorrecto. Usa DD-MM-YYYY";
+            document.getElementById('fechaError').style.display = 'block';
             return;
         }
 
         let fechaNac = new Date(partes[2] + "-" + partes[1] + "-" + partes[0]);
         if (fechaNac == "Invalid Date" || isNaN(fechaNac.getTime())) {
             showToast("Fecha no válida");
+            document.getElementById('fecha-nacimiento').classList.add('input-error');
+            document.getElementById('fechaError').innerText = "Fecha no válida";
+            document.getElementById('fechaError').style.display = 'block';
             return;
         }
 
@@ -311,16 +327,29 @@
             apellidos: apellidos,
             fullName: (nombre + ' ' + apellidos).trim(),
             fechaNacimiento: fechaNacimiento,
-            username: username
+            username: username,
+            masInfo: userData?.masInfo || perfilActual.masInfo || "Usuario registrado"
         };
 
-        saveProfile(nuevoPerfil);
+        if (pass1.length > 0) {
+            nuevoPerfil.password = pass1;
+        }
+
+        saveProfile({
+            nombre: nuevoPerfil.nombre,
+            apellidos: nuevoPerfil.apellidos,
+            fullName: nuevoPerfil.fullName,
+            fechaNacimiento: nuevoPerfil.fechaNacimiento,
+            username: nuevoPerfil.username,
+            masInfo: nuevoPerfil.masInfo
+        });
 
         if (username !== auth.username) {
             window.codify?.setAuth?.({
                 ...auth,
                 loggedIn: true,
-                username: username
+                username: username,
+                fullName: nuevoPerfil.fullName
             });
         }
 
