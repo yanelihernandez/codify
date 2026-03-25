@@ -75,6 +75,7 @@
         await loadHTML('../templates/footer.html', 'site-footer');
         await loadHTML('../templates/best-professor-card.html');
         await loadBestProfessors();
+        window.codify?.initCodifyUI?.();
     }
 
     document.addEventListener('DOMContentLoaded', init);
@@ -92,11 +93,14 @@
 
         const container = document.querySelector('.lista-profesores');
         const template = document.getElementById('best-professor-card-template');
+        if (!template) return;
+        container.innerHTML = '';
 
         professors.forEach(professor => {
             const clone = template.content.cloneNode(true);
             clone.querySelector('.stars').textContent = `${professor.rating} ☆`;
             clone.querySelector('img').src = professor.image;
+            clone.querySelector('img').alt = professor.name;
             clone.querySelector('.professor-name').textContent = professor.name;
             clone.querySelector('.professor-speciality').textContent = `Especialidad: ${professor.speciality}`;
             clone.querySelector('.see-profile').href = `teacher.html?id=${professor.id}`;
