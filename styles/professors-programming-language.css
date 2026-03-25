@@ -1,12 +1,10 @@
 body {
     margin: 0;
     font-family: Arial, sans-serif;
-
     display: flex;
     flex-direction: column;
     min-height: 100vh;
 }
-
 
 main {
     flex: 1;
@@ -19,12 +17,6 @@ main {
     flex-direction: column;
     padding: 30px;
 }
-
-.introduction-title{
-    font-size: 35px;
-    font-weight: bold;
-}
-
 
 .introduction-title {
     margin: 0 0 10px 0;
