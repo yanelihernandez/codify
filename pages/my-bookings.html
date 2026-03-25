@@ -320,30 +320,57 @@
     }
 
     function executeCancelBooking(bookingId, cardElement) {
-        cardElement.style.opacity = '0';
-        cardElement.style.transform = 'translateX(30px)';
+        const auth = window.codify?.getAuth ? window.codify.getAuth() : { loggedIn: false };
 
-        setTimeout(() => {
-            cardElement.remove();
+        if (!auth.loggedIn) return;
 
-            const remainingCards = document.querySelectorAll('.reservation-card');
-            if (remainingCards.length === 0) {
-                document.getElementById('noBookingsMessage').style.display = 'block';
-            }
+        const storageKey = `codify_bookings_${auth.username}`;
+        let allBookings = JSON.parse(localStorage.getItem(storageKey)) || [];
 
-            if (window.codify?.toast) {
-                window.codify.toast('Reserva cancelada correctamente');
-            }
-        }, 300);
+        const bookingIndex = allBookings.findIndex(b => b.id === bookingId);
+
+        if (bookingIndex !== -1) {
+            allBookings[bookingIndex].status = 'cancelled';
+            localStorage.setItem(storageKey, JSON.stringify(allBookings));
+
+            cardElement.style.opacity = '0';
+            cardElement.style.transform = 'translateX(30px)';
+
+            setTimeout(() => {
+                cardElement.remove();
+
+                const remainingBookings = getBookings();
+                if (remainingBookings.length === 0) {
+                    document.getElementById('noBookingsMessage').style.display = 'block';
+                }
+
+                if (window.codify?.toast) {
+                    window.codify.toast('Reserva cancelada correctamente');
+                }
+            }, 300);
+        }
+    }
+
+    function deleteCancelledBookings() {
+        const auth = window.codify?.getAuth ? window.codify.getAuth() : { loggedIn: false };
+
+        if (!auth.loggedIn) return;
+
+        const storageKey = `codify_bookings_${auth.username}`;
+        let allBookings = JSON.parse(localStorage.getItem(storageKey)) || [];
+
+        const activeBookings = allBookings.filter(b => b.status !== 'cancelled');
+        localStorage.setItem(storageKey, JSON.stringify(activeBookings));
+
+        loadBookings();
+        if (window.codify?.toast) {
+            window.codify.toast('🗑Reservas eliminadas');
+        }
     }
 
     const saveBtn = document.getElementById('saveChangesBtn');
     if (saveBtn) {
-        saveBtn.addEventListener('click', () => {
-            if (window.codify?.toast) {
-                window.codify.toast('Cambios guardados');
-            }
-        });
+        saveBtn.addEventListener('click', deleteCancelledBookings);
     }
 
     const cancelBtn = document.getElementById('cancelChangesBtn');
