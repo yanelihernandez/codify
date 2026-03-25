@@ -41,17 +41,201 @@
 
 <footer id="site-footer" xlu-include-file="../templates/footer.html"></footer>
 
+<div id="confirmModal" class="confirm-modal" style="display: none;">
+    <div class="confirm-modal-content">
+        <div class="confirm-modal-header">
+            <span class="confirm-icon"></span>
+            <h3>Cancelar reserva</h3>
+        </div>
+        <p>¿Estás seguro de que quieres cancelar esta reserva?</p>
+        <p class="confirm-booking-info" id="confirmBookingInfo"></p>
+        <div class="confirm-modal-buttons">
+            <button class="confirm-btn confirm-no" id="confirmNoBtn">No, mantener</button>
+            <button class="confirm-btn confirm-yes" id="confirmYesBtn">Sí, cancelar</button>
+        </div>
+    </div>
+</div>
+
+<style>
+    .confirm-modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.6);
+        backdrop-filter: blur(4px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 10000;
+        animation: fadeIn 0.2s ease;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+
+    .confirm-modal-content {
+        background: white;
+        border-radius: 24px;
+        max-width: 400px;
+        width: 90%;
+        padding: 28px 24px;
+        text-align: center;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+        animation: slideUp 0.3s ease;
+    }
+
+    @keyframes slideUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .confirm-modal-header {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        margin-bottom: 20px;
+    }
+
+    .confirm-icon {
+        font-size: 2.5rem;
+    }
+
+    .confirm-modal-header h3 {
+        margin: 0;
+        font-size: 1.4rem;
+        color: #dc2626;
+        font-weight: 700;
+    }
+
+    .confirm-modal-content p {
+        color: #4a5568;
+        margin: 10px 0;
+        font-size: 1rem;
+        line-height: 1.5;
+    }
+
+    .confirm-booking-info {
+        background: #f7fafc;
+        padding: 12px;
+        border-radius: 12px;
+        font-size: 0.9rem;
+        color: #2d3748;
+        margin: 15px 0;
+    }
+
+    .confirm-modal-buttons {
+        display: flex;
+        gap: 12px;
+        margin-top: 20px;
+        justify-content: center;
+    }
+
+    .confirm-btn {
+        padding: 10px 24px;
+        border-radius: 40px;
+        font-weight: 600;
+        font-size: 0.9rem;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        border: none;
+    }
+
+    .confirm-yes {
+        background: linear-gradient(135deg, #dc2626, #b91c1c);
+        color: white;
+        box-shadow: 0 2px 8px rgba(220, 38, 38, 0.3);
+    }
+
+    .confirm-yes:hover {
+        transform: scale(1.02);
+        background: linear-gradient(135deg, #b91c1c, #991b1b);
+    }
+
+    .confirm-no {
+        background: #e2e8f0;
+        color: #4a5568;
+    }
+
+    .confirm-no:hover {
+        background: #cbd5e0;
+        transform: scale(1.02);
+    }
+</style>
+
 <script>
+    let pendingCancelBookingId = null;
+    let pendingCancelCard = null;
+
     async function init() {
         await loadHTML('../templates/header.html', 'site-header');
         await loadHTML('../templates/footer.html', 'site-footer');
 
         loadBookings();
+        setupModalListeners();
 
         window.codify?.initCodifyUI?.();
     }
 
     document.addEventListener('DOMContentLoaded', init);
+
+    function setupModalListeners() {
+        const modal = document.getElementById('confirmModal');
+        const confirmYes = document.getElementById('confirmYesBtn');
+        const confirmNo = document.getElementById('confirmNoBtn');
+
+        confirmYes.addEventListener('click', () => {
+            if (pendingCancelBookingId !== null) {
+                executeCancelBooking(pendingCancelBookingId, pendingCancelCard);
+            }
+            closeModal();
+        });
+
+        confirmNo.addEventListener('click', () => {
+            closeModal();
+        });
+
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                closeModal();
+            }
+        });
+    }
+
+    function openModal(bookingId, cardElement, professorName, date, time) {
+        const modal = document.getElementById('confirmModal');
+        const bookingInfo = document.getElementById('confirmBookingInfo');
+
+        const formattedDate = new Date(date).toLocaleDateString('es-ES', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+        });
+
+        bookingInfo.innerHTML = `<strong>${professorName}</strong><br>${formattedDate} - ${time.substring(0, 5)}`;
+
+        pendingCancelBookingId = bookingId;
+        pendingCancelCard = cardElement;
+
+        modal.style.display = 'flex';
+    }
+
+    function closeModal() {
+        const modal = document.getElementById('confirmModal');
+        modal.style.display = 'none';
+        pendingCancelBookingId = null;
+        pendingCancelCard = null;
+    }
 
     function getBookings() {
         const auth = window.codify?.getAuth ? window.codify.getAuth() : { loggedIn: false };
@@ -126,7 +310,31 @@
             <button class="cancel" data-booking-id="${booking.id}">Cancelar reserva</button>
         `;
 
+        const cancelBtn = card.querySelector('.cancel');
+        cancelBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            openModal(booking.id, card, booking.professorName, booking.date, booking.time);
+        });
+
         return card;
+    }
+
+    function executeCancelBooking(bookingId, cardElement) {
+        cardElement.style.opacity = '0';
+        cardElement.style.transform = 'translateX(30px)';
+
+        setTimeout(() => {
+            cardElement.remove();
+
+            const remainingCards = document.querySelectorAll('.reservation-card');
+            if (remainingCards.length === 0) {
+                document.getElementById('noBookingsMessage').style.display = 'block';
+            }
+
+            if (window.codify?.toast) {
+                window.codify.toast('Reserva cancelada correctamente');
+            }
+        }, 300);
     }
 
     const saveBtn = document.getElementById('saveChangesBtn');
