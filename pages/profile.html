@@ -26,6 +26,15 @@
             <h1>Mi Perfil</h1>
             <img id="profileImage" src="../images/perfil.jpg" alt="Foto de perfil">
 
+            <div class="upload-container">
+                <div class="camera-icon-wrapper" id="cameraIconWrapper">
+                    <span class="camera-icon">📷</span>
+                    <span class="camera-tooltip">Cambiar foto de perfil</span>
+                </div>
+                <span id="fileName">Ningún archivo seleccionado</span>
+                <input type="file" id="inputImage" accept="image/*" style="display: none;">
+            </div>
+
             <div class="info-tarjeta">
                 <p id="profileUsername" class="username-bold">Invitado</p>
                 <div class="info-detalles">
@@ -92,10 +101,50 @@
 
         loadChats();
         await loadFavProfessors();
+        setupProfileImage();
         window.codify?.initCodifyUI?.();
     }
 
     document.addEventListener('DOMContentLoaded', init);
+
+    function updateHeaderImage(imageSrc) {
+        const headerImg = document.querySelector('#site-header .profile img');
+        if (headerImg) headerImg.src = imageSrc;
+        localStorage.setItem('codify_profile_image', imageSrc);
+    }
+
+    function setupProfileImage() {
+        const cameraWrapper = document.getElementById('cameraIconWrapper');
+        const inputImage = document.getElementById('inputImage');
+        const profileImage = document.getElementById('profileImage');
+        const fileName = document.getElementById('fileName');
+
+        const savedImage = localStorage.getItem('codify_profile_image');
+        if (savedImage) {
+            profileImage.src = savedImage;
+            updateHeaderImage(savedImage);
+        }
+
+        if (cameraWrapper) {
+            cameraWrapper.addEventListener('click', () => inputImage.click());
+        }
+
+        inputImage.addEventListener('change', function () {
+            const file = this.files[0];
+            if (!file) return;
+            fileName.textContent = file.name;
+
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const imageData = e.target.result;
+                profileImage.src = imageData;
+                localStorage.setItem('codify_profile_image', imageData);
+                updateHeaderImage(imageData);
+                if (window.codify?.toast) window.codify.toast("Foto de perfil actualizada");
+            };
+            reader.readAsDataURL(file);
+        });
+    }
 
     async function loadFavProfessors() {
         const resOpinions = await fetch('../data/opinions.json');
@@ -188,6 +237,12 @@
                 apellidos: surname,
                 fechaNacimiento: birth !== 'No especificada' ? birth : auth.fechaNacimiento
             });
+        }
+
+        const savedImage = localStorage.getItem('codify_profile_image');
+        if (savedImage) {
+            const profileImg = document.getElementById('profileImage');
+            if (profileImg) profileImg.src = savedImage;
         }
     };
 </script>
