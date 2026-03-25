@@ -99,6 +99,7 @@ main {
     justify-content: center;
     color: #666;
 }
+
 .toggle-btn:hover {
     color: #000;
 }
@@ -183,4 +184,55 @@ main {
     line-height: 1.5;
     width: 80%;
     max-width: 700px;
+}
+
+.input-error {
+    border: 1px solid #d30a0a !important;
+}
+
+.error-msg-empty {
+    display: none;
+    font-size: 13px;
+    color: #d30a0a;
+    margin: 4px 0 0 0;
+}
+
+.progress-container {
+    width: 80%;
+    max-width: 700px;
+    background-color: #e0e0e0;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    height: 10px;
+    overflow: hidden;
+}
+
+.progress-bar-fill {
+    height: 100%;
+    width: 0%;
+    background-color: #87ab69;
+    border-radius: 8px;
+    transition: width 0.4s ease-in-out, background-color 0.4s ease;
+}
+
+.spinner {
+    display: none;
+    width: 16px;
+    height: 16px;
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    border-top-color: white;
+    animation: spin 1s ease-in-out infinite;
+    margin: 0 auto;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+#btnSignup {
+    min-width: 120px;
+    text-align: center;
 }
