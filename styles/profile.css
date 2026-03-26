@@ -166,6 +166,7 @@ html, body {
 
 .fav-professors-content {
     display: flex;
+    justify-content: center;
     flex-wrap: wrap;
     gap: 2rem;
     margin: 50px;
