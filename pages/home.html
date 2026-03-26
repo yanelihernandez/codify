@@ -103,7 +103,7 @@
         if (!template) return;
         container.innerHTML = '';
 
-        professors.forEach(professor => {
+        professors.slice(0,10).forEach(professor => {
             const clone = template.content.cloneNode(true);
             clone.querySelector('.stars').textContent = `${professor.rating} ☆`;
             clone.querySelector('img').src = professor.image;
