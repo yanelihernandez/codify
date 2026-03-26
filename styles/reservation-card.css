@@ -124,3 +124,16 @@
 .cancel.is-cancelled:hover {
     transform: none;
 }
+
+
+@media(max-width: 900px) {
+    .reservation-card {
+        width: 90%;
+    }
+}
+
+@media(max-width: 650px) {
+    .reservation-card {
+        flex-direction: column;
+    }
+}
