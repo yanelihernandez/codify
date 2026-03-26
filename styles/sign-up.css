@@ -45,7 +45,7 @@ main {
 
 .fila-doble {
     display: flex;
-    gap: 15px;
+    gap: 0 15px;
     width: 100%;
     margin-bottom: 0;
 }
@@ -235,4 +235,10 @@ main {
 #btnSignup {
     min-width: 120px;
     text-align: center;
+}
+
+@media(max-width: 750px) {
+    .fila-doble {
+        flex-direction: column;
+    }
 }
