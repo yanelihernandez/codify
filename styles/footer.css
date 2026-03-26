@@ -76,3 +76,9 @@
     text-align: center;
     padding: 12px 18px;
 }
+
+@media(max-width:600px){
+    .footer-links a{
+        font-size: 13px;
+    }
+}
