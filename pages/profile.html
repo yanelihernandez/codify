@@ -25,26 +25,20 @@
     <div class="contenedor">
         <div class="izquierda">
             <h1>Mi Perfil</h1>
-            <div class="profile-header-mobile">
-                <img id="profileImage" src="../images/perfil.jpg" alt="Foto de perfil">
 
-                <div class="buttons mobile-buttons">
-                    <a href="./edit-profile.html">Modificar perfil</a>
-                    <a href="./my-bookings.html">Ver Reservas</a>
-                </div>
-            </div>
+            <section id="profile-section">
+                <div id="profile-info">
+                    <img id="profileImage" src="../images/perfil.jpg" alt="Foto de perfil">
 
-            <div class="upload-container">
-                <div class="camera-icon-wrapper" id="cameraIconWrapper">
-                    <span class="camera-icon">📷</span>
-                    <span class="camera-tooltip">Cambiar foto de perfil</span>
-                </div>
-                <span id="fileName">Ningún archivo seleccionado</span>
-                <input type="file" id="inputImage" accept="image/*" style="display: none;">
-            </div>
+                    <div class="upload-container">
+                        <div class="camera-icon-wrapper" id="cameraIconWrapper">
+                            <span class="camera-icon">📷</span>
+                            <span class="camera-tooltip">Cambiar foto de perfil</span>
+                        </div>
+                        <span id="fileName">Ningún archivo seleccionado</span>
+                        <input type="file" id="inputImage" accept="image/*" style="display: none;">
+                    </div>
 
-            <div id="profile-section">
-                <div id="profile-left-section">
                     <div class="info-tarjeta">
                         <p id="profileUsername" class="username-bold">Invitado</p>
                         <div class="info-detalles">
@@ -53,21 +47,23 @@
                             <p><span>Nacimiento:</span> <span id="profileBirth">Fecha de nacimiento</span></p>
                         </div>
                     </div>
-
+                </div>
+                <div id="profile-buttons">
                     <div class="buttons desktop-buttons">
                         <a href="./edit-profile.html">Modificar perfil</a>
                         <a href="./my-bookings.html">Ver Reservas</a>
                     </div>
+
+                    <div id="mobile-buttons">
+                        <a href="#derecha">
+                            <span class="camera-icon">📩</span>
+                        </a>
+                        <a href="#fav-professors">
+                            <span class="camera-icon">❤️</span>
+                        </a>
+                    </div>
                 </div>
-                <div id="profile-right-section">
-                    <a href="#derecha">
-                        <span class="camera-icon">📩</span>
-                    </a>
-                    <a href="#fav-professors">
-                        <span class="camera-icon">❤️</span>
-                    </a>
-                </div>
-            </div>
+            </section>
 
             <section class="calendar-section">
                 <div class="calendar-placeholder">
