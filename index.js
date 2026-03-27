@@ -142,6 +142,16 @@ function updateHeader() {
         username.textContent = 'Invitado';
         if (profileImg) profileImg.src = '../images/perfil.jpg';
         if (logoutBtn) logoutBtn.style.display = 'none';
+
+        const footerLinks = document.querySelectorAll('.footer-links a');
+
+        if (footerLinks.length > 0) {
+            const targetHome = auth.loggedIn ? 'home.html' : 'home-public.html';
+
+            footerLinks.forEach(link => {
+                link.href = `${targetHome}#acerca-codify`;
+            });
+        }
     }
 }
 
