@@ -44,7 +44,7 @@ Durante este sprint, la interfaz ha sufrido mejoras sustanciales para optimizar 
 ---
 
 ## 💻 Mockups RWD
-El prototipado final que incluye las vistas de **Tablet y Móvil** se ha realizado en **Figma**. Todos los detalles, textos e interacciones se encuentran detallados en el archivo **`sprint2-mockups.pdf`**, diseñado para visualizarse con total claridad mediante el uso de zoom.
+El prototipado final que incluye las vistas de **Tablet y Móvil** se ha realizado en **Figma**. Todos los detalles, textos e interacciones se encuentran detallados en el archivo **`sprint2-mockupsRWD.pdf`**, diseñado para visualizarse con total claridad mediante el uso de zoom.
 
 <img width="1556" height="594" alt="Captura de pantalla Mockups" src="https://github.com/user-attachments/assets/1733bcc5-6658-453b-b423-a2d09db7e55e" />
 
