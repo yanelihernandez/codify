@@ -4,41 +4,111 @@
     "professor_id": 1,
     "user": "Ana",
     "rating": 5,
-    "comment": "Explica muy bien"
+    "comment": "Explica muy bien, hace fácil lo complejo. Lo recomiendo 100%."
   },
   {
     "id": 2,
     "professor_id": 1,
     "user": "Carlos",
     "rating": 4,
-    "comment": "Buen profesor"
+    "comment": "Buen profesor, pero a veces se desvía del tema. Aún así aprendí mucho."
   },
   {
-  "id": 3,
-  "professor_id": 1,
-  "user": "Juan",
-  "rating": 4.5,
-  "comment": "Excelente trato!"
+    "id": 3,
+    "professor_id": 1,
+    "user": "Juan",
+    "rating": 4.5,
+    "comment": "Excelente trato! Muy paciente y resuelve todas las dudas."
   },
   {
-  "id": 4,
-  "professor_id": 2,
-  "user": "Carlos",
-  "rating": 4,
-  "comment": "He aprendido mucho"
+    "id": 4,
+    "professor_id": 2,
+    "user": "Carlos",
+    "rating": 4,
+    "comment": "He aprendido mucho con Maria. Sus ejemplos prácticos son muy útiles."
   },
   {
     "id": 5,
     "professor_id": 2,
     "user": "Juan",
     "rating": 5,
-    "comment": "Le sobran conocimientos!"
+    "comment": "Le sobran conocimientos! Las clases son muy dinámicas y entretenidas."
   },
   {
     "id": 6,
     "professor_id": 3,
     "user": "Ana",
     "rating": 5,
-    "comment": "Buen servicio"
+    "comment": "Buen servicio y muy profesional. Fernando sabe muchísimo de C."
+  },
+  {
+    "id": 7,
+    "professor_id": 4,
+    "user": "Miguel",
+    "rating": 5,
+    "comment": "Lucía es increíble, aprendí Python demasiado rápido. Muy didáctica."
+  },
+  {
+    "id": 8,
+    "professor_id": 4,
+    "user": "Elena",
+    "rating": 4.8,
+    "comment": "Muy clara en sus explicaciones. La recomiendo 100% para Python."
+  },
+  {
+    "id": 9,
+    "professor_id": 5,
+    "user": "Pablo",
+    "rating": 5,
+    "comment": "Carlos es un experto en Java, sus clases son de otro nivel. Aprendí muchísimo."
+  },
+  {
+    "id": 10,
+    "professor_id": 5,
+    "user": "Laura",
+    "rating": 4.5,
+    "comment": "Muy buen profesor, explica con ejemplos prácticos. Lo recomiendo."
+  },
+  {
+    "id": 11,
+    "professor_id": 6,
+    "user": "David",
+    "rating": 5,
+    "comment": "Sofía me ayudó a entender los punteros y la gestión de memoria. Excelente!"
+  },
+  {
+    "id": 12,
+    "professor_id": 6,
+    "user": "Sara",
+    "rating": 4.5,
+    "comment": "Muy paciente y resuelve todas las dudas. Aprendí mucho con ella."
+  },
+  {
+    "id": 13,
+    "professor_id": 7,
+    "user": "Javier",
+    "rating": 5,
+    "comment": "Antonio es el mejor en la arquitectura de computadores. Sus clases son increíbles."
+  },
+  {
+    "id": 14,
+    "professor_id": 7,
+    "user": "Laura",
+    "rating": 4.8,
+    "comment": "Muy profundo en sus explicaciones. Ahora entiendo cómo funciona realmente un ordenador."
+  },
+  {
+    "id": 15,
+    "professor_id": 8,
+    "user": "Pablo",
+    "rating": 5,
+    "comment": "Gracias a ella por fin aprobé los exámenes finales."
+  },
+  {
+    "id": 16,
+    "professor_id": 8,
+    "user": "Miguel",
+    "rating": 5,
+    "comment": "La mejor profesora. Muy recomendada."
   }
 ]
