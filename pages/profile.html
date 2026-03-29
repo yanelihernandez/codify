@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <title>Perfil</title>
     <link rel="icon" type="image/png" href="../images/logo_web.png">
-    <script src="../index.js"></script>
     <script src="../src/loader.js"></script>
-    <script src="../src/utils.js"></script>
+    <script type="module" src="../src/utils.js"></script>
+    <script type="module" src="../src/main.js"></script>
     <link rel="stylesheet" href="../styles/profile.css">
     <link rel="stylesheet" href="../styles/header.css">
     <link rel="stylesheet" href="../styles/aside-nav.css">
@@ -17,7 +17,7 @@
 </head>
 <body>
 
-<header id="site-header" xlu-include-file="../templates/header.html"></header>
+<header id="site-header"></header>
 
 <aside id="aside-nav"></aside>
 
@@ -104,29 +104,34 @@
     </div>
 </main>
 
-<footer id="site-footer" xlu-include-file="../templates/footer.html"></footer>
+<footer id="site-footer"></footer>
 
-<script>
+<script type="module">
+    import { setupAsideNavBar, calculateRating } from '../src/utils.js';
+
     async function init() {
-        await loadHTML('../templates/header.html', 'site-header');
-        await loadHTML('../templates/aside.html', 'aside-nav');
+        console.log('Iniciando profile.html...');
+
+        await window.loadHTML('../templates/header.html', 'site-header');
+        await window.loadHTML('../templates/aside.html', 'aside-nav');
         setupAsideNavBar();
-        await loadHTML('../templates/footer.html', 'site-footer');
-        await loadHTML('../templates/best-professor-card.html');
-        await loadHTML('../templates/chat-card.html');
-        loadChats();
-        await loadFavProfessors();
-        setupProfileImage();
-        window.codify?.initCodifyUI?.();
+        await window.loadHTML('../templates/footer.html', 'site-footer');
+        await window.loadHTML('../templates/best-professor-card.html');
+        await window.loadHTML('../templates/chat-card.html');
+
+        setTimeout(() => {
+            loadChats();
+            loadFavProfessors();
+            setupProfileImage();
+            window.codify?.initCodifyUI?.();
+        }, 100);
     }
 
     document.addEventListener('DOMContentLoaded', init);
 
-    // Actualiza la foto en el header cuando se cambia desde el perfil
     function updateHeaderImage(imageSrc) {
         const headerImg = document.querySelector('#site-header .profile img');
         if (headerImg) headerImg.src = imageSrc;
-        localStorage.setItem('codify_profile_image', imageSrc);
     }
 
     function setupProfileImage() {
@@ -135,31 +140,107 @@
         const profileImage = document.getElementById('profileImage');
         const fileName = document.getElementById('fileName');
 
-        const savedImage = localStorage.getItem('codify_profile_image');
+        if (!cameraWrapper || !inputImage || !profileImage) {
+            console.warn('Elementos de foto de perfil no encontrados');
+            return;
+        }
+
+        const savedImage = window.codify?.getProfileImage ? window.codify.getProfileImage() : null;
         if (savedImage) {
             profileImage.src = savedImage;
             updateHeaderImage(savedImage);
         }
 
-        if (cameraWrapper) {
-            cameraWrapper.addEventListener('click', () => inputImage.click());
-        }
+        cameraWrapper.addEventListener('click', () => inputImage.click());
 
         inputImage.addEventListener('change', function () {
             const file = this.files[0];
             if (!file) return;
-            fileName.textContent = file.name;
+            if (fileName) fileName.textContent = file.name;
 
             const reader = new FileReader();
             reader.onload = (e) => {
                 const imageData = e.target.result;
                 profileImage.src = imageData;
-                localStorage.setItem('codify_profile_image', imageData);
+
+                if (window.codify?.saveProfileImage) {
+                    window.codify.saveProfileImage(imageData);
+                }
                 updateHeaderImage(imageData);
+
                 if (window.codify?.toast) window.codify.toast("Foto de perfil actualizada");
             };
             reader.readAsDataURL(file);
         });
+    }
+
+    function loadChats() {
+        const auth = window.codify?.getAuth ? window.codify.getAuth() : { loggedIn: false };
+        if (!auth.loggedIn) return;
+
+        const storageKey = `codify_bookings_${auth.username}`;
+        const bookings = JSON.parse(localStorage.getItem(storageKey)) || [];
+
+        const professorIds = [...new Set(bookings.map(b => b.professorId))];
+
+        const container = document.querySelector('.chats-section');
+
+        if (professorIds.length === 0) {
+            if (container) {
+                container.innerHTML = '<p style="text-align: center; padding: 40px;">Aún no tienes chats. Reserva una clase para empezar a chatear.</p>';
+            }
+            return;
+        }
+
+        fetch('../data/professors.json')
+            .then(res => res.json())
+            .then(professors => {
+                const template = document.getElementById('chat-template');
+
+                if (!container || !template) return;
+
+                container.innerHTML = '';
+
+                const chatProfessors = professors.filter(p => professorIds.includes(p.id));
+
+                chatProfessors.forEach(professor => {
+                    const professorBookings = bookings.filter(b => b.professorId === professor.id);
+                    const lastBooking = professorBookings.sort((a, b) => new Date(b.bookingDate) - new Date(a.bookingDate))[0];
+
+                    const clone = template.content.cloneNode(true);
+                    const chatLink = clone.querySelector('.access');
+                    const previewMsg = clone.querySelector('.chat-content p:last-child');
+
+                    clone.querySelector('img').src = professor.image;
+                    clone.querySelector('img').alt = professor.name;
+                    clone.querySelector('.professor-name').textContent = professor.name;
+
+                    if (previewMsg && lastBooking) {
+                        const fecha = new Date(lastBooking.date).toLocaleDateString('es-ES', {
+                            year: 'numeric',
+                            month: 'long',
+                            day: 'numeric'
+                        });
+                        const hora = lastBooking.time.substring(0, 5);
+                        previewMsg.textContent = `📅 Reservaste una clase para el ${fecha} a las ${hora}. ¿Necesitas ayuda con ${professor.speciality}?`;
+                    }
+
+                    if (chatLink) {
+                        chatLink.addEventListener('click', (e) => {
+                            e.preventDefault();
+                            localStorage.setItem('currentChatId', professor.id);
+                            localStorage.setItem('currentChatName', professor.name);
+                            window.location.href = `chat.html?id=${professor.id}`;
+                        });
+                    }
+                    container.appendChild(clone);
+                });
+
+                if (chatProfessors.length === 0 && container) {
+                    container.innerHTML = '<p style="text-align: center; padding: 40px;">Aún no tienes chats. Reserva una clase para empezar a chatear.</p>';
+                }
+            })
+            .catch(error => console.error('Error cargando chats:', error));
     }
 
     async function loadFavProfessors() {
@@ -167,90 +248,64 @@
         if (!auth?.loggedIn) return;
 
         const favoriteIds = window.codify?.getFavorites?.() || [];
-        const resOpinions = await fetch('../data/opinions.json');
-        const opinions = await resOpinions.json();
-        const resProfessors = await fetch('../data/professors.json');
-        const professors = await resProfessors.json();
 
-        const container = document.querySelector('.fav-professors-content');
-        const template = document.getElementById('best-professor-card-template');
-        if (!template) return;
+        try {
+            const resOpinions = await fetch('../data/opinions.json');
+            const opinions = await resOpinions.json();
+            const resProfessors = await fetch('../data/professors.json');
+            const professors = await resProfessors.json();
 
-        container.innerHTML = '';
-        const favoriteProfessors = professors.filter(p => favoriteIds.includes(Number(p.id)));
+            const container = document.querySelector('.fav-professors-content');
+            const template = document.getElementById('best-professor-card-template');
 
-        if (favoriteProfessors.length === 0) {
-            container.innerHTML = '<p>No tienes profesores favoritos aún.</p>';
-            return;
-        }
-
-        favoriteProfessors.forEach(professor => {
-            const clone = template.content.cloneNode(true);
-            professor.rating = calculateRating(professor.id, opinions);
-            clone.querySelector('.stars').textContent = `${professor.rating} ☆`;
-            clone.querySelector('img').src = professor.image;
-            clone.querySelector('img').alt = professor.name;
-            clone.querySelector('.professor-name').textContent = professor.name;
-            clone.querySelector('.professor-speciality').textContent = `Especialidad: ${professor.speciality}`;
-            clone.querySelector('.see-profile').href = `teacher.html?id=${professor.id}`;
-
-            const favBtn = clone.querySelector('.fav-btn');
-            if (favBtn) {
-                favBtn.classList.add('liked');
-                favBtn.textContent = '♥';
-                favBtn.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    if (window.codify?.removeFavorite) {
-                        window.codify.removeFavorite(professor.id);
-                        window.codify?.toast?.('Eliminado de favoritos');
-                        const card = favBtn.closest('.best-professor-card');
-                        if (card) card.remove();
-                        const remaining = document.querySelectorAll('.fav-professors-content .best-professor-card');
-                        if (remaining.length === 0) {
-                            document.querySelector('.fav-professors-content').innerHTML = '<p>No tienes profesores favoritos aún.</p>';
-                        }
-                        window.dispatchEvent(new CustomEvent('favorites:updated'));
-                    }
-                });
+            if (!container || !template) {
+                console.warn('Contenedor o template de favoritos no encontrado');
+                return;
             }
-            container.appendChild(clone);
-        });
-    }
 
-    function loadChats() {
-        fetch('../data/professors.json')
-            .then(res => res.json())
-            .then(professors => {
-                const container = document.querySelector('.chats-section');
-                const template = document.getElementById('chat-template');
-                if (!template) return;
-                container.innerHTML = '';
+            container.innerHTML = '';
+            const favoriteProfessors = professors.filter(p => favoriteIds.includes(Number(p.id)));
 
-                professors.forEach(professor => {
-                    const clone = template.content.cloneNode(true);
-                    const chatLink = clone.querySelector('.access');
-                    clone.querySelector('img').src = professor.image;
-                    clone.querySelector('img').alt = professor.name;
-                    clone.querySelector('.professor-name').textContent = professor.name;
+            if (favoriteProfessors.length === 0) {
+                container.innerHTML = '<p>No tienes profesores favoritos aún.</p>';
+                return;
+            }
 
-                    chatLink.addEventListener('click', (e) => {
+            favoriteProfessors.forEach(professor => {
+                const clone = template.content.cloneNode(true);
+                professor.rating = calculateRating(professor.id, opinions);
+                clone.querySelector('.stars').textContent = `${professor.rating} ☆`;
+                clone.querySelector('img').src = professor.image;
+                clone.querySelector('img').alt = professor.name;
+                clone.querySelector('.professor-name').textContent = professor.name;
+                clone.querySelector('.professor-speciality').textContent = `Especialidad: ${professor.speciality}`;
+                clone.querySelector('.see-profile').href = `teacher.html?id=${professor.id}`;
+
+                const favBtn = clone.querySelector('.fav-btn');
+                if (favBtn) {
+                    favBtn.classList.add('liked');
+                    favBtn.textContent = '♥';
+                    favBtn.addEventListener('click', (e) => {
                         e.preventDefault();
-                        const auth = window.codify?.getAuth ? window.codify.getAuth() : { loggedIn: false };
-                        if (!auth.loggedIn) {
-                            window.codify?.toast?.('Debes iniciar sesión para acceder al chat');
-                            setTimeout(() => window.location.href = 'sign-in.html', 500);
-                        } else {
-                            localStorage.removeItem('returnToProfile');
-                            localStorage.removeItem('lastProfileUrl');
-                            localStorage.setItem('currentChatId', professor.id);
-                            localStorage.setItem('currentChatName', professor.name);
-                            window.location.href = `chat.html?id=${professor.id}`;
+                        e.stopPropagation();
+                        if (window.codify?.removeFavorite) {
+                            window.codify.removeFavorite(professor.id);
+                            window.codify?.toast?.('Eliminado de favoritos');
+                            const card = favBtn.closest('.best-professor-card');
+                            if (card) card.remove();
+                            const remaining = document.querySelectorAll('.fav-professors-content .best-professor-card');
+                            if (remaining.length === 0 && container) {
+                                container.innerHTML = '<p>No tienes profesores favoritos aún.</p>';
+                            }
+                            window.dispatchEvent(new CustomEvent('favorites:updated'));
                         }
                     });
-                    container.appendChild(clone);
-                });
+                }
+                container.appendChild(clone);
             });
+        } catch (error) {
+            console.error('Error cargando favoritos:', error);
+        }
     }
 
     window.addEventListener('favorites:updated', () => loadFavProfessors());
@@ -266,7 +321,10 @@
             return;
         }
 
-        document.getElementById('profileUsername').textContent = auth.username || 'Usuario';
+        const profileUsername = document.getElementById('profileUsername');
+        if (profileUsername) {
+            profileUsername.textContent = auth.username || 'Usuario';
+        }
 
         let profile = null;
         try {
@@ -284,9 +342,13 @@
         const surname = userData?.apellidos || profile?.apellidos || auth.apellidos || 'Apellidos';
         const birth = userData?.fechaNacimiento || profile?.fechaNacimiento || auth.fechaNacimiento || 'No especificada';
 
-        document.getElementById('profileName').textContent = name;
-        document.getElementById('profileSurname').textContent = surname;
-        document.getElementById('profileBirth').textContent = birth;
+        const profileName = document.getElementById('profileName');
+        const profileSurname = document.getElementById('profileSurname');
+        const profileBirth = document.getElementById('profileBirth');
+
+        if (profileName) profileName.textContent = name;
+        if (profileSurname) profileSurname.textContent = surname;
+        if (profileBirth) profileBirth.textContent = birth;
 
         if (window.codify?.setAuth && (userData || profile)) {
             window.codify.setAuth({
@@ -300,7 +362,7 @@
             });
         }
 
-        const savedImage = localStorage.getItem('codify_profile_image');
+        const savedImage = window.codify?.getProfileImage ? window.codify.getProfileImage() : null;
         if (savedImage) {
             const profileImg = document.getElementById('profileImage');
             if (profileImg) profileImg.src = savedImage;
