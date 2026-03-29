@@ -93,6 +93,8 @@ Se ha utilizado **Flexbox** para las tarjetas de contenido y **CSS Grid** para l
 ---
 
 ## Carga Dinámica y Datos (JSON)
+**Ubicación del contenido JSON:** Los datos se encuentran alojados de forma **local** dentro del directorio `/data`.
+
 La plataforma funciona como una **SPA (Single Page Application) híbrida**:
 
 1. **Ficheros Fuente:** Utilizamos `professors.json`, `users.json`, `languages.json` y `opinions.json`.
@@ -121,21 +123,21 @@ Hemos implementado persistencia en el lado del cliente:
 | :--- | :--- |
 | `mariagarcia` | `12345678` |
 | `carloslopez` | `12345678` |
-> *O bien, cualquier usuario existente en el archivo **`data/users.json`** o uno nuevo creado a través del registro.*
+> *O bien, cualquier usuario existente en el archivo local **`data/users.json`** o uno nuevo creado a través de registro.*
 
 ---
 
 ## Detalle de Páginas y Funcionalidades RWD
 | Página | Aspectos Responsive Implementados | Carga Dinámica (JSON/LS) | Validaciones y Datos |
 | :--- | :--- | :--- | :--- |
-| **Home (Pública/Privada)** | Hero Image adaptativa y menú hamburguesa lateral. | Carga de **"Mejor valorados"**. | Inicio de la aplicación. |
-| **List of Teachers** | Tarjetas pasan de horizontal a vertical. | Filtro dinámico por **lenguaje**. | Sistema de **Favoritos**. |
-| **Teacher (Perfil)** | Layout de 3 columnas a 1 columna. Chat flotante. | Info y **opiniones reales**. | Verifica sesión activa. |
-| **Booking (Reserva)** | Formulario adaptativo y reordenación de precio. | Cálculo de precio dinámico y descuentos. | **Validación fecha/hora.** |
-| **My Bookings** | Lista con scroll optimizado y modales de borrado. | Reservas desde `LocalStorage`. | Confirmación explícita. |
-| **Chat** | Interfaz a pantalla completa en móviles. | Carga de tutor por **ID**. | Requiere autenticación. |
-| **Profile** | Sidebar convertible en botones de acceso. | Foto de perfil (**FileReader**). | Vista de favoritos. |
-| **Edit Profile** | Formulario optimizado para móviles. | Sincronización con **Header**. | **Validación +18 años.** |
-| **Sign In / Sign Up** | Centrado y ajuste al 100% de ancho. | Creación/Verificación usuarios. | Registro funcional. |
+| **Home / Public Home** *(Página de Inicio)* | Hero Image adaptativa y menú hamburguesa lateral. | Carga de **"Mejor valorados"**. | Inicio de la aplicación. |
+| **List of Teachers** | Tarjetas de profesores pasan de horizontal a apilamiento vertical. | Filtro dinámico por **lenguaje**. | Sistema de **Favoritos**. |
+| **Teacher** | Layout de 3 columnas a 1 columna. Botones de acción y chat ocupan el 100% del ancho. | Info y **opiniones reales**. | Verifica sesión activa. |
+| **Booking** | Formulario adaptativo a una columna y reordenación de precio. | Cálculo de precio dinámico y descuentos al igual que la info del profesor correspondiente. | **Validación fecha/hora.** |
+| **My Bookings** | Lista con scroll optimizado y modales de confirmación de borrado. | Reservas desde `LocalStorage`. | Confirmación explícita. |
+| **Chat** | Interfaz de mensajería adaptada a pantalla completa en dispositivos móviles. | Carga de tutor por **ID**. | Requiere autenticación. |
+| **Profile** | Sidebar lateral se convierte en botones de acceso apilados verticalmente. | Foto de perfil (**FileReader**). | Vista de favoritos. |
+| **Edit Profile** | Los campos paralelos se apilan en una sola columna con inputs al 100% de ancho. | Sincronización con **Header**. | **Validación +18 años.** |
+| **Sign In / Sign Up** | Centrado, campos paralelos y ajuste al 100% de ancho. | Creación/Verificación usuarios. | Registro funcional. |
 
 ---
