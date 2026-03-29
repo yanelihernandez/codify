@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <title>Home</title>
-    <script src="../index.js"></script>
     <script src="../src/loader.js"></script>
-    <script src="../src/utils.js"></script>
+    <script type="module" src="../src/utils.js"></script>
+    <script type="module" src="../src/main.js"></script>
     <link rel="stylesheet" href="../styles/home.css">
     <link rel="stylesheet" href="../styles/header.css">
     <link rel="stylesheet" href="../styles/aside-nav.css">
@@ -15,7 +15,7 @@
 </head>
 <body>
 
-<header id="site-header" xlu-include-file="../templates/header.html"></header>
+<header id="site-header"></header>
 
 <aside id="aside-nav"></aside>
 
@@ -70,17 +70,19 @@
     </section>
 </main>
 
-<footer id="site-footer" xlu-include-file="../templates/footer.html"></footer>
+<footer id="site-footer"></footer>
 
-</body>
+<script type="module">
+    import { setupAsideNavBar, calculateRating } from '../src/utils.js';
 
-<script>
     async function init() {
-        await loadHTML('../templates/header.html', 'site-header');
-        await loadHTML('../templates/aside.html', 'aside-nav');
+        console.log('Iniciando carga de templates...');
+        await window.loadHTML('../templates/header.html', 'site-header');
+        await window.loadHTML('../templates/aside.html', 'aside-nav');
         setupAsideNavBar();
-        await loadHTML('../templates/footer.html', 'site-footer');
-        await loadHTML('../templates/best-professor-card.html');
+        await window.loadHTML('../templates/footer.html', 'site-footer');
+        await window.loadHTML('../templates/best-professor-card.html');
+        console.log('Templates cargados, cargando profesores...');
         await loadBestProfessors();
         window.codify?.initCodifyUI?.();
     }
@@ -88,32 +90,60 @@
     document.addEventListener('DOMContentLoaded', init);
 
     async function loadBestProfessors() {
-        const resOpinions = await fetch('../data/opinions.json');
-        const opinions = await resOpinions.json();
-        const resProfessors = await fetch('../data/professors.json');
-        const professors = await resProfessors.json();
+        try {
+            console.log('Cargando opiniones...');
+            const resOpinions = await fetch('../data/opinions.json');
+            const opinions = await resOpinions.json();
+            console.log('Opiniones cargadas:', opinions.length);
 
-        professors.forEach(professor => {
-            professor.rating = calculateRating(professor.id, opinions);
-        });
-        professors.sort((a, b) => b.rating - a.rating);
+            console.log('Cargando profesores...');
+            const resProfessors = await fetch('../data/professors.json');
+            const professors = await resProfessors.json();
+            console.log('Profesores cargados:', professors.length);
 
-        const container = document.querySelector('.lista-profesores');
-        const template = document.getElementById('best-professor-card-template');
-        if (!template) return;
-        container.innerHTML = '';
+            professors.forEach(professor => {
+                professor.rating = calculateRating(professor.id, opinions);
+            });
 
-        professors.slice(0,10).forEach(professor => {
-            const clone = template.content.cloneNode(true);
-            clone.querySelector('.stars').textContent = `${professor.rating} ☆`;
-            clone.querySelector('img').src = professor.image;
-            clone.querySelector('img').alt = professor.name;
-            clone.querySelector('.professor-name').textContent = professor.name;
-            clone.querySelector('.professor-speciality').textContent = `Especialidad: ${professor.speciality}`;
-            clone.querySelector('.see-profile').href = `teacher.html?id=${professor.id}`;
-            container.appendChild(clone);
-        });
+            professors.sort((a, b) => b.rating - a.rating);
+            const topProfessors = professors.slice(0, 3);
+            console.log('Top 3 profesores:', topProfessors);
+
+            const container = document.querySelector('.lista-profesores');
+            const template = document.getElementById('best-professor-card-template');
+
+            if (!template) {
+                console.error('Template best-professor-card-template no encontrado');
+                return;
+            }
+
+            container.innerHTML = '';
+
+            if (topProfessors.length === 0) {
+                container.innerHTML = '<p>No hay profesores disponibles</p>';
+                return;
+            }
+
+            topProfessors.forEach(professor => {
+                const clone = template.content.cloneNode(true);
+                clone.querySelector('.stars').textContent = `${professor.rating} ☆`;
+                const img = clone.querySelector('img');
+                if (img) {
+                    img.src = professor.image;
+                    img.alt = professor.name;
+                }
+                clone.querySelector('.professor-name').textContent = professor.name;
+                clone.querySelector('.professor-speciality').textContent = `Especialidad: ${professor.speciality}`;
+                clone.querySelector('.see-profile').href = `teacher.html?id=${professor.id}`;
+                container.appendChild(clone);
+            });
+
+            console.log('Profesores mostrados correctamente');
+        } catch (error) {
+            console.error('Error cargando profesores:', error);
+        }
     }
 </script>
 
+</body>
 </html>
