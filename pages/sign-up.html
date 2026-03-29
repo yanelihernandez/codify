@@ -4,9 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <title>Regístrate</title>
-    <script src="../index.js"></script>
     <script src="../src/loader.js"></script>
-    <script src="../src/utils.js"></script>
+    <script type="module" src="../src/utils.js"></script>
+    <script type="module" src="../src/main.js"></script>
     <link rel="stylesheet" href="../styles/sign-up.css">
     <link rel="stylesheet" href="../styles/header.css">
     <link rel="stylesheet" href="../styles/aside-nav.css">
@@ -17,7 +17,7 @@
 
 <body>
 
-<header id="site-header" xlu-include-file="../templates/header.html"></header>
+<header id="site-header"></header>
 
 <aside id="aside-nav"></aside>
 
@@ -95,14 +95,16 @@
     </div>
 </main>
 
-<footer id="site-footer" xlu-include-file="../templates/footer.html"></footer>
+<footer id="site-footer"></footer>
 
-<script>
+<script type="module">
+    import { setupAsideNavBar } from '../src/utils.js';
+
     async function init() {
-        await loadHTML('../templates/header.html', 'site-header');
-        await loadHTML('../templates/aside.html', 'aside-nav');
+        await window.loadHTML('../templates/header.html', 'site-header');
+        await window.loadHTML('../templates/aside.html', 'aside-nav');
         setupAsideNavBar();
-        await loadHTML('../templates/footer.html', 'site-footer');
+        await window.loadHTML('../templates/footer.html', 'site-footer');
     }
     document.addEventListener('DOMContentLoaded', init);
 
@@ -118,12 +120,13 @@
         });
 
         const percentage = (filledCount / requiredInputs.length) * 100;
-        progressBar.style.width = percentage + '%';
-
-        if (percentage === 100) {
-            progressBar.style.backgroundColor = '#25510a';
-        } else {
-            progressBar.style.backgroundColor = '#87ab69';
+        if (progressBar) {
+            progressBar.style.width = percentage + '%';
+            if (percentage === 100) {
+                progressBar.style.backgroundColor = '#25510a';
+            } else {
+                progressBar.style.backgroundColor = '#87ab69';
+            }
         }
     }
 
@@ -143,18 +146,22 @@
         let mensaje = document.getElementById('mensajeEdad');
         let errorFecha = document.getElementById('fechaError');
 
-        errorFecha.style.display = 'none';
+        if (errorFecha) errorFecha.style.display = 'none';
         inputFecha.classList.remove('input-error');
-        mensaje.innerHTML = "";
-        mensaje.className = "mensaje-edad";
+        if (mensaje) {
+            mensaje.innerHTML = "";
+            mensaje.className = "mensaje-edad";
+        }
 
         if (fecha === "") return;
 
         let partes = fecha.split("-");
 
         if (partes.length != 3 || partes[2].length < 4) {
-            errorFecha.innerText = "Formato incorrecto. Usa DD-MM-YYYY";
-            errorFecha.style.display = 'block';
+            if (errorFecha) {
+                errorFecha.innerText = "Formato incorrecto. Usa DD-MM-YYYY";
+                errorFecha.style.display = 'block';
+            }
             inputFecha.classList.add('input-error');
             return;
         }
@@ -163,8 +170,10 @@
         let fechaNac = new Date(año + "-" + partes[1] + "-" + partes[0]);
 
         if (fechaNac == "Invalid Date" || isNaN(fechaNac.getTime())) {
-            errorFecha.innerText = "Fecha no válida";
-            errorFecha.style.display = 'block';
+            if (errorFecha) {
+                errorFecha.innerText = "Fecha no válida";
+                errorFecha.style.display = 'block';
+            }
             inputFecha.classList.add('input-error');
             return;
         }
@@ -175,12 +184,14 @@
             edad = edad - 1;
         }
 
-        if (edad >= 18) {
-            mensaje.innerHTML = "✓ Eres mayor de edad, puedes registrarte";
-            mensaje.className = "mensaje-edad ok-mensaje";
-        } else {
-            mensaje.innerHTML = "✗ Eres menor de edad, no puedes registrarte";
-            mensaje.className = "mensaje-edad no-mensaje";
+        if (mensaje) {
+            if (edad >= 18) {
+                mensaje.innerHTML = "✓ Eres mayor de edad, puedes registrarte";
+                mensaje.className = "mensaje-edad ok-mensaje";
+            } else {
+                mensaje.innerHTML = "✗ Eres menor de edad, no puedes registrarte";
+                mensaje.className = "mensaje-edad no-mensaje";
+            }
         }
     }
 
@@ -190,25 +201,29 @@
         let error1 = document.getElementById('passwordError');
         let error2 = document.getElementById('repeatError');
 
-        error1.style.display = 'none';
-        error2.style.display = 'none';
-        pass1.classList.remove('input-error');
-        pass2.classList.remove('input-error');
+        if (error1) error1.style.display = 'none';
+        if (error2) error2.style.display = 'none';
+        if (pass1) pass1.classList.remove('input-error');
+        if (pass2) pass2.classList.remove('input-error');
 
-        if (pass1.value.length > 0 && pass1.value.length < 8) {
-            error1.style.display = 'block';
+        if (pass1 && pass1.value.length > 0 && pass1.value.length < 8) {
+            if (error1) error1.style.display = 'block';
             pass1.classList.add('input-error');
         }
 
-        if (pass2.value.length > 0 && pass1.value !== pass2.value) {
-            error2.style.display = 'block';
+        if (pass2 && pass2.value.length > 0 && pass1 && pass1.value !== pass2.value) {
+            if (error2) error2.style.display = 'block';
             pass2.classList.add('input-error');
         }
     }
 
-    document.getElementById('contraseña').addEventListener('input', comprobarPass);
-    document.getElementById('rep-contraseña').addEventListener('input', comprobarPass);
-    document.getElementById('fecha-nacimiento').addEventListener('input', comprobarEdad);
+    const contraseñaInput = document.getElementById('contraseña');
+    const repContraseñaInput = document.getElementById('rep-contraseña');
+    const fechaInput = document.getElementById('fecha-nacimiento');
+
+    if (contraseñaInput) contraseñaInput.addEventListener('input', comprobarPass);
+    if (repContraseñaInput) repContraseñaInput.addEventListener('input', comprobarPass);
+    if (fechaInput) fechaInput.addEventListener('input', comprobarEdad);
 
     function saveUser(userData) {
         let usersData = JSON.parse(localStorage.getItem('codify_users')) || { users: [] };
@@ -224,146 +239,175 @@
     }
 
     function showToast(message) {
-        if (window.codify?.toast) window.codify.toast(message);
-        else alert(message);
+        if (window.codify?.toast) {
+            window.codify.toast(message);
+        } else {
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.textContent = message;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.classList.add('show'), 10);
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => toast.remove(), 250);
+            }, 2200);
+        }
     }
 
-    document.getElementById('btnVer1').addEventListener('click', function() {
-        let input = document.getElementById('contraseña');
-        if (input.type == 'password') {
-            input.type = 'text';
-            this.innerHTML = '🔒';
-        } else {
-            input.type = 'password';
-            this.innerHTML = '👁';
-        }
-    });
+    const btnVer1 = document.getElementById('btnVer1');
+    const btnVer2 = document.getElementById('btnVer2');
 
-    document.getElementById('btnVer2').addEventListener('click', function() {
-        let input = document.getElementById('rep-contraseña');
-        if (input.type == 'password') {
-            input.type = 'text';
-            this.innerHTML = '🔒';
-        } else {
-            input.type = 'password';
-            this.innerHTML = '👁';
-        }
-    });
-
-    document.getElementById('btnSignup').addEventListener('click', function() {
-        let hasErrors = false;
-
-        requiredInputs.forEach(input => {
-            if (input.value.trim() === '') {
-                input.classList.add('input-error');
-                const errorMsg = input.parentElement.querySelector('.error-msg-empty') || input.parentElement.parentElement.querySelector('.error-msg-empty');
-                if (errorMsg) errorMsg.style.display = 'block';
-                hasErrors = true;
+    if (btnVer1) {
+        btnVer1.addEventListener('click', function() {
+            let input = document.getElementById('contraseña');
+            if (input) {
+                if (input.type == 'password') {
+                    input.type = 'text';
+                    this.innerHTML = '🔒';
+                } else {
+                    input.type = 'password';
+                    this.innerHTML = '👁';
+                }
             }
         });
+    }
 
-        if (hasErrors) {
-            showToast("Por favor, rellena todos los campos");
-            return;
-        }
+    if (btnVer2) {
+        btnVer2.addEventListener('click', function() {
+            let input = document.getElementById('rep-contraseña');
+            if (input) {
+                if (input.type == 'password') {
+                    input.type = 'text';
+                    this.innerHTML = '🔒';
+                } else {
+                    input.type = 'password';
+                    this.innerHTML = '👁';
+                }
+            }
+        });
+    }
 
-        const nombre = document.getElementById('nombre').value.trim();
-        const apellidos = document.getElementById('apellidos').value.trim();
-        const fechaNacimiento = document.getElementById('fecha-nacimiento').value;
-        const username = document.getElementById('username').value.trim();
-        const pass1 = document.getElementById('contraseña').value;
-        const pass2 = document.getElementById('rep-contraseña').value;
+    const btnSignup = document.getElementById('btnSignup');
+    if (btnSignup) {
+        btnSignup.addEventListener('click', function() {
+            let hasErrors = false;
 
-        let partes = fechaNacimiento.split("-");
-        if (partes.length != 3 || partes[2].length < 4) {
-            showToast("Formato de fecha incorrecto. Usa DD-MM-YYYY");
-            document.getElementById('fecha-nacimiento').classList.add('input-error');
-            document.getElementById('fechaError').innerText = "Formato incorrecto. Usa DD-MM-YYYY";
-            document.getElementById('fechaError').style.display = 'block';
-            return;
-        }
-
-        let fechaNac = new Date(partes[2] + "-" + partes[1] + "-" + partes[0]);
-        if (fechaNac == "Invalid Date" || isNaN(fechaNac.getTime())) {
-            showToast("Fecha no válida");
-            document.getElementById('fecha-nacimiento').classList.add('input-error');
-            document.getElementById('fechaError').innerText = "Fecha no válida";
-            document.getElementById('fechaError').style.display = 'block';
-            return;
-        }
-
-        let hoy = new Date();
-        let edad = hoy.getFullYear() - fechaNac.getFullYear();
-        if (hoy.getMonth() < fechaNac.getMonth() || (hoy.getMonth() == fechaNac.getMonth() && hoy.getDate() < fechaNac.getDate())) {
-            edad = edad - 1;
-        }
-
-        if (edad < 18) {
-            showToast("Debes ser mayor de 18 años para registrarte");
-            return;
-        }
-
-        if (pass1.length < 8) {
-            showToast("La contraseña debe tener al menos 8 caracteres");
-            document.getElementById('contraseña').classList.add('input-error');
-            return;
-        }
-
-        if (pass1 != pass2) {
-            showToast("Las contraseñas no coinciden");
-            document.getElementById('rep-contraseña').classList.add('input-error');
-            return;
-        }
-
-        const btn = document.getElementById('btnSignup');
-        const btnText = document.getElementById('btnText');
-        const spinner = document.getElementById('btnSpinner');
-
-        btn.disabled = true;
-        btn.style.backgroundColor = "#ccc";
-        btn.style.cursor = "not-allowed";
-        btnText.style.display = "none";
-        spinner.style.display = "block";
-
-        const nuevoUsuario = {
-            nombre: nombre,
-            apellidos: apellidos,
-            fullName: (nombre + ' ' + apellidos).trim(),
-            fechaNacimiento: fechaNacimiento,
-            username: username,
-            password: pass1,
-            masInfo: "Usuario registrado"
-        };
-
-        const guardado = saveUser(nuevoUsuario);
-
-        if (!guardado) {
-            showToast("El nombre de usuario ya está registrado");
-            btn.disabled = false;
-            btn.style.backgroundColor = "";
-            btn.style.cursor = "";
-            btnText.style.display = "inline";
-            spinner.style.display = "none";
-            return;
-        }
-
-        if (window.codify?.setAuth) {
-            window.codify.setAuth({
-                loggedIn: true,
-                username: username,
-                fullName: nuevoUsuario.fullName,
-                fechaNacimiento: nuevoUsuario.fechaNacimiento,
-                nombre: nuevoUsuario.nombre,
-                apellidos: nuevoUsuario.apellidos
+            requiredInputs.forEach(input => {
+                if (input.value.trim() === '') {
+                    input.classList.add('input-error');
+                    const errorMsg = input.parentElement.querySelector('.error-msg-empty') || input.parentElement.parentElement.querySelector('.error-msg-empty');
+                    if (errorMsg) errorMsg.style.display = 'block';
+                    hasErrors = true;
+                }
             });
-        }
 
-        showToast("¡Registro completado con éxito!");
+            if (hasErrors) {
+                showToast("Por favor, rellena todos los campos");
+                return;
+            }
 
-        setTimeout(() => {
-            window.location.href = 'home.html';
-        }, 1200);
-    });
+            const nombre = document.getElementById('nombre').value.trim();
+            const apellidos = document.getElementById('apellidos').value.trim();
+            const fechaNacimiento = document.getElementById('fecha-nacimiento').value;
+            const username = document.getElementById('username').value.trim();
+            const pass1 = document.getElementById('contraseña').value;
+            const pass2 = document.getElementById('rep-contraseña').value;
+
+            let partes = fechaNacimiento.split("-");
+            if (partes.length != 3 || partes[2].length < 4) {
+                showToast("Formato de fecha incorrecto. Usa DD-MM-YYYY");
+                const fechaInput = document.getElementById('fecha-nacimiento');
+                if (fechaInput) fechaInput.classList.add('input-error');
+                const fechaError = document.getElementById('fechaError');
+                if (fechaError) {
+                    fechaError.innerText = "Formato incorrecto. Usa DD-MM-YYYY";
+                    fechaError.style.display = 'block';
+                }
+                return;
+            }
+
+            let fechaNac = new Date(partes[2] + "-" + partes[1] + "-" + partes[0]);
+            if (fechaNac == "Invalid Date" || isNaN(fechaNac.getTime())) {
+                showToast("Fecha no válida");
+                const fechaInput = document.getElementById('fecha-nacimiento');
+                if (fechaInput) fechaInput.classList.add('input-error');
+                const fechaError = document.getElementById('fechaError');
+                if (fechaError) {
+                    fechaError.innerText = "Fecha no válida";
+                    fechaError.style.display = 'block';
+                }
+                return;
+            }
+
+            let hoy = new Date();
+            let edad = hoy.getFullYear() - fechaNac.getFullYear();
+            if (hoy.getMonth() < fechaNac.getMonth() || (hoy.getMonth() == fechaNac.getMonth() && hoy.getDate() < fechaNac.getDate())) {
+                edad = edad - 1;
+            }
+
+            if (edad < 18) {
+                showToast("Debes ser mayor de 18 años para registrarte");
+                return;
+            }
+
+            if (pass1.length < 8) {
+                showToast("La contraseña debe tener al menos 8 caracteres");
+                const passInput = document.getElementById('contraseña');
+                if (passInput) passInput.classList.add('input-error');
+                return;
+            }
+
+            if (pass1 != pass2) {
+                showToast("Las contraseñas no coinciden");
+                const repPassInput = document.getElementById('rep-contraseña');
+                if (repPassInput) repPassInput.classList.add('input-error');
+                return;
+            }
+
+            const btn = document.getElementById('btnSignup');
+            const btnText = document.getElementById('btnText');
+            const spinner = document.getElementById('btnSpinner');
+
+            if (btn) {
+                btn.disabled = true;
+                btn.style.backgroundColor = "#ccc";
+                btn.style.cursor = "not-allowed";
+            }
+            if (btnText) btnText.style.display = "none";
+            if (spinner) spinner.style.display = "block";
+
+            const nuevoUsuario = {
+                nombre: nombre,
+                apellidos: apellidos,
+                fullName: (nombre + ' ' + apellidos).trim(),
+                fechaNacimiento: fechaNacimiento,
+                username: username,
+                password: pass1,
+                masInfo: "Usuario registrado"
+            };
+
+            const guardado = saveUser(nuevoUsuario);
+
+            if (!guardado) {
+                showToast("El nombre de usuario ya está registrado");
+                if (btn) {
+                    btn.disabled = false;
+                    btn.style.backgroundColor = "";
+                    btn.style.cursor = "";
+                }
+                if (btnText) btnText.style.display = "inline";
+                if (spinner) spinner.style.display = "none";
+                return;
+            }
+
+            // No iniciar sesión automáticamente - redirigir al login
+            showToast("¡Registro completado con éxito! Ahora inicia sesión");
+
+            setTimeout(() => {
+                window.location.href = 'sign-in.html';
+            }, 1500);
+        });
+    }
 </script>
 
 </body>
