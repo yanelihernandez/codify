@@ -5,9 +5,9 @@
     <title>Mis Reservas</title>
     <link rel="icon" type="image/png" href="../images/logo_web.png">
 
-    <script src="../index.js"></script>
     <script src="../src/loader.js"></script>
-    <script src="../src/utils.js"></script>
+    <script type="module" src="../src/utils.js"></script>
+    <script type="module" src="../src/main.js"></script>
 
     <link rel="stylesheet" href="../styles/professors-programming-language.css">
     <link rel="stylesheet" href="../styles/reservation-card.css">
@@ -19,7 +19,7 @@
 </head>
 <body>
 
-<header id="site-header" xlu-include-file="../templates/header.html"></header>
+<header id="site-header"></header>
 
 <aside id="aside-nav"></aside>
 
@@ -43,7 +43,7 @@
     </div>
 </div>
 
-<footer id="site-footer" xlu-include-file="../templates/footer.html"></footer>
+<footer id="site-footer"></footer>
 
 <div id="confirmModal" class="confirm-modal" style="display: none;">
     <div class="confirm-modal-content">
@@ -177,15 +177,17 @@
     }
 </style>
 
-<script>
+<script type="module">
+    import { setupAsideNavBar } from '../src/utils.js';
+
     let pendingCancelBookingId = null;
     let pendingCancelCard = null;
 
     async function init() {
-        await loadHTML('../templates/header.html', 'site-header');
-        await loadHTML('../templates/aside.html', 'aside-nav');
+        await window.loadHTML('../templates/header.html', 'site-header');
+        await window.loadHTML('../templates/aside.html', 'aside-nav');
         setupAsideNavBar();
-        await loadHTML('../templates/footer.html', 'site-footer');
+        await window.loadHTML('../templates/footer.html', 'site-footer');
 
         loadBookings();
         setupModalListeners();
