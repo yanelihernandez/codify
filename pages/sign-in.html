@@ -4,9 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <title>Inicia Sesión</title>
-    <script src="../index.js"></script>
     <script src="../src/loader.js"></script>
-    <script src="../src/utils.js"></script>
+    <script type="module" src="../src/utils.js"></script>
+    <script type="module" src="../src/main.js"></script>
     <link rel="stylesheet" href="../styles/sign-in.css">
     <link rel="stylesheet" href="../styles/header.css">
     <link rel="stylesheet" href="../styles/aside-nav.css">
@@ -17,7 +17,7 @@
 
 <body>
 
-<header id="site-header" xlu-include-file="../templates/header.html"></header>
+<header id="site-header"></header>
 
 <aside id="aside-nav"></aside>
 
@@ -60,14 +60,31 @@
 
 </main>
 
-<footer id="site-footer" xlu-include-file="../templates/footer.html"></footer>
+<footer id="site-footer"></footer>
 
-<script>
+<script type="module">
+    import { setupAsideNavBar } from '../src/utils.js';
+
+    // Función para mostrar toast local
+    function showToastLocal(message) {
+        const toast = document.createElement('div');
+        toast.className = 'toast';
+        toast.textContent = message;
+        document.body.appendChild(toast);
+
+        setTimeout(() => toast.classList.add('show'), 10);
+
+        setTimeout(() => {
+            toast.classList.remove('show');
+            setTimeout(() => toast.remove(), 250);
+        }, 2200);
+    }
+
     async function init() {
-        await loadHTML('../templates/header.html', 'site-header');
-        await loadHTML('../templates/aside.html', 'aside-nav');
+        await window.loadHTML('../templates/header.html', 'site-header');
+        await window.loadHTML('../templates/aside.html', 'aside-nav');
         setupAsideNavBar();
-        await loadHTML('../templates/footer.html', 'site-footer');
+        await window.loadHTML('../templates/footer.html', 'site-footer');
 
         document.querySelector('.toggle-btn')?.addEventListener('click', function() {
             let input = document.getElementById('contraseña');
@@ -182,7 +199,7 @@
                 btn.textContent = "Aceptar";
                 inputUsuario.classList.add("input-error");
                 errorUsuarioNoExiste.style.display = "block";
-                window.codify?.toast?.("El usuario no existe");
+                showToastLocal("El usuario no existe");
                 return;
             }
 
@@ -192,20 +209,31 @@
                 btn.textContent = "Aceptar";
                 inputPass.classList.add("input-error");
                 errorPassIncorrecta.style.display = "block";
-                window.codify?.toast?.("Contraseña incorrecta");
+                showToastLocal("Contraseña incorrecta");
                 return;
             }
 
-            window.codify?.setAuth?.({
-                loggedIn: true,
-                username: usuarioEncontrado.username,
-                fullName: usuarioEncontrado.fullName,
-                fechaNacimiento: usuarioEncontrado.fechaNacimiento,
-                nombre: usuarioEncontrado.nombre,
-                apellidos: usuarioEncontrado.apellidos
-            });
+            if (window.codify?.setAuth) {
+                window.codify.setAuth({
+                    loggedIn: true,
+                    username: usuarioEncontrado.username,
+                    fullName: usuarioEncontrado.fullName,
+                    fechaNacimiento: usuarioEncontrado.fechaNacimiento,
+                    nombre: usuarioEncontrado.nombre,
+                    apellidos: usuarioEncontrado.apellidos
+                });
+            } else {
+                localStorage.setItem('codify_auth', JSON.stringify({
+                    loggedIn: true,
+                    username: usuarioEncontrado.username,
+                    fullName: usuarioEncontrado.fullName,
+                    fechaNacimiento: usuarioEncontrado.fechaNacimiento,
+                    nombre: usuarioEncontrado.nombre,
+                    apellidos: usuarioEncontrado.apellidos
+                }));
+            }
 
-            window.codify?.toast?.("¡Bienvenido " + usuarioEncontrado.fullName + "!");
+            showToastLocal("¡Bienvenido " + usuarioEncontrado.fullName + "!");
 
             const redirectUrl = sessionStorage.getItem('redirectAfterLogin') || "home.html";
             sessionStorage.removeItem('redirectAfterLogin');
@@ -217,4 +245,5 @@
     });
 </script>
 
+</body>
 </html>
