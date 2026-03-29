@@ -4,20 +4,21 @@
     <meta charset="UTF-8">
     <title>Chat</title>
 
-    <script src="../index.js"></script>
     <script src="../src/loader.js"></script>
-    <script src="../src/utils.js"></script>
+    <script type="module" src="../src/utils.js"></script>
+    <script type="module" src="../src/main.js"></script>
 
     <link rel="stylesheet" href="../styles/header.css">
     <link rel="stylesheet" href="../styles/aside-nav.css">
     <link rel="stylesheet" href="../styles/footer.css">
     <link rel="stylesheet" href="../styles/chat.css">
+    <link rel="stylesheet" href="../styles/toast.css">
     <link rel="icon" type="image/png" href="../images/logo_web.png">
 
 </head>
 <body>
 
-<header id="site-header" xlu-include-file="../templates/header.html"></header>
+<header id="site-header"></header>
 
 <aside id="aside-nav"></aside>
 
@@ -35,56 +36,26 @@
             </div>
         </div>
 
-        <div class="chat-messages">
-            <div class="message profesor">
-                <img src="../images/juan_manuel.png" alt="Juan Manuel" class="message-avatar">
-                <div class="message-content">
-                    <p class="teacher-message-intro">¡Hola! ¿En qué puedo ayudarte con Python?</p>
-                    <span class="message-time">10:30</span>
-                </div>
-            </div>
-
-            <div class="message alumno">
-                <div class="message-content alumno">
-                    <p class="student-message-intro">Hola, soy de ingeniería informática y tengo un proyecto con Django</p>
-                    <span class="message-time">10:32</span>
-                </div>
-                <img src="../images/perfil.jpg" alt="Mi perfil" class="message-avatar alumno-avatar">
-            </div>
-
-            <div class="message profesor">
-                <img src="../images/juan_manuel.png" alt="Juan Manuel" class="message-avatar">
-                <div class="message-content">
-                    <p class="teacher-message-followup">Cuéntame, ¿qué es lo que se te complica?</p>
-                    <span class="message-time">10:33</span>
-                </div>
-            </div>
-
-            <div class="message alumno">
-                <div class="message-content alumno">
-                    <p>Los modelos y las relaciones entre tablas</p>
-                    <span class="message-time">10:35</span>
-                </div>
-                <img src="../images/perfil.jpg" alt="Mi perfil" class="message-avatar alumno-avatar">
-            </div>
-        </div>
+        <div class="chat-messages" id="chatMessages"></div>
 
         <div class="chat-input-area">
-            <input type="text" placeholder="Escribe un mensaje..." class="chat-input">
-            <button class="send-btn">Enviar</button>
+            <input type="text" placeholder="Escribe un mensaje..." class="chat-input" id="chatInput">
+            <button class="send-btn" id="sendBtn">Enviar</button>
         </div>
 
     </div>
 </main>
 
-<footer id="site-footer" xlu-include-file="../templates/footer.html"></footer>
+<footer id="site-footer"></footer>
 
-<script>
+<script type="module">
+    import { setupAsideNavBar } from '../src/utils.js';
+
     async function init() {
-        await loadHTML('../templates/header.html', 'site-header');
-        await loadHTML('../templates/aside.html', 'aside-nav');
+        await window.loadHTML('../templates/header.html', 'site-header');
+        await window.loadHTML('../templates/aside.html', 'aside-nav');
         setupAsideNavBar();
-        await loadHTML('../templates/footer.html', 'site-footer');
+        await window.loadHTML('../templates/footer.html', 'site-footer');
         loadData();
         setupBackButton();
     }
@@ -94,7 +65,54 @@
 
     document.addEventListener('DOMContentLoaded', init);
 
+    function getNombreReal() {
+        const auth = window.codify?.getAuth ? window.codify.getAuth() : { loggedIn: false };
+        if (!auth.loggedIn) return null;
+
+        const usersData = JSON.parse(localStorage.getItem('codify_users')) || { users: [] };
+        const user = usersData.users.find(u => u.username === auth.username);
+
+        if (user && user.nombre) {
+            return user.nombre;
+        }
+
+        const profileData = localStorage.getItem('codify_profile');
+        if (profileData) {
+            try {
+                const profile = JSON.parse(profileData);
+                if (profile.nombre) return profile.nombre;
+            } catch(e) {}
+        }
+
+        return auth.username;
+    }
+
+    function getFotoPerfil() {
+        const auth = window.codify?.getAuth ? window.codify.getAuth() : { loggedIn: false };
+        if (!auth.loggedIn) return '../images/perfil.jpg';
+
+        const fotoGuardada = window.codify?.getProfileImage ? window.codify.getProfileImage() : null;
+        if (fotoGuardada) return fotoGuardada;
+
+        return '../images/perfil.jpg';
+    }
+
     function loadData() {
+        const auth = window.codify?.getAuth ? window.codify.getAuth() : { loggedIn: false };
+
+        if (!auth.loggedIn) {
+            if (window.codify?.toast) {
+                window.codify.toast("No tienes permiso para acceder al chat");
+            }
+            setTimeout(function() {
+                window.location.href = "home-public.html";
+            }, 500);
+            return;
+        }
+
+        const nombreReal = getNombreReal();
+        const fotoPerfil = getFotoPerfil();
+
         fetch("../data/professors.json")
             .then(res => res.json())
             .then(data => {
@@ -108,64 +126,128 @@
                 localStorage.setItem('currentChatId', prof.id);
                 localStorage.setItem('currentChatName', prof.name);
 
-                const profesorImages = document.querySelectorAll('.message.profesor img');
-                profesorImages.forEach(img => {
-                    img.src = prof.image;
-                    img.alt = prof.name;
-                });
+                const storageKey = `codify_bookings_${auth.username}`;
+                const bookings = JSON.parse(localStorage.getItem(storageKey)) || [];
+                const professorBookings = bookings.filter(b => b.professorId === prof.id);
+                const lastBooking = professorBookings.sort((a, b) => new Date(b.bookingDate) - new Date(a.bookingDate))[0];
 
-                const studentIntro = document.querySelector('.student-message-intro');
-                if (studentIntro) {
-                    studentIntro.textContent = `Hola ${prof.name}, soy de ingeniería informática y tengo un proyecto con Django`;
+                const chatMessages = document.getElementById('chatMessages');
+                if (!chatMessages) return;
+
+                chatMessages.innerHTML = '';
+
+                const profesorMessageDiv = document.createElement('div');
+                profesorMessageDiv.className = 'message profesor';
+
+                const profesorAvatar = document.createElement('img');
+                profesorAvatar.src = prof.image;
+                profesorAvatar.alt = prof.name;
+                profesorAvatar.className = 'message-avatar';
+
+                const messageContent = document.createElement('div');
+                messageContent.className = 'message-content';
+
+                const messageText = document.createElement('p');
+
+                if (lastBooking) {
+                    const fecha = new Date(lastBooking.date).toLocaleDateString('es-ES', {
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric'
+                    });
+                    const hora = lastBooking.time.substring(0, 5);
+                    messageText.textContent = `¡Hola! Veo que reservaste una clase para el ${fecha} a las ${hora}. ¿En qué puedo ayudarte con ${prof.speciality}?`;
+                } else {
+                    messageText.textContent = `¡Hola! Soy ${prof.name}, especialista en ${prof.speciality}. ¿En qué puedo ayudarte? ¿Te interesa reservar una clase o tienes alguna duda?`;
                 }
 
-                const teacherIntro = document.querySelector('.teacher-message-intro');
-                if (teacherIntro) {
-                    teacherIntro.textContent = `¡Hola! ¿En qué puedo ayudarte con ${prof.speciality}?`;
-                }
+                const messageTime = document.createElement('span');
+                messageTime.className = 'message-time';
+                const now = new Date();
+                messageTime.textContent = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
+
+                messageContent.appendChild(messageText);
+                messageContent.appendChild(messageTime);
+                profesorMessageDiv.appendChild(profesorAvatar);
+                profesorMessageDiv.appendChild(messageContent);
+                chatMessages.appendChild(profesorMessageDiv);
+
+                const systemDiv = document.createElement('div');
+                systemDiv.className = 'message alumno';
+                systemDiv.innerHTML = `
+                    <div class="message-content alumno">
+                        <p>Hola ${prof.name}, soy ${nombreReal}. Me pondré en contacto contigo por aquí.</p>
+                        <span class="message-time">${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}</span>
+                    </div>
+                    <img src="${fotoPerfil}" alt="Mi perfil" class="message-avatar alumno-avatar">
+                `;
+                chatMessages.appendChild(systemDiv);
+
+                chatMessages.scrollTop = chatMessages.scrollHeight;
             });
     }
 
     function setupBackButton() {
         const backBtn = document.getElementById('backButton');
-
-        backBtn.addEventListener('click', function(e) {
-            e.preventDefault();
-            window.history.back();
-        });
+        if (backBtn) {
+            backBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                window.history.back();
+            });
+        }
     }
 
-    document.addEventListener('DOMContentLoaded', function() {
-        const auth = window.codify?.getAuth ? window.codify.getAuth() : { loggedIn: false };
-        const usuarioLogueado = auth.loggedIn || false;
+    const sendBtn = document.getElementById('sendBtn');
+    const chatInput = document.getElementById('chatInput');
+    const chatMessages = document.getElementById('chatMessages');
 
-        if (!usuarioLogueado) {
-            if (window.codify?.toast) {
-                window.codify.toast("No tienes permiso para acceder al chat");
+    if (sendBtn && chatInput && chatMessages) {
+        sendBtn.addEventListener('click', function() {
+            const message = chatInput.value.trim();
+            if (!message) return;
+
+            const now = new Date();
+            const timeStr = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
+            const fotoPerfil = getFotoPerfil();
+
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message alumno';
+            messageDiv.innerHTML = `
+                <div class="message-content alumno">
+                    <p>${message}</p>
+                    <span class="message-time">${timeStr}</span>
+                </div>
+                <img src="${fotoPerfil}" alt="Mi perfil" class="message-avatar alumno-avatar">
+            `;
+            chatMessages.appendChild(messageDiv);
+            chatInput.value = '';
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+
+            setTimeout(() => {
+                const responseDiv = document.createElement('div');
+                responseDiv.className = 'message profesor';
+
+                const profImg = document.querySelector('.chat-header-info img');
+                const profName = document.querySelector('.chat-header h2').textContent;
+
+                responseDiv.innerHTML = `
+                    <img src="${profImg ? profImg.src : '../images/juan_manuel.png'}" alt="${profName}" class="message-avatar">
+                    <div class="message-content">
+                        <p>Gracias por tu mensaje. Te responderé lo antes posible.</p>
+                        <span class="message-time">${new Date().getHours().toString().padStart(2, '0')}:${new Date().getMinutes().toString().padStart(2, '0')}</span>
+                    </div>
+                `;
+                chatMessages.appendChild(responseDiv);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }, 1000);
+        });
+
+        chatInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                sendBtn.click();
             }
-
-            setTimeout(function() {
-                window.location.href = "home-public.html";
-            }, 500);
-        }
-    });
-
-    document.querySelector('.send-btn')?.addEventListener('click', function(e) {
-        const auth = window.codify?.getAuth ? window.codify.getAuth() : { loggedIn: false };
-        const usuarioLogueado = auth.loggedIn || false;
-
-        if (!usuarioLogueado) {
-            e.preventDefault();
-            window.location.href = "sign-in.html";
-        } else {
-            const input = document.querySelector('.chat-input');
-            const message = input.value.trim();
-            if (message) {
-                console.log('Enviando mensaje:', message);
-                input.value = '';
-            }
-        }
-    });
+        });
+    }
 </script>
 
 </body>
