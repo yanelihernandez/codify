@@ -137,6 +137,11 @@
 
                     const favBtn = clone.querySelector('.fav-btn');
                     if (favBtn) {
+                        // Forzar modo invitado (ya que home-public.html es para usuarios no logueados)
+                        favBtn.classList.add('guest-mode');
+                        favBtn.classList.remove('liked');
+                        favBtn.textContent = '♡';
+
                         favBtn.addEventListener('click', (e) => {
                             e.preventDefault();
                             e.stopPropagation();
