@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <title>Invitado</title>
-    <script src="../index.js"></script>
     <script src="../src/loader.js"></script>
-    <script src="../src/utils.js"></script>
+    <script type="module" src="../src/utils.js"></script>
+    <script type="module" src="../src/main.js"></script>
     <link rel="stylesheet" href="../styles/home.css">
     <link rel="stylesheet" href="../styles/header.css">
     <link rel="stylesheet" href="../styles/aside-nav.css">
@@ -16,7 +16,7 @@
 </head>
 <body>
 
-<header id="site-header" xlu-include-file="../templates/header.html"></header>
+<header id="site-header"></header>
 
 <aside id="aside-nav"></aside>
 
@@ -72,15 +72,32 @@
     </section>
 </main>
 
-<footer id="site-footer" xlu-include-file="../templates/footer.html"></footer>
+<footer id="site-footer"></footer>
 
-<script>
+<script type="module">
+    import { setupAsideNavBar } from '../src/utils.js';
+
+    // Función para mostrar toast (mensaje flotante)
+    function showToast(message) {
+        const toast = document.createElement('div');
+        toast.className = 'toast';
+        toast.textContent = message;
+        document.body.appendChild(toast);
+
+        setTimeout(() => toast.classList.add('show'), 10);
+
+        setTimeout(() => {
+            toast.classList.remove('show');
+            setTimeout(() => toast.remove(), 250);
+        }, 2200);
+    }
+
     async function init() {
-        await loadHTML('../templates/header.html', 'site-header');
-        await loadHTML('../templates/aside.html', 'aside-nav');
+        await window.loadHTML('../templates/header.html', 'site-header');
+        await window.loadHTML('../templates/aside.html', 'aside-nav');
         setupAsideNavBar();
-        await loadHTML('../templates/footer.html', 'site-footer');
-        await loadHTML('../templates/best-professor-card.html');
+        await window.loadHTML('../templates/footer.html', 'site-footer');
+        await window.loadHTML('../templates/best-professor-card.html');
         loadBestProfessors();
     }
 
@@ -91,47 +108,53 @@
             .then(res => res.json())
             .then(professors => {
                 professors.sort((a, b) => b.stars - a.stars);
+                const topProfessors = professors.slice(0, 3);
                 const container = document.querySelector('.lista-profesores');
                 const template = document.getElementById('best-professor-card-template');
 
-                professors.forEach(professor => {
+                if (!template) {
+                    console.error('Template best-professor-card-template no encontrado');
+                    return;
+                }
+
+                container.innerHTML = '';
+
+                if (topProfessors.length === 0) {
+                    container.innerHTML = '<p>No hay profesores disponibles</p>';
+                    return;
+                }
+
+                topProfessors.forEach(professor => {
                     const clone = template.content.cloneNode(true);
                     clone.querySelector('.stars').textContent = `${professor.stars} ☆`;
                     clone.querySelector('img').src = professor.image;
                     clone.querySelector('img').alt = professor.name;
                     clone.querySelector('.professor-name').textContent = professor.name;
                     clone.querySelector('.professor-speciality').textContent = `Especialidad: ${professor.speciality}`;
-                    clone.querySelector('.see-profile').href = `teacher.html?id=${professor.id}`;
+
+                    const seeProfileLink = clone.querySelector('.see-profile');
+                    seeProfileLink.href = `teacher.html?id=${professor.id}`;
+
+                    const favBtn = clone.querySelector('.fav-btn');
+                    if (favBtn) {
+                        favBtn.addEventListener('click', (e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            showToast("Debes iniciar sesión para guardar favoritos");
+                            setTimeout(() => {
+                                sessionStorage.setItem('redirectAfterLogin', window.location.href);
+                                window.location.href = "sign-in.html";
+                            }, 800);
+                        });
+                    }
+
                     container.appendChild(clone);
                 });
+            })
+            .catch(error => {
+                console.error('Error cargando profesores:', error);
             });
     }
-
-    // Si el usuario no está logueado y hace clic en un corazón, lo mandamos al login
-    function redirectToLogin() {
-        if (window.codify?.toast) {
-            window.codify.toast("Debes iniciar sesión para guardar favoritos");
-        } else {
-            alert("Debes iniciar sesión para guardar favoritos");
-        }
-        setTimeout(() => window.location.href = "sign-in.html", 500);
-    }
-
-    function setupGuestMode() {
-        const favBtns = document.querySelectorAll('.fav-btn');
-        favBtns.forEach(btn => btn.classList.add('guest-mode'));
-    }
-
-    document.addEventListener('DOMContentLoaded', setupGuestMode);
-    setTimeout(setupGuestMode, 500);
-    setTimeout(setupGuestMode, 1000);
-
-    document.addEventListener('click', function(e) {
-        if (e.target.classList.contains('fav-btn')) {
-            e.preventDefault();
-            redirectToLogin();
-        }
-    });
 </script>
 
 </body>
