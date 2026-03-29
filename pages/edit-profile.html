@@ -5,9 +5,9 @@
     <meta charset="UTF-8">
     <title>Modificar perfil</title>
 
-    <script src="../index.js"></script>
     <script src="../src/loader.js"></script>
-    <script src="../src/utils.js"></script>
+    <script type="module" src="../src/utils.js"></script>
+    <script type="module" src="../src/main.js"></script>
 
     <link rel="stylesheet" href="../styles/header.css">
     <link rel="stylesheet" href="../styles/aside-nav.css">
@@ -19,7 +19,7 @@
 
 <body>
 
-<header id="site-header" xlu-include-file="../templates/header.html"></header>
+<header id="site-header"></header>
 
 <aside id="aside-nav"></aside>
 
@@ -87,14 +87,16 @@
     </div>
 </main>
 
-<footer id="site-footer" xlu-include-file="../templates/footer.html"></footer>
+<footer id="site-footer"></footer>
 
-<script>
+<script type="module">
+    import { setupAsideNavBar } from '../src/utils.js';
+
     async function init() {
-        await loadHTML('../templates/header.html', 'site-header');
-        await loadHTML('../templates/aside.html', 'aside-nav');
+        await window.loadHTML('../templates/header.html', 'site-header');
+        await window.loadHTML('../templates/aside.html', 'aside-nav');
         setupAsideNavBar();
-        await loadHTML('../templates/footer.html', 'site-footer');
+        await window.loadHTML('../templates/footer.html', 'site-footer');
     }
     document.addEventListener('DOMContentLoaded', init);
 
