@@ -8,7 +8,7 @@ import { Professor } from '../models/professor';
 })
 export class ProfessorService {
 
-  private apiUrl = 'assets/data/professors.json';
+  private apiUrl = 'data/professors.json';
 
   constructor(private http: HttpClient) { }
 
