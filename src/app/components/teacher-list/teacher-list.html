@@ -1,0 +1,13 @@
+<section class="profesores-mejor-valorados">
+  <h2>Profesores mejor valorados</h2>
+  <div class="lista-profesores">
+    @for (professor of professors(); track professor) {
+      <app-best-professor
+        [image_src]="professor.image"
+        [name]="professor.name"
+        [speciality]="professor.speciality"
+        [stars]="professor.stars">
+      </app-best-professor>
+    }
+  </div>
+</section>

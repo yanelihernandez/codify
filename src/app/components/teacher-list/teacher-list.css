@@ -1,0 +1,17 @@
+.profesores-mejor-valorados {
+  padding: 20px;
+}
+
+.profesores-mejor-valorados h2 {
+  margin-bottom: 15px;
+}
+
+.lista-profesores {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap;
+  padding: 20px;
+  background-color: #87ab69;
+  border-radius: 10px;
+}
