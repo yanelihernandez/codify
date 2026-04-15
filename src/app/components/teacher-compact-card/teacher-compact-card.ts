@@ -2,6 +2,7 @@ import { Component, Input } from '@angular/core';
 
 @Component({
   selector: 'app-best-professor',
+  standalone: true,
   imports: [],
   templateUrl: './teacher-compact-card.html',
   styleUrl: './teacher-compact-card.css',
