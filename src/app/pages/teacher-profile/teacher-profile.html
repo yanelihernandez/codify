@@ -1,0 +1,62 @@
+@if(professor()){
+  <main>
+    <div class="profesor-perfil-horizontal">
+      <a href="#" class="chat-icon-corner" title="Enviar mensaje">📩</a>
+
+      <div class="columna-izquierda">
+        <div class="profesor-imagen">
+          <img [attr.src]="professor()?.image" [attr.alt]="professor()?.name">
+        </div>
+        <h1 id="main-name">{{professor()?.name}}</h1>
+        <div class="estadisticas-vertical">
+          <div class="estadistica-item">
+            <span class="estadistica-valor" id="hour-price">{{professor()?.hour_price}}</span>
+            <span class="estadistica-etiqueta">PRECIO/HORA</span>
+          </div>
+          <div class="estadistica-item">
+            <span class="estadistica-valor" id="response-time">{{professor()?.response_time}}</span>
+            <span class="estadistica-etiqueta">T RESPUESTA</span>
+          </div>
+          <div class="estadistica-item">
+            <span class="estadistica-valor" id="students">{{professor()?.students}}</span>
+            <span class="estadistica-etiqueta">Nº ALUMNOS</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="columna-central">
+        <div class="sobre-profesor">
+          <h2>Sobre</h2>
+          <p>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+          </p>
+        </div>
+        <div class="opiniones">
+          <h2>Opiniones</h2>
+          <section id="opinions"></section>
+        </div>
+      </div>
+
+      <div class="columna-derecha">
+        <div class="grupos">
+          <h2>Grupos</h2>
+          <p>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+          </p>
+          <p class="descuento"><strong>10% en cada hora</strong></p>
+        </div>
+        <div class="video">
+          <h2>Video </h2>
+          <div class="video-placeholder">
+            <p>[Video URL]</p>
+          </div>
+        </div>
+        <div class="reserva-container">
+          <a href="#" class="btn-reservar" id="reservarBtn">Reservar</a>
+        </div>
+      </div>
+    </div>
+  </main>
+} @else{
+  <p>Profesor no cargado</p>
+}
