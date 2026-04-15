@@ -3,6 +3,7 @@ import {RouterLink} from '@angular/router';
 
 @Component({
   selector: 'app-teacher',
+  standalone: true,
   imports: [
     RouterLink
   ],
