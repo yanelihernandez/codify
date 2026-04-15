@@ -26,7 +26,7 @@
 
       <div class="columna-central">
         <div class="sobre-profesor">
-          <h2>Sobre</h2>
+          <h2>Sobre {{professor()?.name}}</h2>
           <p>
             Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
           </p>
@@ -43,7 +43,7 @@
           <p>
             Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
           </p>
-          <p class="descuento"><strong>10% en cada hora</strong></p>
+          <p class="descuento"><strong>{{ professor()?.group_discount }}% en cada hora</strong></p>
         </div>
         <div class="video">
           <h2>Video </h2>
