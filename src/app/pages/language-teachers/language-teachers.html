@@ -9,15 +9,12 @@
     <section class="professors-list">
 
       @for (professor of professors(); track professor.id) {
-        <!--
         <app-teacher
           [image_src]="professor.image"
           [name]="professor.name"
           [info]="professor.info"
           [id]="professor.id">
         </app-teacher>
-        -->
-        <p>Nombre: {{professor.name}}</p>
       } @empty {
         <p>No hay profesores disponibles (El array está vacío).</p>
       }

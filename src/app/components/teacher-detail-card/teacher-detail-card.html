@@ -1,0 +1,13 @@
+<article class="professor-card">
+  <img [attr.alt]="image_alt" [attr.src]="image_src">
+
+  <div class="professor-content">
+    <p class="professor-name">{{ name }}</p>
+    <p class="professor-info">{{ info }}</p>
+  </div>
+
+  <div class="professor-card-buttons">
+    <button class="fav-btn">♡</button>
+    <a [routerLink]="['/teacher-profile', id]" class="see-profile-btn">Ver Perfil</a>
+  </div>
+</article>

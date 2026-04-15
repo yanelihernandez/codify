@@ -5,12 +5,13 @@ import { Language } from '../../models/language';
 import {LanguagesService} from '../../services/languages.service';
 import {Professor} from '../../models/professor';
 import {ProfessorService} from '../../services/professors.service';
+import {TeacherDetailCard} from '../../components/teacher-detail-card/teacher-detail-card';
 
 
 @Component({
   standalone: true,
   selector: 'app-language-teachers',
-  imports: [CommonModule],
+  imports: [CommonModule, TeacherDetailCard],
   templateUrl: './language-teachers.html',
   styleUrl: './language-teachers.css',
 })
