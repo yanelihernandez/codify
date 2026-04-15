@@ -1,9 +1,12 @@
 import { Component, Input } from '@angular/core';
+import {RouterLink} from '@angular/router';
 
 @Component({
-  selector: 'app-best-professor',
+  selector: 'app-teacher-compact-card',
   standalone: true,
-  imports: [],
+  imports: [
+    RouterLink
+  ],
   templateUrl: './teacher-compact-card.html',
   styleUrl: './teacher-compact-card.css',
 })
@@ -18,5 +21,7 @@ export class TeacherCompactCardComponent {
   speciality: string = 'Speciality';
   @Input()
   stars: number = 0;
+  @Input()
+  id: number = 0;
   constructor() {}
 }

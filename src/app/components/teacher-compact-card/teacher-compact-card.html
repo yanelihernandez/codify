@@ -8,5 +8,5 @@
 
   <p class="professor-name">{{ name }}</p>
   <p class="professor-speciality">Especialidad: {{ speciality }}</p>
-  <a href="#" class="see-profile">Ver perfil</a>
+  <a [routerLink]="['/teacher-profile', id]" class="see-profile">Ver perfil</a>
 </article>
