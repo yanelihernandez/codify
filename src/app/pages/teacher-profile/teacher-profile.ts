@@ -2,10 +2,13 @@ import {Component, OnInit, signal} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {ProfessorService} from '../../services/professors.service';
 import {Professor} from '../../models/professor';
+import {OpinionCard} from '../../components/opinion-card/opinion-card';
 
 @Component({
   selector: 'app-teacher-profile',
-  imports: [],
+  imports: [
+    OpinionCard
+  ],
   templateUrl: './teacher-profile.html',
   styleUrl: './teacher-profile.css',
 })
