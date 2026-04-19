@@ -1,0 +1,16 @@
+<div class="message" [ngClass]="type">
+
+  @if (type === 'profesor') {
+    <img [src]="avatar" alt="imagen" class="message-avatar">
+  }
+
+  <div class="message-content" [ngClass]="type">
+    <p>{{ text }}</p>
+    <span class="message-time">{{ time }}</span>
+  </div>
+
+  @if (type === 'alumno') {
+    <img [src]="avatar" alt="imagen" class="message-avatar alumno-avatar">
+  }
+
+</div>
