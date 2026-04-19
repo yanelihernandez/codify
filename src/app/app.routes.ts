@@ -3,10 +3,12 @@ import {HomeComponent} from './pages/home/home';
 import {LanguageTeachers} from './pages/language-teachers/language-teachers';
 import {TeacherProfileComponent} from './pages/teacher-profile/teacher-profile';
 import {Profile} from './pages/profile/profile';
+import {MyBookings} from './pages/my-bookings/my-bookings';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },
   { path: 'language-teachers/:id', component: LanguageTeachers },
   { path: 'teacher-profile/:id', component: TeacherProfileComponent },
   { path: 'profile', component: Profile },
+  { path: 'my-bookings', component: MyBookings },
 ];
