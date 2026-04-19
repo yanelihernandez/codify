@@ -4,6 +4,7 @@ import {LanguageTeachers} from './pages/language-teachers/language-teachers';
 import {TeacherProfileComponent} from './pages/teacher-profile/teacher-profile';
 import {Profile} from './pages/profile/profile';
 import {MyBookings} from './pages/my-bookings/my-bookings';
+import {Chat} from './pages/chat/chat';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -11,4 +12,5 @@ export const routes: Routes = [
   { path: 'teacher-profile/:id', component: TeacherProfileComponent },
   { path: 'profile', component: Profile },
   { path: 'my-bookings', component: MyBookings },
+  { path: 'chat', component: Chat },
 ];
