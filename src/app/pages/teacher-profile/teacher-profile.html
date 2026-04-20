@@ -56,7 +56,7 @@
           </div>
         </div>
         <div class="reserva-container">
-          <a href="#" class="btn-reservar" id="reservarBtn">Reservar</a>
+          <a [routerLink]="['/booking', professor()?.id]" class="btn-reservar" id="reservarBtn">Reservar</a>
         </div>
       </div>
     </div>

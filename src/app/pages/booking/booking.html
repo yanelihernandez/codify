@@ -1,0 +1,82 @@
+@if(professor()){
+  <main class="booking-page">
+    <section class="booking-card">
+      <h1 class="booking-title">Reserva con {{ professor()?.name }}</h1>
+      <p class="booking-teacher-name"></p>
+
+      <div class="booking-top">
+        <div class="booking-photo">
+          <img [attr.src]="professor()?.image" [attr.alt]="professor()?.name" />
+        </div>
+
+        <div class="booking-about">
+          <p>
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+          </p>
+          <p>
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+          </p>
+        </div>
+      </div>
+
+      <form class="booking-form" id="bookingForm">
+        <div class="field full">
+          <label for="fullName">nombre y apellidos *</label>
+          <input id="fullName" type="text" placeholder="Ej: Juan Pérez García" />
+          <p class="error-msg-field" id="errorFullName">Por favor, rellena este campo</p>
+        </div>
+
+        <div class="field">
+          <label for="date">fecha *</label>
+          <input id="date" type="date" />
+          <p class="error-msg-field" id="errorDate">Por favor, rellena este campo</p>
+        </div>
+
+        <div class="field">
+          <label for="time">hora *</label>
+          <input id="time" type="time" />
+          <p class="error-msg-field" id="errorTime">Por favor, rellena este campo</p>
+        </div>
+
+        <div class="field">
+          <label for="hours">nº de horas *</label>
+          <select id="hours">
+            <option value="">Selecciona</option>
+            <option value="1">1 hora</option>
+            <option value="2">2 horas</option>
+            <option value="3">3 horas</option>
+            <option value="4">4 horas</option>
+          </select>
+          <p class="error-msg-field" id="errorHours">Por favor, rellena este campo</p>
+        </div>
+
+        <div class="field modality">
+          <div class="modality-head">
+            <label>modalidad</label>
+          </div>
+
+          <div class="toggle-row">
+            <label class="switch">
+              <input type="checkbox" id="groupToggle" />
+              <span class="slider"></span>
+            </label>
+            <span class="toggle-label">individual / en grupo</span>
+          </div>
+        </div>
+
+        <div class="price-box">
+          <p class="price-label">precio</p>
+          <p class="price-value" id="priceValue">0€</p>
+        </div>
+
+        <div class="booking-actions">
+          <a class="btn btn-cancel" id="cancelBtn" [routerLink]="['/teacher-profile', professor()?.id]">cancelar</a>
+          <button type="button" class="btn btn-accept" id="acceptBtn" [routerLink]="['/my-bookings']">aceptar</button>
+        </div>
+      </form>
+    </section>
+  </main>
+} @else {
+  <p>Profesor no cargado.</p>
+}
+
