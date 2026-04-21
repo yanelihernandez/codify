@@ -18,15 +18,20 @@
     </nav>
   </section>
 
-  <div class="profile" id="profileDropdown">
-    <a [routerLink]="'/profile'" class="profile-link">
-      <img src="images/perfil.jpg" alt="perfil" id="headerProfileImg">
-    </a>
-    <span class="username" id="headerUsername">Invitado</span>
+  <div class="profile" (click)="toggleDropdown()">
+    <img src="images/perfil.jpg" alt="perfil">
+    <span class="username">{{ authService.authState().fullName ?? 'Invitado' }}</span>
 
-    <div class="dropdown-menu" id="dropdownMenu">
-      <a href="../pages/profile.html" id="profileLinkMenu">Mi Perfil</a>
-      <a href="#" id="logoutBtn">Cerrar Sesión</a>
-    </div>
+    @if (dropdownVisible()) {
+      <div class="dropdown-menu">
+        @if (authService.authState().loggedIn) {
+          <a routerLink="/profile" (click)="dropdownVisible.set(false)">Mi Perfil</a>
+          <a (click)="logout()">Cerrar Sesión</a>
+        } @else {
+          <a routerLink="/sign-in" (click)="dropdownVisible.set(false)">Iniciar Sesión</a>
+          <a routerLink="/sign-up" (click)="dropdownVisible.set(false)">Registrarse</a>
+        }
+      </div>
+    }
   </div>
 </header>
