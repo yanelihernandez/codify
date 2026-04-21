@@ -1,0 +1,114 @@
+<div class="contenedor">
+  <h1>Modificar perfil</h1>
+
+  <a routerLink="/">
+    <img src="images/logo_verde.png" alt="Logo" width="180">
+  </a>
+
+  <form class="formulario" [formGroup]="editForm" (ngSubmit)="handleSubmit()">
+
+    <div class="fila-doble">
+      <div class="form-group mitad">
+        <label for="nombre">Nombre</label>
+        <input class="formulario-input"
+               [class.input-error]="nombre.invalid && nombre.touched"
+               type="text" id="nombre" formControlName="nombre"
+               placeholder="Tu nombre">
+        @if (nombre.hasError('required') && nombre.touched) {
+          <p class="error-msg">El nombre no puede estar vacío</p>
+        }
+      </div>
+
+      <div class="form-group mitad">
+        <label for="apellidos">Apellidos</label>
+        <input class="formulario-input"
+               [class.input-error]="apellidos.invalid && apellidos.touched"
+               type="text" id="apellidos" formControlName="apellidos"
+               placeholder="Tus apellidos">
+        @if (apellidos.hasError('required') && apellidos.touched) {
+          <p class="error-msg">Los apellidos no pueden estar vacíos</p>
+        }
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="fechaNacimiento">Fecha de Nacimiento</label>
+      <input class="formulario-input"
+             [class.input-error]="fechaNacimiento.invalid && fechaNacimiento.touched"
+             type="text" id="fechaNacimiento" formControlName="fechaNacimiento"
+             placeholder="DD-MM-YYYY (ejemplo: 24-03-2000)">
+      @if (fechaNacimiento.hasError('required') && fechaNacimiento.touched) {
+        <p class="error-msg">Por favor, rellena este campo</p>
+      }
+      @if (fechaNacimiento.hasError('formatoFecha')) {
+        <p class="error-msg">Formato incorrecto. Usa DD-MM-YYYY</p>
+      }
+      @if (fechaNacimiento.hasError('fechaInvalida')) {
+        <p class="error-msg">Fecha no válida</p>
+      }
+      @if (mensajeEdad(); as msg) {
+        <div class="mensaje-edad" [class.ok-mensaje]="msg.tipo === 'ok'" [class.no-mensaje]="msg.tipo === 'no'">
+          {{ msg.texto }}
+        </div>
+      }
+    </div>
+
+    <div class="form-group">
+      <label for="username">Nombre de Usuario</label>
+      <input class="formulario-input"
+             [class.input-error]="username.invalid && username.touched"
+             type="text" id="username" formControlName="username"
+             placeholder="Nombre de usuario">
+      @if (username.hasError('required') && username.touched) {
+        <p class="error-msg">El nombre de usuario no puede estar vacío</p>
+      }
+    </div>
+
+    <div class="form-group">
+      <label for="contrasena">Nueva Contraseña</label>
+      <div class="field-wrapper">
+        <input class="formulario-input"
+               [class.input-error]="contrasena.invalid && contrasena.touched"
+               [type]="showPassword() ? 'text' : 'password'"
+               id="contrasena" formControlName="contrasena"
+               placeholder="********">
+        <button type="button" class="toggle-btn" (click)="togglePassword()">
+          {{ showPassword() ? '🔒' : '👁' }}
+        </button>
+      </div>
+      <p class="password-hint">Mínimo 8 caracteres — Déjalo en blanco para no cambiar</p>
+      @if (contrasena.hasError('minLengthPass')) {
+        <p class="error-msg">La contraseña debe tener al menos 8 caracteres</p>
+      }
+    </div>
+
+    <div class="form-group">
+      <label for="repContrasena">Repetir Nueva Contraseña</label>
+      <div class="field-wrapper">
+        <input class="formulario-input"
+               [class.input-error]="editForm.hasError('passwordsMismatch') && repContrasena.touched"
+               [type]="showRepPassword() ? 'text' : 'password'"
+               id="repContrasena" formControlName="repContrasena"
+               placeholder="********">
+        <button type="button" class="toggle-btn" (click)="toggleRepPassword()">
+          {{ showRepPassword() ? '🔒' : '👁' }}
+        </button>
+      </div>
+      @if (editForm.hasError('passwordsMismatch') && repContrasena.touched) {
+        <p class="error-msg">Las contraseñas no coinciden</p>
+      }
+    </div>
+
+    <div class="botones">
+      <button type="button" routerLink="/profile">Cancelar</button>
+      <button type="submit" id="btnSave" [disabled]="isLoading()">
+        @if (isLoading()) {
+          <div class="spinner"></div>
+        } @else {
+          Guardar cambios
+        }
+      </button>
+    </div>
+
+  </form>
+</div>

@@ -1,0 +1,63 @@
+<div class="contenedor">
+  <h1>Inicia Sesión</h1>
+
+  <a routerLink="/">
+    <img src="images/logo_verde.png" alt="Logo">
+  </a>
+
+  <form class="formulario" [formGroup]="loginForm" (ngSubmit)="handleSubmit()">
+
+    <div class="form-group">
+      <label for="usuario">Usuario</label>
+      <input
+        class="formulario-input"
+        [class.input-error]="usuario.invalid && usuario.touched || errorUsuarioNoExiste()"
+        type="text"
+        id="usuario"
+        formControlName="usuario"
+        (input)="clearErrors()"
+      >
+      @if (usuario.hasError('required') && usuario.touched) {
+        <p class="error-msg">Por favor, rellena este campo</p>
+      }
+      @if (errorUsuarioNoExiste()) {
+        <p class="error-msg">El usuario no existe</p>
+      }
+    </div>
+
+    <div class="form-group">
+      <label for="contrasena">Contraseña</label>
+      <div class="field-wrapper">
+        <input
+          class="formulario-input"
+          [class.input-error]="contrasena.invalid && contrasena.touched || errorPassIncorrecta()"
+          [type]="showPassword() ? 'text' : 'password'"
+          id="contrasena"
+          formControlName="contrasena"
+          (input)="clearErrors()"
+        >
+        <button type="button" class="toggle-btn" (click)="togglePassword()">
+          {{ showPassword() ? '🔒' : '👁' }}
+        </button>
+      </div>
+      @if (contrasena.hasError('required') && contrasena.touched) {
+        <p class="error-msg">Por favor, rellena este campo</p>
+      }
+      @if (errorPassIncorrecta()) {
+        <p class="error-msg">Contraseña incorrecta</p>
+      }
+    </div>
+
+    @if (isLoading()) {
+      <progress style="width: 100%; margin-bottom: 15px; height: 8px; accent-color: #25510a;"></progress>
+    }
+
+    <div class="botones">
+      <a routerLink="/sign-up">¿No tienes cuenta? - Regístrate</a>
+      <button type="submit" [disabled]="isLoading()">
+        {{ isLoading() ? 'Verificando...' : 'Aceptar' }}
+      </button>
+    </div>
+
+  </form>
+</div>
