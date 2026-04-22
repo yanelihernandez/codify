@@ -7,7 +7,18 @@
   </div>
 
   <div class="professor-card-buttons">
-    <button class="fav-btn">♡</button>
-    <a [routerLink]="['/teacher-profile', id]" class="see-profile-btn">Ver Perfil</a>
+    <button
+      class="fav-btn"
+      [class.guest-mode]="!authState().loggedIn"
+      [class.liked]="isFavorite()"
+      [attr.aria-pressed]="isFavorite()"
+      (click)="onFavoriteClick($event)"
+    >
+      {{ isFavorite() ? '♥' : '♡' }}
+    </button>
+
+    <a [routerLink]="['/teacher-profile', id]" class="see-profile-btn">
+      Ver Perfil
+    </a>
   </div>
 </article>
