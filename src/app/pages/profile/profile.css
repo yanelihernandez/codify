@@ -435,3 +435,33 @@ html, body {
     border: purple solid 1px;
 }
 */
+
+
+.fav-professors-content p {
+  width: 100%;
+  text-align: center;
+  color: #4b5563;
+}
+.no-chats-message {
+  text-align: center;
+  padding: 40px;
+  color: #6b7280;
+  background: #f9fafb;
+  border-radius: 12px;
+}
+
+.link-explore {
+  color: #25510a;
+  text-decoration: none;
+  font-weight: bold;
+  cursor: pointer;
+  display: inline-block;
+}
+
+.link-explore:hover {
+  text-decoration: underline;
+}
+
+.chat-card-wrapper {
+  cursor: pointer;
+}
