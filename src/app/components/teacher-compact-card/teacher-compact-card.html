@@ -1,7 +1,11 @@
 <article class="best-professor-card">
   <div class="card-top">
     <p class="stars">{{ stars }} ☆</p>
-    <button class="fav-btn">♡</button>
+    <button class="fav-btn"
+            [class.guest-mode]="!authState().loggedIn"
+            [class.liked]="isFavorite()"
+            [attr.aria-pressed]="isFavorite()"
+            (click)="onFavoriteClick($event)">{{ isFavorite() ? '♥' : '♡' }}</button>
   </div>
 
   <img [attr.alt]="image_alt" [attr.src]="image_src">
