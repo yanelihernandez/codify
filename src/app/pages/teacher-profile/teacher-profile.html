@@ -4,6 +4,7 @@
       <a
         [routerLink]="null"
         class="chat-icon-corner"
+        [class.guest-mode]="isGuest()"
         title="Enviar mensaje"
         (click)="goToChat($event)"
       >
