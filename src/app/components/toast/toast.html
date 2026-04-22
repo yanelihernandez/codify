@@ -1,4 +1,4 @@
-<div class="toast-container">
+<div class="toast-stack">
   @for (toast of toastService.toasts(); track toast.id) {
     <div class="toast show">{{ toast.message }}</div>
   }
