@@ -1,27 +1,15 @@
-@if(language()){
-  <main>
+<main class="teachers-page">
+  <h1 class="page-title">{{ languageName() }}</h1>
 
-    <div class="introduction">
-      <p class="introduction-title">{{ language()?.name }}</p>
-      <p class="language-introduction">{{ language()?.introduction }}</p>
-    </div>
-
-    <section class="professors-list">
-
-      @for (professor of professors(); track professor.id) {
-        <app-teacher
-          [image_src]="professor.image"
-          [name]="professor.name"
-          [info]="professor.info"
-          [id]="professor.id">
-        </app-teacher>
-      } @empty {
-        <p>No hay profesores disponibles (El array está vacío).</p>
-      }
-
-    </section>
-
-  </main>
-} @else {
-  <p>Lenguaje no cargado</p>
-}
+  <section class="teachers-list">
+    @for (professor of filteredProfessors(); track professor.id) {
+      <app-teacher-detail-card
+        [id]="professor.id"
+        [image_src]="professor.image"
+        [image_alt]="professor.name"
+        [name]="professor.name"
+        [info]="professor.info">
+      </app-teacher-detail-card>
+    }
+  </section>
+</main>
