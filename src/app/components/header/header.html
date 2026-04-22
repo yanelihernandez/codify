@@ -18,19 +18,16 @@
     </nav>
   </section>
 
-  <div class="profile" (click)="toggleDropdown()">
-    <img src="images/perfil.jpg" alt="perfil">
-    <span class="username">{{ authService.authState().fullName ?? 'Invitado' }}</span>
+  <div class="profile" id="profileDropdown" [class.guest-mode]="!authState().loggedIn">
+    <a href="#" class="profile-link" (click)="goToProfile($event)">
+      <img src="images/perfil.jpg" alt="perfil" id="headerProfileImg">
+    </a>
+    <span class="username" id="headerUsername">{{ displayName() }}</span>
 
-    @if (dropdownVisible()) {
-      <div class="dropdown-menu">
-        @if (authService.authState().loggedIn) {
-          <a routerLink="/profile" (click)="dropdownVisible.set(false)">Mi Perfil</a>
-          <a (click)="logout()">Cerrar Sesión</a>
-        } @else {
-          <a routerLink="/sign-in" (click)="dropdownVisible.set(false)">Iniciar Sesión</a>
-          <a routerLink="/sign-up" (click)="dropdownVisible.set(false)">Registrarse</a>
-        }
+    @if (authState().loggedIn) {
+      <div class="dropdown-menu" id="dropdownMenu" [class.show-dropdown]="menuOpen()">
+        <a href="#" id="profileLinkMenu" (click)="goToMyProfile($event)">Mi Perfil</a>
+        <a href="#" id="logoutBtn" (click)="logout($event)">Cerrar Sesión</a>
       </div>
     }
   </div>
