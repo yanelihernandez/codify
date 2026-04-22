@@ -5,7 +5,7 @@
 
       <section id="profile-section">
         <div id="profile-info">
-          <img id="profileImage" src="../images/perfil.jpg" alt="Foto de perfil">
+          <img id="profileImage" src="images/perfil.jpg" alt="Foto de perfil">
 
           <div class="upload-container">
             <div class="camera-icon-wrapper" id="cameraIconWrapper">
@@ -17,11 +17,11 @@
           </div>
 
           <div class="info-tarjeta">
-            <p id="profileUsername" class="username-bold">Invitado</p>
+            <p id="profileUsername" class="username-bold">{{ authState().username || 'Invitado' }}</p>
             <div class="info-detalles">
-              <p><span>Nombre:</span> <span id="profileName">Nombre</span></p>
-              <p><span>Apellidos:</span> <span id="profileSurname">Apellidos</span></p>
-              <p><span>Nacimiento:</span> <span id="profileBirth">Fecha de nacimiento</span></p>
+              <p><span>Nombre:</span> <span id="profileName">{{ authState().nombre || '' }}</span></p>
+              <p><span>Apellidos:</span> <span id="profileSurname">{{ authState().apellidos || '' }}</span></p>
+              <p><span>Nacimiento:</span> <span id="profileBirth">{{ authState().fechaNacimiento || '' }}</span></p>
             </div>
           </div>
         </div>
@@ -70,12 +70,41 @@
     <div id="derecha">
       <h2>Mis Chats</h2>
       <section class="chats-section">
-        <app-chat-card></app-chat-card>
-        <app-chat-card></app-chat-card>
-        <app-chat-card></app-chat-card>
+        @for (chat of chatProfessors(); track chat.id) {
+          <div class="chat-card-wrapper" (click)="goToChat(chat.id)">
+            <app-chat-card
+              [professorName]="chat.name"
+              [professorImage]="chat.image"
+              [lastMessage]="chat.lastMessage || 'Reserva confirmada'"
+              [lastMessageTime]="chat.lastMessageTime || ''">
+            </app-chat-card>
+          </div>
+        } @empty {
+          <p class="no-chats-message">
+            No tienes conversaciones activas.
+            <span class="link-explore" (click)="goToTeachers()">Explora profesores y reserva una clase para comenzar a chatear</span>
+          </p>
+        }
       </section>
     </div>
   </div>
 
-  <app-teacher-list></app-teacher-list>
+  <div id="fav-professors">
+    <div class="fav-professors-title">
+      <h2>Mis favoritos</h2>
+    </div>
+    <div class="fav-professors-content">
+      @for (professor of favoriteProfessors(); track professor.id) {
+        <app-teacher-compact-card
+          [image_src]="professor.image"
+          [name]="professor.name"
+          [speciality]="professor.speciality"
+          [stars]="professor.stars"
+          [id]="professor.id">
+        </app-teacher-compact-card>
+      } @empty {
+        <p>No tienes profesores favoritos aún. Explora y añade algunos.</p>
+      }
+    </div>
+  </div>
 </main>
