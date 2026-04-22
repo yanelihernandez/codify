@@ -1,52 +1,43 @@
-<main>
-  <div class="chat-container">
+@if (professor(); as prof) {
+  <main class="chat-page">
+    <section class="chat-shell">
+      <div class="chat-header">
+        <button class="back-btn" type="button" (click)="goBack()">←</button>
 
-    <div class="chat-header">
-      <a href="#" id="backButton" class="back-btn" title="Volver">←</a>
-      <div class="chat-header-info">
-        <img src="images/juan_manuel.png" alt="Juan Manuel" class="chat-avatar">
-        <div>
-          <h2>Juan Manuel González</h2>
-          <p class="online-status">🟢 En línea</p>
+        <div class="chat-professor">
+          <img [src]="prof.image" [alt]="prof.name" class="chat-avatar" />
+          <div>
+            <h1 class="chat-title">Chat con {{ prof.name }}</h1>
+            <p class="chat-subtitle">Profesor disponible</p>
+          </div>
         </div>
       </div>
-    </div>
 
-    <div class="chat-messages">
-      <!-- mensajes -->
-      <app-chat-message
-        type="profesor"
-        text="¡Hola! ¿En qué puedo ayudarte con Python?"
-        time="10:30"
-        avatar="../images/juan_manuel.png">
-      </app-chat-message>
+      <div class="chat-messages">
+        @for (message of messages(); track message.id) {
+          <div
+            class="message"
+            [class.mine]="message.sender === 'user'"
+            [class.theirs]="message.sender === 'professor'"
+          >
+            <p class="message-text">{{ message.text }}</p>
+            <span class="message-time">{{ message.time }}</span>
+          </div>
+        }
+      </div>
 
-      <app-chat-message
-        type="alumno"
-        text="Hola, tengo un proyecto con Django"
-        time="10:32"
-        avatar="../images/perfil.jpg">
-      </app-chat-message>
-
-      <app-chat-message
-        type="profesor"
-        text="¿Qué se te complica?"
-        time="10:33"
-        avatar="../images/juan_manuel.png">
-      </app-chat-message>
-
-      <app-chat-message
-        type="alumno"
-        text="Los modelos y relaciones"
-        time="10:35"
-        avatar="../images/perfil.jpg">
-      </app-chat-message>
-    </div>
-
-    <div class="chat-input-area">
-      <input type="text" placeholder="Escribe un mensaje..." class="chat-input">
-      <button class="send-btn">Enviar</button>
-    </div>
-
-  </div>
-</main>
+      <form class="chat-input-row" (ngSubmit)="sendMessage()">
+        <input
+          type="text"
+          name="message"
+          [(ngModel)]="newMessage"
+          placeholder="Escribe un mensaje..."
+          class="chat-input"
+        />
+        <button type="submit" class="send-btn">Enviar</button>
+      </form>
+    </section>
+  </main>
+} @else {
+  <p class="loading-message">Cargando chat...</p>
+}
