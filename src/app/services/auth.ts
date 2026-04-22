@@ -22,7 +22,6 @@ export interface AuthState {
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-
   private readonly USERS_KEY = 'codify_users';
   private readonly AUTH_KEY = 'codify_auth';
 
@@ -45,13 +44,14 @@ export class AuthService {
   }
 
   logout(): void {
-    this.setAuth({ loggedIn: false });
+    localStorage.removeItem(this.AUTH_KEY);
+    this.authState.set({ loggedIn: false });
   }
 
   getUsers(): User[] {
     try {
       const raw = localStorage.getItem(this.USERS_KEY);
-      return raw ? JSON.parse(raw).users : [];
+      return raw ? (JSON.parse(raw).users ?? []) : [];
     } catch {
       return [];
     }
@@ -72,8 +72,10 @@ export class AuthService {
           const user = data.users.find(u => u.username === username);
           if (user) {
             const users = this.getUsers();
-            users.push(user);
-            this.saveUsers(users);
+            if (!users.some(u => u.username === user.username)) {
+              users.push(user);
+              this.saveUsers(users);
+            }
           }
           resolve(user ?? null);
         },
