@@ -1,95 +1,45 @@
 .chat-card {
   display: flex;
-  width: 80%;
   align-items: center;
-  justify-content: space-between;
-  padding: 20px 32px;
-  max-width: 600px;
-  min-height: 100px;
-  border-radius: 8px;
-  border: 1px solid #ccc;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  background-color: #bcbaba;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  gap: 12px;
+  padding: 12px;
+  background: white;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: 1px solid #e5e7eb;
 }
 
 .chat-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transform: translateX(5px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border-color: #87ab69;
 }
 
-.chat-card img {
-  width: 100px;
-  height: 100px;
-  object-fit: cover;
+.chat-card-avatar {
+  width: 50px;
+  height: 50px;
   border-radius: 50%;
-  border: 3px solid white;
-  flex-shrink: 0;
-  margin-right: 20px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  object-fit: cover;
 }
 
-.chat-content {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
+.chat-card-info {
   flex: 1;
-  margin-right: 20px;
 }
 
-.professor-name {
-  margin: 0 0 5px 0;
-  font-size: 1.2rem;
-  font-weight: bold;
-  color: #1a1a1a;
+.chat-card-name {
+  margin: 0 0 4px;
+  font-size: 16px;
+  color: #1f2937;
 }
 
-.chat-content p:last-child {
+.chat-card-last-message {
   margin: 0;
-  font-size: 0.95rem;
-  color: #555;
+  font-size: 12px;
+  color: #6b7280;
 }
 
-.access {
-  display: inline-block;
-  text-decoration: none;
-  background-color: #0a79d3;
-  color: white;
-  padding: 10px 24px;
-  border-radius: 25px;
-  font-weight: 600;
-  font-size: 0.9rem;
-  transition: all 0.3s ease;
-  white-space: nowrap;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-  border: none;
-  cursor: pointer;
-  letter-spacing: 0.5px;
-}
-
-.access:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-  background-color: #0649dd;
-}
-
-.access:active {
-  transform: translateY(0);
-}
-
-
-@media (max-width: 700px), (min-width: 1100px) and (max-width: 1380px) {
-  .chat-card {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .access {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 30%;
-    margin: 20px auto 0 auto;
-    text-align: center;
-  }
+.chat-card-time {
+  font-size: 11px;
+  color: #9ca3af;
 }
