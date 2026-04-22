@@ -1,26 +1,33 @@
 @if (professor(); as prof) {
   <main class="booking-page">
     <section class="booking-card">
-      <h1 class="booking-title">Reserva con Profesor</h1>
+      <h1 class="booking-title">Reserva con {{ prof.name }}</h1>
       <p class="booking-teacher-name">{{ prof.name }}</p>
 
       <div class="booking-top">
         <div class="booking-photo">
           <img [src]="prof.image" [alt]="prof.name" />
         </div>
+
         <div class="booking-about">
           <p>{{ prof.info }}</p>
         </div>
       </div>
 
-      <form class="booking-form" [formGroup]="bookingForm" (ngSubmit)="handleSubmit()">
-
+      <form
+        class="booking-form"
+        [formGroup]="bookingForm"
+        (ngSubmit)="handleSubmit()"
+      >
         <div class="field full">
           <label for="fullName">nombre y apellidos *</label>
-          <input id="fullName" type="text"
-                 formControlName="fullName"
-                 [class.input-error]="fullName.invalid && fullName.touched"
-                 placeholder="Ej: Juan Pérez García" />
+          <input
+            id="fullName"
+            type="text"
+            formControlName="fullName"
+            [class.input-error]="fullName.invalid && fullName.touched"
+            placeholder="Ej: Juan Pérez García"
+          />
           @if (fullName.hasError('required') && fullName.touched) {
             <p class="error-msg-field">Por favor, rellena este campo</p>
           }
@@ -28,22 +35,28 @@
 
         <div class="field">
           <label for="date">fecha *</label>
-          <input id="date" type="date"
-                 formControlName="date"
-                 [class.input-error]="date.invalid && date.touched" />
+          <input
+            id="date"
+            type="date"
+            formControlName="date"
+            [class.input-error]="date.invalid && date.touched"
+          />
           @if (date.hasError('required') && date.touched) {
             <p class="error-msg-field">Por favor, rellena este campo</p>
           }
-          @if (date.hasError('fechaPasada')) {
+          @if (date.hasError('fechaPasada') && date.touched) {
             <p class="error-msg-field">No puedes reservar en una fecha pasada</p>
           }
         </div>
 
         <div class="field">
           <label for="time">hora *</label>
-          <input id="time" type="time"
-                 formControlName="time"
-                 [class.input-error]="time.invalid && time.touched" />
+          <input
+            id="time"
+            type="time"
+            formControlName="time"
+            [class.input-error]="time.invalid && time.touched"
+          />
           @if (time.hasError('required') && time.touched) {
             <p class="error-msg-field">Por favor, rellena este campo</p>
           }
@@ -51,9 +64,11 @@
 
         <div class="field">
           <label for="hours">nº de horas *</label>
-          <select id="hours"
-                  formControlName="hours"
-                  [class.input-error]="hours.invalid && hours.touched">
+          <select
+            id="hours"
+            formControlName="hours"
+            [class.input-error]="hours.invalid && hours.touched"
+          >
             <option value="">Selecciona</option>
             <option value="1">1 hora</option>
             <option value="2">2 horas</option>
@@ -66,12 +81,11 @@
         </div>
 
         <div class="field modality">
-          <div class="modality-head">
-            <label>modalidad</label>
-          </div>
+          <p class="modality-title">modalidad</p>
+
           <div class="toggle-row">
             <label class="switch">
-              <input type="checkbox" formControlName="isGroup" />
+              <input type="checkbox" formControlName="isGroup" (change)="onGroupChange()" />
               <span class="slider"></span>
             </label>
             <span class="toggle-label">individual / en grupo</span>
@@ -84,13 +98,23 @@
         </div>
 
         <div class="booking-actions">
-          <button type="button" class="btn btn-cancel" (click)="goBack()">cancelar</button>
-          <button type="submit" class="btn btn-accept">aceptar</button>
-        </div>
+          <a
+            class="btn btn-cancel"
+            [routerLink]="['/teacher-profile', prof.id]"
+          >
+            cancelar
+          </a>
 
+          <button
+            type="submit"
+            class="btn btn-accept"
+          >
+            aceptar
+          </button>
+        </div>
       </form>
     </section>
   </main>
 } @else {
-  <p style="padding: 40px; text-align:center;">Cargando profesor...</p>
+  <p class="loading-message">Cargando profesor...</p>
 }
