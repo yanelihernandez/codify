@@ -5,7 +5,7 @@ import {
 } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth';
-import { ToastService } from '../../services/toast';
+import { ToastService } from '../../services/toast.service';
 
 function fechaNacimientoValidator(control: AbstractControl): ValidationErrors | null {
   const value = control.value?.trim();
@@ -97,7 +97,6 @@ export class EditProfileComponent implements OnInit {
       this.apellidos.setValue(user.apellidos ?? '');
       this.fechaNacimiento.setValue(user.fechaNacimiento ?? '');
       this.username.setValue(user.username ?? '');
-      // Trigger edad feedback on load
       if (user.fechaNacimiento) this.fechaNacimiento.markAsTouched();
     }
   }
@@ -112,7 +111,10 @@ export class EditProfileComponent implements OnInit {
 
   handleSubmit(): void {
     this.editForm.markAllAsTouched();
-    if (this.editForm.invalid) return;
+    if (this.editForm.invalid) {
+      this.toastService.show('Por favor, revisa los campos del formulario');
+      return;
+    }
 
     const nombre = this.nombre.value!.trim();
     const apellidos = this.apellidos.value!.trim();
@@ -139,7 +141,7 @@ export class EditProfileComponent implements OnInit {
 
     if (!ok) {
       this.isLoading.set(false);
-      this.toastService.show('Error al guardar los cambios');
+      this.toastService.show('Error al actualizar el perfil');
       return;
     }
 
@@ -152,7 +154,8 @@ export class EditProfileComponent implements OnInit {
       fechaNacimiento: fechaNac
     });
 
-    this.toastService.show('Cambios guardados correctamente');
+    this.toastService.show('Perfil actualizado correctamente');
+
     setTimeout(() => this.router.navigate(['/profile']), 600);
   }
 }
