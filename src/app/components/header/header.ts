@@ -1,7 +1,8 @@
-import { Component, signal, HostListener } from '@angular/core';
-import { RouterLink, Router } from '@angular/router';
+import { Component, computed, inject, signal } from '@angular/core';
+import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth';
-import { ToastService } from '../../services/toast';
+import { ToastService } from '../../services/toast.service';
+import { FavoritesService } from '../../services/favorites.service';
 
 @Component({
   selector: 'app-header',
@@ -11,34 +12,38 @@ import { ToastService } from '../../services/toast';
   standalone: true
 })
 export class HeaderComponent {
+  private authService = inject(AuthService);
+  private favoritesService = inject(FavoritesService);
+  private toastService = inject(ToastService);
+  private router = inject(Router);
 
-  dropdownVisible = signal(false);
+  authState = this.authService.authState;
+  menuOpen = signal(false);
+  displayName = computed(() => this.authState().fullName || this.authState().username || 'Invitado');
 
-  constructor(
-    public authService: AuthService,
-    private toastService: ToastService,
-    private router: Router
-  ) {}
-
-  toggleDropdown(): void {
-    this.dropdownVisible.update(v => !v);
-  }
-
-  logout(): void {
-    const nombre = this.authService.authState().fullName;
-    this.authService.logout();
-    this.dropdownVisible.set(false);
-    this.toastService.show(`¡Hasta pronto, ${nombre}!`);
-    this.router.navigate(['/']);
-  }
-
-  // Cerrar dropdown al hacer click fuera
-  @HostListener('document:click', ['$event'])
-  onDocumentClick(event: MouseEvent): void {
-    const target = event.target as HTMLElement;
-    if (!target.closest('.profile')) {
-      this.dropdownVisible.set(false);
+  goToProfile(event: Event): void {
+    event.preventDefault();
+    if (this.authState().loggedIn) {
+      this.menuOpen.update(v => !v);
+    } else {
+      this.toastService.show('Debes iniciar sesión para acceder a tu perfil');
+      sessionStorage.setItem('redirectAfterLogin', '/profile');
+      this.router.navigate(['/sign-in']);
     }
   }
-}
 
+  goToMyProfile(event: Event): void {
+    event.preventDefault();
+    this.menuOpen.set(false);
+    this.router.navigate(['/profile']);
+  }
+
+  logout(event: Event): void {
+    event.preventDefault();
+    this.menuOpen.set(false);
+    this.authService.logout();
+    this.favoritesService.clearForLogout();
+    this.toastService.show('¡Hasta pronto! Has cerrado sesión');
+    this.router.navigate(['/']);
+  }
+}
