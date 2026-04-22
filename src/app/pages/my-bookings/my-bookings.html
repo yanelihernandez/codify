@@ -1,22 +1,16 @@
 <main>
   <h1 class="page-title">Mis Reservas</h1>
 
-  <div id="noBookingsMessage" class="no-bookings" style="display: none;">
-    <p>No tienes reservas realizadas aún</p>
-    <a routerLink="/" class="btn-explore">Explorar profesores</a>
-  </div>
-
-  <section class="reservation-list" id="reservationList">
-    <!-- tarjetas de reserva -->
-    <app-booking-card></app-booking-card>
-    <app-booking-card></app-booking-card>
-    <app-booking-card></app-booking-card>
-  </section>
+  @if (bookings().length === 0) {
+    <div class="no-bookings">
+      <p>No tienes reservas realizadas aún</p>
+      <a [routerLink]="'/'" class="btn-explore">Explorar profesores</a>
+    </div>
+  } @else {
+    <section class="reservation-list">
+      @for (booking of bookings(); track booking.id) {
+        <app-booking-card [booking]="booking"></app-booking-card>
+      }
+    </section>
+  }
 </main>
-
-<div class="action-bar" id="actionBar" style="display: none;">
-  <div class="action-bar-content">
-    <button class="btn-save" id="saveChangesBtn">Guardar cambios</button>
-    <button class="btn-cancel" id="cancelChangesBtn">Cancelar</button>
-  </div>
-</div>
