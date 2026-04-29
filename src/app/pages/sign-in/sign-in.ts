@@ -41,44 +41,30 @@ export class SignInComponent {
     if (this.loginForm.invalid) return;
 
     this.isLoading.set(true);
+
     const username = this.usuario.value!.trim();
     const pass = this.contrasena.value!.trim();
-    const usuarioEncontrado = await this.authService.findUser(username);
 
-    setTimeout(() => {
-      this.isLoading.set(false);
+    const ok = await this.authService.login(username, pass);
 
-      if (!usuarioEncontrado) {
-        this.errorUsuarioNoExiste.set(true);
-        this.usuario.setErrors({ notFound: true });
-        this.toastService.show('El usuario no existe');
-        return;
-      }
+    this.isLoading.set(false);
 
-      if (usuarioEncontrado.password !== pass) {
-        this.errorPassIncorrecta.set(true);
-        this.contrasena.setErrors({ wrongPassword: true });
-        this.toastService.show('Contraseña incorrecta');
-        return;
-      }
+    if (!ok) {
+      // Firebase no distingue fácilmente entre user/pass incorrecto
+      this.errorUsuarioNoExiste.set(true);
+      this.errorPassIncorrecta.set(true);
+      this.toastService.show('Usuario o contraseña incorrectos');
+      return;
+    }
 
-      this.authService.setAuth({
-        loggedIn: true,
-        username: usuarioEncontrado.username,
-        fullName: usuarioEncontrado.fullName,
-        nombre: usuarioEncontrado.nombre,
-        apellidos: usuarioEncontrado.apellidos,
-        fechaNacimiento: usuarioEncontrado.fechaNacimiento
-      });
+    this.toastService.show(`¡Bienvenido!`);
 
-      this.toastService.show(`¡Bienvenido, ${usuarioEncontrado.username}!`);
-      const redirect = sessionStorage.getItem('redirectAfterLogin');
-      if (redirect) {
-        sessionStorage.removeItem('redirectAfterLogin');
-        this.router.navigateByUrl(redirect);
-      } else {
-        this.router.navigate(['/']);
-      }
-    }, 800);
+    const redirect = sessionStorage.getItem('redirectAfterLogin');
+    if (redirect) {
+      sessionStorage.removeItem('redirectAfterLogin');
+      this.router.navigateByUrl(redirect);
+    } else {
+      this.router.navigate(['']);
+    }
   }
 }

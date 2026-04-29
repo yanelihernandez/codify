@@ -17,11 +17,11 @@
           </div>
 
           <div class="info-tarjeta">
-            <p id="profileUsername" class="username-bold">{{ authState().username || 'Invitado' }}</p>
+            <p id="profileUsername" class="username-bold">{{ user()?.username || 'Invitado' }}</p>
             <div class="info-detalles">
-              <p><span>Nombre:</span> <span id="profileName">{{ authState().nombre || '' }}</span></p>
-              <p><span>Apellidos:</span> <span id="profileSurname">{{ authState().apellidos || '' }}</span></p>
-              <p><span>Nacimiento:</span> <span id="profileBirth">{{ authState().fechaNacimiento || '' }}</span></p>
+              <p><span>Nombre:</span> <span id="profileName">{{ user()?.name || ''}}</span></p>
+              <p><span>Apellidos:</span> <span id="profileSurname">{{ user()?.surnames || '' }}</span></p>
+              <p><span>Nacimiento:</span> <span id="profileBirth">{{ user()?.birthdate || '' }}</span></p>
             </div>
           </div>
         </div>
@@ -32,10 +32,10 @@
           </div>
 
           <div id="mobile-buttons">
-            <a href="#derecha">
+            <a (click)="scrollTo('derecha')">
               <span class="camera-icon">📩</span>
             </a>
-            <a href="#fav-professors">
+            <a (click)="scrollTo('fav-professors')">
               <span class="camera-icon">❤️</span>
             </a>
           </div>

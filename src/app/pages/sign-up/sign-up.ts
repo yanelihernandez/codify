@@ -4,7 +4,7 @@ import {
   AbstractControl, ValidationErrors, ReactiveFormsModule
 } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
-import { AuthService } from '../../services/auth';
+import { AuthService, User } from '../../services/auth';
 import { ToastService } from '../../services/toast.service';
 
 function fechaNacimientoValidator(control: AbstractControl): ValidationErrors | null {
@@ -51,6 +51,7 @@ export class SignUpComponent {
   apellidos = new FormControl('', Validators.required);
   fechaNacimiento = new FormControl('', [Validators.required, fechaNacimientoValidator]);
   username = new FormControl('', Validators.required);
+  email = new FormControl('', [Validators.required, Validators.email]);
   contrasena = new FormControl('', [Validators.required, minLengthPassword]);
   repContrasena = new FormControl('', Validators.required);
 
@@ -59,6 +60,7 @@ export class SignUpComponent {
     apellidos: this.apellidos,
     fechaNacimiento: this.fechaNacimiento,
     username: this.username,
+    email: this.email,
     contrasena: this.contrasena,
     repContrasena: this.repContrasena
   }, { validators: passwordsCoinciden });
@@ -89,7 +91,46 @@ export class SignUpComponent {
   togglePassword(): void { this.showPassword.update(v => !v); }
   toggleRepPassword(): void { this.showRepPassword.update(v => !v); }
 
-  handleSubmit(): void {
+  async handleSubmit(): Promise<void> {
+    this.signUpForm.markAllAsTouched();
+    if (this.signUpForm.invalid) return;
+
+    const nombre = this.nombre.value!.trim();
+    const apellidos = this.apellidos.value!.trim();
+    const fechaNacimiento = this.fechaNacimiento.value!;
+    const username = this.username.value!.trim();
+    const email = this.email.value!.trim();
+    const pass = this.contrasena.value!;
+
+    this.isLoading.set(true);
+
+    const nuevoUsuario: User = {
+      name: nombre,
+      surnames: apellidos,
+      fullName: `${nombre} ${apellidos}`.trim(),
+      birthdate: fechaNacimiento,
+      username: username,
+      email: email,
+      moreInfo: 'Usuario registrado'
+    };
+
+    const ok = await this.authService.registerUser(nuevoUsuario, pass);
+
+    if (!ok) {
+      this.isLoading.set(false);
+      this.username.setErrors({ usernameTaken: true });
+      this.toastService.show('El nombre de usuario ya está registrado');
+      return;
+    }
+
+    this.toastService.show('Registro completado');
+    this.router.navigate(['']);
+  }
+}
+
+
+/*
+handleSubmit(): void {
     this.signUpForm.markAllAsTouched();
     if (this.signUpForm.invalid) return;
 
@@ -125,4 +166,4 @@ export class SignUpComponent {
       this.router.navigate(['/sign-in']);
     }, 1200);
   }
-}
+ */

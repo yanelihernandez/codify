@@ -4,8 +4,9 @@ import {
   AbstractControl, ValidationErrors, ReactiveFormsModule
 } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
-import { AuthService } from '../../services/auth';
+import {AuthService, User} from '../../services/auth';
 import { ToastService } from '../../services/toast.service';
+import {updateEmail, User as FirebaseUser, verifyBeforeUpdateEmail} from '@angular/fire/auth';
 
 function fechaNacimientoValidator(control: AbstractControl): ValidationErrors | null {
   const value = control.value?.trim();
@@ -84,20 +85,21 @@ export class EditProfileComponent implements OnInit {
     private router: Router
   ) {}
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
     const auth = this.authService.authState();
-    if (!auth.loggedIn) {
+    if (!auth.loggedIn || !auth.uid) {
       this.router.navigate(['/sign-in']);
       return;
     }
 
-    const user = this.authService.getCurrentUser();
+    const user = await this.authService.getCurrentUser();
+
     if (user) {
-      this.nombre.setValue(user.nombre ?? '');
-      this.apellidos.setValue(user.apellidos ?? '');
-      this.fechaNacimiento.setValue(user.fechaNacimiento ?? '');
+      this.nombre.setValue(user.name ?? '');
+      this.apellidos.setValue(user.surnames ?? '');
+      this.fechaNacimiento.setValue(user.birthdate ?? '');
       this.username.setValue(user.username ?? '');
-      if (user.fechaNacimiento) this.fechaNacimiento.markAsTouched();
+      if (user.birthdate) this.fechaNacimiento.markAsTouched();
     }
   }
 
@@ -109,53 +111,43 @@ export class EditProfileComponent implements OnInit {
     this.showRepPassword.update(v => !v);
   }
 
-  handleSubmit(): void {
+  async handleSubmit(): Promise<void> {
+    const user = await this.authService.getCurrentUser();
+    if(!user) return;
+
     this.editForm.markAllAsTouched();
     if (this.editForm.invalid) {
-      this.toastService.show('Por favor, revisa los campos del formulario');
+      this.toastService.show('Revisa los campos');
       return;
     }
-
-    const nombre = this.nombre.value!.trim();
-    const apellidos = this.apellidos.value!.trim();
-    const fechaNac = this.fechaNacimiento.value!;
-    const username = this.username.value!.trim();
-    const pass = this.contrasena.value ?? '';
 
     this.isLoading.set(true);
 
-    const auth = this.authService.authState();
-    const currentUsername = auth.username!;
+    const nombre = this.nombre.value!.trim();
+    const apellidos = this.apellidos.value!.trim();
+    const fechaNacimiento = this.fechaNacimiento.value!;
+    const username = this.username.value!.trim();
 
-    const updatedUser = {
-      nombre,
-      apellidos,
+    const updatedUser: User = {
+      name: nombre,
+      surnames: apellidos,
       fullName: `${nombre} ${apellidos}`.trim(),
-      fechaNacimiento: fechaNac,
-      username,
-      password: pass || '',
-      masInfo: 'Usuario registrado'
+      birthdate: fechaNacimiento,
+      username: username,
+      email: user.email,
+      moreInfo: 'Usuario actualizado'
     };
 
-    const ok = this.authService.updateUser(currentUsername, updatedUser);
+    const ok = await this.authService.updateUser(updatedUser);
+
+    this.isLoading.set(false);
 
     if (!ok) {
-      this.isLoading.set(false);
-      this.toastService.show('Error al actualizar el perfil');
+      this.toastService.show('Error al actualizar');
       return;
     }
 
-    this.authService.setAuth({
-      loggedIn: true,
-      username,
-      fullName: updatedUser.fullName,
-      nombre,
-      apellidos,
-      fechaNacimiento: fechaNac
-    });
-
-    this.toastService.show('Perfil actualizado correctamente');
-
-    setTimeout(() => this.router.navigate(['/profile']), 600);
+    this.toastService.show('Perfil actualizado');
+    this.router.navigate(['/profile']);
   }
 }

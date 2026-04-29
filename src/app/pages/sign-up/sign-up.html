@@ -75,6 +75,20 @@
     </div>
 
     <div class="form-group">
+      <label for="email">Correo electrónico</label>
+      <input class="formulario-input"
+             [class.input-error]="email.invalid && email.touched"
+             type="text" id="email" formControlName="email"
+             placeholder="Ingresa una dirección de correo electrónico">
+      @if (email.hasError('required') && email.touched) {
+        <p class="error-msg-empty">Por favor, rellena este campo</p>
+      }
+      @if (email.hasError('email') && email.touched) {
+        <p class="error-msg">Correo no válido</p>
+      }
+    </div>
+
+    <div class="form-group">
       <label for="contrasena">Contraseña</label>
       <div class="field-wrapper">
         <input class="formulario-input"

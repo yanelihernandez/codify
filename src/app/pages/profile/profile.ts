@@ -1,7 +1,7 @@
 import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { ChatCard } from '../../components/chat-card/chat-card';
 import { Router, RouterLink } from '@angular/router';
-import { AuthService } from '../../services/auth';
+import {AuthService, User} from '../../services/auth';
 import { FavoritesService } from '../../services/favorites.service';
 import { ProfessorService } from '../../services/professors.service';
 import { Professor } from '../../models/professor';
@@ -30,6 +30,8 @@ export class Profile implements OnInit {
   private bookingService = inject(BookingService);
   private router = inject(Router);
 
+  user = signal<User | null>(null);
+
   authState = this.authService.authState;
   allProfessors = signal<Professor[]>([]);
   chatProfessors = signal<ChatProfessor[]>([]);
@@ -46,6 +48,8 @@ export class Profile implements OnInit {
       this.router.navigate(['/sign-in']);
       return;
     }
+
+    this.authService.getCurrentUser().then(u => this.user.set(u));
 
     this.professorService.getProfessors().subscribe(profs => {
       this.allProfessors.set(profs);
@@ -89,4 +93,16 @@ export class Profile implements OnInit {
   goToTeachers(): void {
     this.router.navigate(['/']);
   }
+
+  scrollTo(id: string): void {
+    const element = document.getElementById(id);
+
+    if (element) {
+      element.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start'
+      });
+    }
+  }
+
 }
