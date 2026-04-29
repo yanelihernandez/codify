@@ -1,7 +1,7 @@
 import { Component, Input, computed, inject } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth';
-import { FavoritesService } from '../../../../../../../Downloads/prueba-git/codify-sprint3/src/app/services/favorites.service';
+import { FavoritesService } from '../../services/favorites.service';
 import { ToastService } from '../../services/toast.service';
 
 @Component({
