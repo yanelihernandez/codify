@@ -12,7 +12,7 @@ import { EditProfileComponent } from './pages/edit-profile/edit-profile';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },
-  { path: 'language-teachers/:id', component: LanguageTeachers },
+  { path: 'language-teachers/:slug', component: LanguageTeachers },
   { path: 'teacher-profile/:id', component: TeacherProfileComponent },
   { path: 'profile', component: Profile },
   { path: 'my-bookings', component: MyBookings },

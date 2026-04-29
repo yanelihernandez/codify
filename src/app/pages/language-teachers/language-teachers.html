@@ -1,7 +1,10 @@
 <main class="teachers-page">
-  <h1 class="page-title">{{ languageName() }}</h1>
+  <div class="introduction">
+    <h1 class="introduction-title">{{ language()?.name }}</h1>
+    <p class="language-introduction">{{ language()?.introduction }}</p>
+  </div>
 
-  <section class="teachers-list">
+  <section class="professors-list">
     @for (professor of filteredProfessors(); track professor.id) {
       <app-teacher-detail-card
         [id]="professor.id"

@@ -4,6 +4,8 @@ import { ActivatedRoute } from '@angular/router';
 import { TeacherDetailCard } from '../../components/teacher-detail-card/teacher-detail-card';
 import { ProfessorService } from '../../services/professors.service';
 import { Professor } from '../../models/professor';
+import {LanguagesService} from '../../services/languages.service';
+import {Language} from '../../models/language';
 
 @Component({
   selector: 'app-language-teachers',
@@ -14,7 +16,42 @@ import { Professor } from '../../models/professor';
 })
 export class LanguageTeachers implements OnInit {
   professors = signal<Professor[]>([]);
-  languageId = signal<string>('');
+  language = signal<Language | null>(null);
+
+  filteredProfessors = computed(() => {
+    const lang = this.language();
+
+    if (!lang) return [];
+
+    return this.professors().filter(
+      (professor) =>
+        (professor.speciality || '').toLowerCase() === lang.name.toLowerCase()
+    );
+  });
+
+  constructor(
+    private route: ActivatedRoute,
+    private professorService: ProfessorService,
+    private languageService: LanguagesService
+  ) {}
+
+  ngOnInit(): void {
+    this.route.paramMap.subscribe((params) => {
+      const slug = params.get('slug') ?? '';
+
+      this.languageService.getLanguageBySlug(slug).subscribe((lang) => {
+        this.language.set(lang);
+      });
+
+      this.professorService.getProfessors().subscribe((data) => {
+        this.professors.set(data);
+      });
+    });
+  }
+}
+
+
+/*
 
   languageName = computed(() => {
     const id = this.languageId();
@@ -70,20 +107,5 @@ export class LanguageTeachers implements OnInit {
       );
     });
   });
+   */
 
-  constructor(
-    private route: ActivatedRoute,
-    private professorService: ProfessorService
-  ) {}
-
-  ngOnInit(): void {
-    this.route.paramMap.subscribe((params) => {
-      const id = params.get('id') ?? '';
-      this.languageId.set(id);
-
-      this.professorService.getProfessors().subscribe((data) => {
-        this.professors.set(data);
-      });
-    });
-  }
-}
