@@ -12,6 +12,8 @@ export interface User {
   username: string;
   email: string;
   moreInfo?: string;
+  uid?: string;
+  profileImageUrl?: string;
 }
 
 export interface AuthState {
