@@ -1,7 +1,7 @@
 import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { ChatCard } from '../../components/chat-card/chat-card';
 import { Router, RouterLink } from '@angular/router';
-import { AuthService, User} from '../../services/auth';
+import { AuthService, User } from '../../services/auth';
 import { FavoritesService } from '../../services/favorites.service';
 import { ProfessorService } from '../../services/professors.service';
 import { Professor } from '../../models/professor';
@@ -46,7 +46,7 @@ export class Profile implements OnInit {
   favoriteProfessors = computed(() => {
     this.favoritesService.favoritesVersion();
     const favIds = this.favoritesService.getFavorites();
-    return this.allProfessors().filter(p => favIds.includes(Number(p.id)));
+    return this.allProfessors().filter(p => favIds.includes(String(p.id)));
   });
 
   openDeleteModal() {
@@ -69,8 +69,17 @@ export class Profile implements OnInit {
     this.authService.getCurrentUser().then(u => this.user.set(u));
 
     this.professorService.getProfessors().subscribe(profs => {
-      this.allProfessors.set(profs);
-      this.loadChatProfessors(profs);
+      const fixedProfessors = profs.map(professor => {
+        const data = professor as any;
+
+        return {
+          ...professor,
+          stars: Number(data.stars ?? data.rating ?? 0)
+        };
+      });
+
+      this.allProfessors.set(fixedProfessors);
+      this.loadChatProfessors(fixedProfessors);
     });
   }
 
@@ -94,7 +103,6 @@ export class Profile implements OnInit {
 
       const cloudinaryUrl = `https://api.cloudinary.com/v1_1/dcqaw1j7r/image/upload`;
 
-      // Lo subimos a Cloudinary
       const response: any = await lastValueFrom(this.http.post(cloudinaryUrl, formData));
       const imageUrl = response.secure_url;
 
@@ -105,7 +113,6 @@ export class Profile implements OnInit {
       if (currentUser) {
         this.user.set({ ...currentUser, profileImageUrl: imageUrl });
       }
-
     } catch (error) {
       console.error('Error al subir la imagen:', error);
       alert('Hubo un error al actualizar la foto de perfil.');
@@ -136,7 +143,6 @@ export class Profile implements OnInit {
         delete updatedUser.profileImageUrl;
         this.user.set(updatedUser);
       }
-
     } catch (error) {
       console.error('Error al borrar la imagen:', error);
       alert('Hubo un error al borrar la foto de perfil.');
@@ -153,11 +159,11 @@ export class Profile implements OnInit {
     const professorIds = [...new Set(userBookings.map(b => b.professorId))];
 
     const chats = professorIds.map(profId => {
-      const professor = professors.find(p => p.id === profId);
+      const professor = professors.find(p => String(p.id) === String(profId));
       if (!professor) return null;
 
       const lastBooking = userBookings
-        .filter(b => b.professorId === profId)
+        .filter(b => String(b.professorId) === String(profId))
         .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())[0];
 
       return {
@@ -192,5 +198,4 @@ export class Profile implements OnInit {
       });
     }
   }
-
 }
