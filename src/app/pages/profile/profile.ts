@@ -1,12 +1,15 @@
 import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { ChatCard } from '../../components/chat-card/chat-card';
 import { Router, RouterLink } from '@angular/router';
-import {AuthService, User} from '../../services/auth';
+import { AuthService, User} from '../../services/auth';
 import { FavoritesService } from '../../services/favorites.service';
 import { ProfessorService } from '../../services/professors.service';
 import { Professor } from '../../models/professor';
 import { TeacherCompactCardComponent } from '../../components/teacher-compact-card/teacher-compact-card';
 import { BookingService } from '../../services/booking.service';
+import { HttpClient } from '@angular/common/http';
+import { Firestore, doc, updateDoc } from '@angular/fire/firestore';
+import { lastValueFrom } from 'rxjs';
 
 interface ChatProfessor {
   id: number;
@@ -29,8 +32,11 @@ export class Profile implements OnInit {
   private professorService = inject(ProfessorService);
   private bookingService = inject(BookingService);
   private router = inject(Router);
+  private http = inject(HttpClient);
+  private firestore = inject(Firestore);
 
   user = signal<User | null>(null);
+  isUploading = signal<boolean>(false);
 
   authState = this.authService.authState;
   allProfessors = signal<Professor[]>([]);
@@ -55,6 +61,46 @@ export class Profile implements OnInit {
       this.allProfessors.set(profs);
       this.loadChatProfessors(profs);
     });
+  }
+
+  async onFileSelected(event: any) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const authUser = await this.authService.getAuthUser();
+
+    if (!authUser || !authUser.uid) {
+      alert('Error: No se ha podido verificar tu sesión.');
+      return;
+    }
+
+    this.isUploading.set(true);
+
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('upload_preset', 'codify_preset');
+
+      const cloudinaryUrl = `https://api.cloudinary.com/v1_1/dcqaw1j7r/image/upload`;
+
+      // Lo subimos a Cloudinary
+      const response: any = await lastValueFrom(this.http.post(cloudinaryUrl, formData));
+      const imageUrl = response.secure_url;
+
+      const userDocRef = doc(this.firestore, `users/${authUser.uid}`);
+      await updateDoc(userDocRef, { profileImageUrl: imageUrl });
+
+      const currentUser = this.user();
+      if (currentUser) {
+        this.user.set({ ...currentUser, profileImageUrl: imageUrl });
+      }
+
+    } catch (error) {
+      console.error('Error al subir la imagen:', error);
+      alert('Hubo un error al actualizar la foto de perfil.');
+    } finally {
+      this.isUploading.set(false);
+    }
   }
 
   private loadChatProfessors(professors: Professor[]): void {

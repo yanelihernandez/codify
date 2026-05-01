@@ -5,15 +5,15 @@
 
       <section id="profile-section">
         <div id="profile-info">
-          <img id="profileImage" src="images/perfil.jpg" alt="Foto de perfil">
+          <img id="profileImage" [src]="user()?.profileImageUrl || 'images/perfil.jpg'" alt="Foto de perfil">
 
           <div class="upload-container">
-            <div class="camera-icon-wrapper" id="cameraIconWrapper">
+            <div class="camera-icon-wrapper" id="cameraIconWrapper" (click)="fileInput.click()">
               <span class="camera-icon">📷</span>
               <span class="camera-tooltip">Cambiar foto de perfil</span>
             </div>
-            <span id="fileName">Ningún archivo seleccionado</span>
-            <input type="file" id="inputImage" accept="image/*" style="display: none;">
+            <span id="fileName">{{ isUploading() ? 'Subiendo foto...' : 'Cambiar imagen' }}</span>
+            <input type="file" #fileInput id="inputImage" accept="image/*" style="display: none;" (change)="onFileSelected($event)">
           </div>
 
           <div class="info-tarjeta">
