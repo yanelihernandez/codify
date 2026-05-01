@@ -143,3 +143,33 @@ main {
 .reservation-card:nth-child(3) { animation-delay: 0.15s; }
 .reservation-card:nth-child(4) { animation-delay: 0.2s; }
 .reservation-card:nth-child(5) { animation-delay: 0.25s; }
+
+.header-bookings {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.back-btn {
+  position: absolute;
+  left: 0;
+  top: 5px; /* Lo bajamos un poquito para que quede alineado con el texto del título */
+  background: none;
+  border: none;
+  font-size: 2.2rem;
+  color: #25510a;
+  cursor: pointer;
+  padding: 0 15px;
+  transition: transform 0.2s ease, color 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.back-btn:hover {
+  transform: scale(1.15) translateX(-3px); /* Se hace grande y se mueve un poco a la izquierda */
+  color: #87ab69;
+}

@@ -1,5 +1,8 @@
 <main>
-  <h1 class="page-title">Mis Reservas</h1>
+  <div class="header-bookings">
+    <button class="back-btn" type="button" routerLink="/profile">←</button>
+    <h1 class="page-title">Mis Reservas</h1>
+  </div>
 
   @if (bookings().length === 0) {
     <div class="no-bookings">

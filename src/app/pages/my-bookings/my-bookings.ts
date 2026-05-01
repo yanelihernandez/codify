@@ -20,19 +20,16 @@ export class MyBookings implements OnInit {
     private router: Router
   ) {}
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
+    const isLogged = await this.authService.isAuthReady();
     const auth = this.authService.authState();
-    console.log('Auth state:', auth);
 
-    if (!auth.loggedIn || !auth.username) {
+    if (!isLogged || !auth.username) {
       this.router.navigate(['/sign-in']);
       return;
     }
 
     const userBookings = this.bookingService.getBookingsByUser(auth.username);
-    console.log('Reservas cargadas:', userBookings);
-    console.log('Número de reservas:', userBookings.length);
-
     this.bookings.set(userBookings);
   }
 }
