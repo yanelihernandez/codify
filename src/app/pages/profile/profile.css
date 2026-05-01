@@ -420,23 +420,6 @@ html, body {
   }
 }
 
-/* bordes debug */
-/*
-.buttons{
-    border: black solid 1px;
-}
-#profile-buttons{
-    border: red solid 1px;
-}
-#profile-info{
-    border: green solid 1px;
-}
-#mobile-buttons{
-    border: purple solid 1px;
-}
-*/
-
-
 .fav-professors-content p {
   width: 100%;
   text-align: center;
@@ -465,3 +448,58 @@ html, body {
 .chat-card-wrapper {
   cursor: pointer;
 }
+
+
+.upload-actions-row {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+
+.delete-icon-wrapper {
+  position: relative;
+  width: 34px;
+  height: 34px;
+  background-color: #ffdde0;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, background-color 0.3s ease;
+}
+
+.delete-icon {
+  font-size: 1rem;
+}
+
+.delete-icon-wrapper:hover {
+  transform: scale(1.1);
+  background-color: #ffc2c7;
+}
+
+.delete-tooltip {
+  visibility: hidden;
+  background-color: rgba(0, 0, 0, 0.8);
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px 10px;
+  position: absolute;
+  z-index: 1;
+  bottom: 120%;
+  left: 50%;
+  transform: translateX(-50%);
+  opacity: 0;
+  transition: opacity 0.3s;
+  font-size: 0.8rem;
+  white-space: nowrap;
+}
+
+.delete-icon-wrapper:hover .delete-tooltip {
+  visibility: visible;
+  opacity: 1;
+}
+

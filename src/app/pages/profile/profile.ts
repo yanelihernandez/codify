@@ -8,7 +8,7 @@ import { Professor } from '../../models/professor';
 import { TeacherCompactCardComponent } from '../../components/teacher-compact-card/teacher-compact-card';
 import { BookingService } from '../../services/booking.service';
 import { HttpClient } from '@angular/common/http';
-import { Firestore, doc, updateDoc } from '@angular/fire/firestore';
+import { Firestore, doc, updateDoc, deleteField } from '@angular/fire/firestore';
 import { lastValueFrom } from 'rxjs';
 
 interface ChatProfessor {
@@ -48,8 +48,10 @@ export class Profile implements OnInit {
     return this.allProfessors().filter(p => favIds.includes(Number(p.id)));
   });
 
-  ngOnInit(): void {
-    if (!this.authState().loggedIn) {
+  async ngOnInit(): Promise<void> {
+    const isLogged = await this.authService.isAuthReady();
+
+    if (!isLogged) {
       sessionStorage.setItem('redirectAfterLogin', '/profile');
       this.router.navigate(['/sign-in']);
       return;
@@ -98,6 +100,39 @@ export class Profile implements OnInit {
     } catch (error) {
       console.error('Error al subir la imagen:', error);
       alert('Hubo un error al actualizar la foto de perfil.');
+    } finally {
+      this.isUploading.set(false);
+    }
+  }
+
+  async deleteProfileImage() {
+    const authUser = await this.authService.getAuthUser();
+
+    if (!authUser || !authUser.uid) {
+      alert('Error: No se ha podido verificar tu sesión.');
+      return;
+    }
+
+    if (!confirm('¿Estás seguro de que quieres borrar tu foto de perfil?')) {
+      return;
+    }
+
+    this.isUploading.set(true);
+
+    try {
+      const userDocRef = doc(this.firestore, `users/${authUser.uid}`);
+      await updateDoc(userDocRef, { profileImageUrl: deleteField() });
+
+      const currentUser = this.user();
+      if (currentUser) {
+        const updatedUser = { ...currentUser };
+        delete updatedUser.profileImageUrl;
+        this.user.set(updatedUser);
+      }
+
+    } catch (error) {
+      console.error('Error al borrar la imagen:', error);
+      alert('Hubo un error al borrar la foto de perfil.');
     } finally {
       this.isUploading.set(false);
     }
