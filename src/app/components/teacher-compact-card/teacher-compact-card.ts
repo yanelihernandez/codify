@@ -17,7 +17,7 @@ export class TeacherCompactCardComponent {
   @Input() name = 'Best Professor';
   @Input() speciality = 'Speciality';
   @Input() stars = 0;
-  @Input() id = 0;
+  @Input() id: string | number = '';
 
   private authService = inject(AuthService);
   private favoritesService = inject(FavoritesService);
@@ -25,6 +25,11 @@ export class TeacherCompactCardComponent {
   private router = inject(Router);
 
   authState = this.authService.authState;
+
+  shownStars(): number {
+    return Number(this.stars) || 0;
+  }
+
   isFavorite = computed(() => {
     this.favoritesService.favoritesVersion();
     return this.authState().loggedIn && this.favoritesService.isFavorite(this.id);
@@ -32,6 +37,8 @@ export class TeacherCompactCardComponent {
 
   onFavoriteClick(event: Event): void {
     event.preventDefault();
+    event.stopPropagation();
+
     if (!this.authState().loggedIn) {
       this.toastService.show('Debes iniciar sesión para guardar favoritos');
       sessionStorage.setItem('redirectAfterLogin', this.router.url);
