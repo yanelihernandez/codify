@@ -37,6 +37,7 @@ export class Profile implements OnInit {
 
   user = signal<User | null>(null);
   isUploading = signal<boolean>(false);
+  showDeleteModal = signal<boolean>(false);
 
   authState = this.authService.authState;
   allProfessors = signal<Professor[]>([]);
@@ -47,6 +48,14 @@ export class Profile implements OnInit {
     const favIds = this.favoritesService.getFavorites();
     return this.allProfessors().filter(p => favIds.includes(Number(p.id)));
   });
+
+  openDeleteModal() {
+    this.showDeleteModal.set(true);
+  }
+
+  closeDeleteModal() {
+    this.showDeleteModal.set(false);
+  }
 
   async ngOnInit(): Promise<void> {
     const isLogged = await this.authService.isAuthReady();
@@ -105,15 +114,13 @@ export class Profile implements OnInit {
     }
   }
 
-  async deleteProfileImage() {
+  async confirmDeleteProfileImage() {
+    this.closeDeleteModal();
+
     const authUser = await this.authService.getAuthUser();
 
     if (!authUser || !authUser.uid) {
       alert('Error: No se ha podido verificar tu sesión.');
-      return;
-    }
-
-    if (!confirm('¿Estás seguro de que quieres borrar tu foto de perfil?')) {
       return;
     }
 

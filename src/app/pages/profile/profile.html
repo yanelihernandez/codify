@@ -15,7 +15,7 @@
               </div>
 
               @if (user()?.profileImageUrl) {
-                <div class="delete-icon-wrapper" (click)="deleteProfileImage()">
+                <div class="delete-icon-wrapper" (click)="openDeleteModal()">
                   <span class="delete-icon">🗑️</span>
                   <span class="delete-tooltip">Borrar foto</span>
                 </div>
@@ -119,4 +119,18 @@
       }
     </div>
   </div>
+
+  @if (showDeleteModal()) {
+    <div class="modal-overlay">
+      <div class="modal-content">
+        <h3>¿Borrar foto de perfil?</h3>
+        <p>¿Estás seguro de que quieres eliminar tu foto? Volverás a tener la imagen por defecto del sistema.</p>
+        <div class="modal-buttons">
+          <button class="btn-cancelar" (click)="closeDeleteModal()">Cancelar</button>
+          <button class="btn-borrar" (click)="confirmDeleteProfileImage()">Sí, borrar</button>
+        </div>
+      </div>
+    </div>
+  }
+
 </main>
