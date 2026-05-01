@@ -3,7 +3,7 @@
     <button class="menu-toggle">☰</button>
 
     <a class="home-btn" id="homeLink" [routerLink]="''">
-      <img src="images/logo.png" alt="Logo">
+      <img src="https://res.cloudinary.com/dcqaw1j7r/image/upload/v1777657389/logo_a7axaq.png" alt="Logo Codify">
     </a>
   </div>
 
@@ -20,7 +20,7 @@
 
   <div class="profile" id="profileDropdown" [class.guest-mode]="!authState().loggedIn">
     <a href="#" class="profile-link" (click)="goToProfile($event)">
-      <img src="images/perfil.jpg" alt="perfil" id="headerProfileImg">
+      <img src="https://res.cloudinary.com/dcqaw1j7r/image/upload/v1777657390/perfil_pgak1f.jpg" alt="perfil" id="headerProfileImg">
     </a>
     <span class="username" id="headerUsername">{{ displayName() }}</span>
 
