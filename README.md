@@ -41,13 +41,13 @@ Este repositorio utiliza ramas para organizar las entregas del proyecto:
 │   └── 📄 sprint2-mockupsRWD.pdf (Mockups responsive: Desktop, Tablet y Móvil)
 │
 └── sprint3
-    ├── 📂 public/ (Recursos públicos y mock de datos JSON)
     ├── 📂 src/ (Código fuente de la SPA migrada a Angular)
     │   └── 📂 app/
     │       ├── 📂 components/ (Componentes reutilizables)
     │       ├── 📂 models/ (Interfaces y modelos de datos TypeScript)
-    │       ├── 📂 pages/ (Vistas enrutables: home, perfil, reservas, login...)
-    │       └── 📂 services/ (Servicios de lógica de negocio y autenticación)
+    │       ├── 📂 pages/ (Vistas enrutables de la web)
+    │       └── 📂 services/ (Servicios de lógica de negocio, autenticación y conexión a Firebase)
     ├── 📄 angular.json (Configuración del entorno Angular)
+    ├── 📄 package-lock.json (Árbol exacto de dependencias)
     ├── 📄 package.json (Gestión de dependencias de Angular y Firebase)
     └── 📄 README.md (Documentación específica del Sprint 3)
