@@ -18,12 +18,23 @@ Codify ha evolucionado de un prototipo estático a una plataforma funcional y mo
 
 ---
 
-## Iniciar el Proyecto
+## Iniciar el proyecto (Desarrollo Local)
+Para poder visualizar y ejecutar esta aplicación Angular en tu máquina local, asegúrate de tener instalado [Node.js](https://nodejs.org/) y el [Angular CLI](https://angular.dev/tools/cli). 
+Sigue estos pasos:
 
+1. **Clonar el repositorio e instalar las dependencias:**
+   Abre tu terminal, clona el proyecto y descarga los paquetes necesarios de Node.
+   ```bash
+   git clone [URL_DE_TU_REPOSITORIO]
+   cd codify-sprint3
+   npm install
+   ```
+2. **Desplegar el servidor de desarrollo:**
+   Una vez instaladas las dependencias, levanta el servidor local de Angular con el siguiente comando:
+   ```bash
+   ng serve
+   ```
+3. Abre tu navegador web y navega a la dirección `http://localhost:4200/`. Si realizas cualquier cambio en el código fuente, la página se recargará automáticamente.
 
 ---
 
-## 📁 Estructura del Repositorio
-
-
----
