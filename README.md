@@ -1,59 +1,29 @@
-# Codify
+<p align="center">
+  <img width="756" height="330" alt="logo_verde" src="https://github.com/user-attachments/assets/548b29e3-3678-456e-8248-688c6c966ca9" />
+</p>
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.3.23.
+# Codify - Sprint 3
+### ➣ Programación Web y Móvil
 
-## Development server
+> **Estado del Proyecto:** Aplicación **SPA (Single Page Application)** migrada a **Angular (v20.3.23)**, con backend en tiempo real en **Firebase** y gestión multimedia mediante **Cloudinary**. Mantiene un diseño **100% Adaptativo (RWD)**.
 
-To start a local development server, run:
+Codify ha evolucionado de un prototipo estático a una plataforma funcional y moderna. En esta fase, hemos abandonado Vanilla JavaScript y la carga de datos local (JSON/LocalStorage) para implementar una arquitectura basada en **Angular**. Se ha establecido específicamente la **versión 20.3.23** como base del proyecto para garantizar la máxima estabilidad y evitar los defectos presentes en versiones más recientes. Ahora contamos con un backend real en la nube que garantiza un sistema de autenticación seguro, sincronización de datos en tiempo real y una estructura completamente modularizada.
 
-```bash
-ng serve
-```
+---
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+## 👥 Integrantes del Grupo
+* **Dámaso Guerra, Sergio**
+* **Perdomo Hernández, Yaneli**
+* **Ramos Quintana, Alba**
 
-## Code scaffolding
+---
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+## Iniciar el Proyecto
 
-```bash
-ng generate component component-name
-```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+---
 
-```bash
-ng generate --help
-```
+## 📁 Estructura del Repositorio
 
-## Building
 
-To build the project run:
-
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+---
