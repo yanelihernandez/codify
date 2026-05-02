@@ -10,14 +10,18 @@ import { BookingService } from '../../services/booking.service';
 import { HttpClient } from '@angular/common/http';
 import { Firestore, doc, updateDoc, deleteField } from '@angular/fire/firestore';
 import { lastValueFrom } from 'rxjs';
+import { ChatService } from '../../services/chat.service';
+import {ChatUI} from '../../models/chat';
 
+/*
 interface ChatProfessor {
-  id: number;
+  id: string;
   name: string;
   image: string;
   lastMessage?: string;
-  lastMessageTime?: string;
+  lastMessageTime?: Timestamp | FieldValue;
 }
+ */
 
 @Component({
   selector: 'app-profile',
@@ -34,6 +38,7 @@ export class Profile implements OnInit {
   private router = inject(Router);
   private http = inject(HttpClient);
   private firestore = inject(Firestore);
+  private chatService = inject(ChatService);
 
   user = signal<User | null>(null);
   isUploading = signal<boolean>(false);
@@ -41,7 +46,7 @@ export class Profile implements OnInit {
 
   authState = this.authService.authState;
   allProfessors = signal<Professor[]>([]);
-  chatProfessors = signal<ChatProfessor[]>([]);
+  chatProfessors = signal<ChatUI[]>([]);
 
   favoriteProfessors = computed(() => {
     this.favoritesService.favoritesVersion();
@@ -79,7 +84,7 @@ export class Profile implements OnInit {
       });
 
       this.allProfessors.set(fixedProfessors);
-      this.loadChatProfessors(fixedProfessors);
+      this.loadChatsFromService();
     });
   }
 
@@ -151,7 +156,64 @@ export class Profile implements OnInit {
     }
   }
 
-  private loadChatProfessors(professors: Professor[]): void {
+  private loadChatsFromService(): void {
+    const auth = this.authService.authState();
+    if (!auth.loggedIn || !auth.uid) return;
+
+    this.chatService.getChats(auth.uid).subscribe(chats => {
+
+      const sortedChats = [...chats].sort((a, b) => {
+        const dateA = a.lastMessageDate?.toDate().getTime() ?? 0;
+        const dateB = b.lastMessageDate?.toDate().getTime() ?? 0;
+
+        return dateB - dateA;
+      });
+
+      const mapped: ChatUI[] = sortedChats.map(chat => {
+        const professor = this.allProfessors().find(
+          p => String(p.id) === String(chat.teacherId)
+        );
+
+        return {
+          id: chat.teacherId,
+          name: professor?.name ?? 'Profesor',
+          image: professor?.image ?? '',
+          lastMessage: chat.lastMessage ?? '',
+          lastMessageTime: chat.lastMessageDate
+            ? chat.lastMessageDate.toDate?.() ?? null
+            : null
+        };
+      });
+
+      this.chatProfessors.set(mapped);
+    });
+  }
+
+  goToChat(professorId: string): void {
+    this.router.navigate(['/chat', professorId], {
+      state: { from: this.router.url }
+    });
+  }
+
+  goToTeachers(): void {
+    this.router.navigate(['/']);
+  }
+
+  scrollTo(id: string): void {
+    const element = document.getElementById(id);
+
+    if (element) {
+      element.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start'
+      });
+    }
+  }
+}
+
+
+/*
+private loadChatProfessors(professors: Professor[]): void {
     const auth = this.authService.authState();
     if (!auth.loggedIn || !auth.username) return;
 
@@ -177,25 +239,4 @@ export class Profile implements OnInit {
 
     this.chatProfessors.set(chats);
   }
-
-  goToChat(professorId: number): void {
-    this.router.navigate(['/chat', professorId], {
-      state: { from: this.router.url }
-    });
-  }
-
-  goToTeachers(): void {
-    this.router.navigate(['/']);
-  }
-
-  scrollTo(id: string): void {
-    const element = document.getElementById(id);
-
-    if (element) {
-      element.scrollIntoView({
-        behavior: 'smooth',
-        block: 'start'
-      });
-    }
-  }
-}
+ */

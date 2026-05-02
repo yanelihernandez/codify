@@ -17,11 +17,11 @@
         @for (message of messages(); track message.id) {
           <div
             class="message"
-            [class.mine]="message.sender === 'user'"
-            [class.theirs]="message.sender === 'professor'"
+            [class.mine]="message.senderId === auth.uid"
+            [class.theirs]="message.senderId !== auth.uid"
           >
             <p class="message-text">{{ message.text }}</p>
-            <span class="message-time">{{ message.time }}</span>
+            <p class="message-time">{{ toDate(message.createdAt) }}</p>
           </div>
         }
       </div>

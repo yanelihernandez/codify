@@ -1,11 +1,14 @@
-import { Component, OnInit, signal } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { Location } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { ProfessorService } from '../../services/professors.service';
-import { Professor } from '../../models/professor';
-import { AuthService } from '../../services/auth';
-import { ToastService } from '../../services/toast.service';
+import {Component, OnInit, signal} from '@angular/core';
+import {ActivatedRoute, Router} from '@angular/router';
+import {Location} from '@angular/common';
+import {FormsModule} from '@angular/forms';
+import {ProfessorService} from '../../services/professors.service';
+import {Professor} from '../../models/professor';
+import {AuthService, AuthState} from '../../services/auth';
+import {ToastService} from '../../services/toast.service';
+import {ChatService} from '../../services/chat.service';
+import {Message} from '../../models/chat';
+import {FieldValue, serverTimestamp, Timestamp} from 'firebase/firestore';
 
 interface ChatMessage {
   id: string;
@@ -23,9 +26,12 @@ interface ChatMessage {
 })
 export class Chat implements OnInit {
   professor = signal<Professor | null>(null);
-  messages = signal<ChatMessage[]>([]);
+  messages = signal<Message[]>([]);
   newMessage = '';
-  private professorId: number | null = null;
+  private professorId: string | null = null;
+
+  private chatId: string | null = null;
+  protected auth: AuthState;
 
   constructor(
     private route: ActivatedRoute,
@@ -33,8 +39,11 @@ export class Chat implements OnInit {
     private location: Location,
     private professorService: ProfessorService,
     private authService: AuthService,
-    private toastService: ToastService
-  ) {}
+    private toastService: ToastService,
+    private chatService: ChatService
+  ) {
+    this.auth = this.authService.authState();
+  }
 
   ngOnInit(): void {
     const auth = this.authService.authState();
@@ -52,21 +61,75 @@ export class Chat implements OnInit {
       return;
     }
 
-    this.professorId = Number(profId);
+    this.professorId = profId;
 
     this.professorService.getProfessors().subscribe(profs => {
       const prof = profs.find(p => p.id.toString() === profId);
       this.professor.set(prof ?? null);
     });
 
-    this.loadMessages();
+    this.initChat();
   }
 
-  private storageKey(): string {
+  private async initChat(): Promise<void> {
     const auth = this.authService.authState();
-    return `chat_${auth.username}_${this.professorId}`;
+    const userId = auth.uid!;
+    const teacherId = this.professorId!;
+
+    // Recuperar o crear chat
+    this.chatId = await this.chatService.getOrCreateChat(userId, teacherId);
+
+    // Listener: mensajes en tiempo real
+    this.chatService.getMessages(this.chatId).subscribe(msgs => {
+      this.messages.set(msgs);
+    });
   }
 
+  async sendMessage(): Promise<void> {
+    const text = this.newMessage.trim();
+    if (!text || !this.chatId) return;
+
+    const auth = this.authService.authState();
+
+    const message: Message = {
+      senderId: auth.uid!,
+      text: text,
+      createdAt: serverTimestamp()
+    };
+
+    this.chatService.sendMessage(this.chatId, message);
+
+    this.newMessage = '';
+  }
+
+
+  goBack(): void {
+    const from = history.state?.from;
+    if (from) {
+      this.router.navigateByUrl(from);
+      return;
+    }
+
+    this.location.back();
+  }
+
+  protected toDate(time: Timestamp | FieldValue) {
+    if (time instanceof Timestamp) {
+      const date = time.toDate();
+      return date.toLocaleString('en-US', {
+        weekday: 'short',
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: false
+      });
+    }
+    return time;
+  }
+}
+
+
+
+/*
   private loadMessages(): void {
     const raw = localStorage.getItem(this.storageKey());
 
@@ -88,18 +151,6 @@ export class Chat implements OnInit {
     localStorage.setItem(this.storageKey(), JSON.stringify(initialMessages));
   }
 
-  private saveMessages(): void {
-    localStorage.setItem(this.storageKey(), JSON.stringify(this.messages()));
-  }
-
-  private currentTime(): string {
-    const now = new Date();
-    return now.toLocaleTimeString('es-ES', {
-      hour: '2-digit',
-      minute: '2-digit'
-    });
-  }
-
   sendMessage(): void {
     const text = this.newMessage.trim();
     if (!text) return;
@@ -119,13 +170,21 @@ export class Chat implements OnInit {
     this.newMessage = '';
   }
 
-  goBack(): void {
-    const from = history.state?.from;
-    if (from) {
-      this.router.navigateByUrl(from);
-      return;
-    }
-
-    this.location.back();
+  private saveMessages(): void {
+    localStorage.setItem(this.storageKey(), JSON.stringify(this.messages()));
   }
-}
+
+  private currentTime(): string {
+    const now = new Date();
+    return now.toLocaleTimeString('es-ES', {
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+  }
+
+  private storageKey(): string {
+    const auth = this.authService.authState();
+    return `chat_${auth.username}_${this.professorId}`;
+  }
+
+ */

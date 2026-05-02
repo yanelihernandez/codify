@@ -21,5 +21,5 @@ export class ChatCard {
   @Input() professorName: string = '';
   @Input() professorImage: string = '';
   @Input() lastMessage: string = '';
-  @Input() lastMessageTime: string = '';
+  @Input() lastMessageTime: Date | string = '';
 }
