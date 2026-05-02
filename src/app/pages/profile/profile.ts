@@ -6,17 +6,17 @@ import { FavoritesService } from '../../services/favorites.service';
 import { ProfessorService } from '../../services/professors.service';
 import { Professor } from '../../models/professor';
 import { TeacherCompactCardComponent } from '../../components/teacher-compact-card/teacher-compact-card';
-import { BookingService } from '../../services/booking.service';
+import { BookingItem, BookingService } from '../../services/booking.service';
 import { HttpClient } from '@angular/common/http';
 import { Firestore, doc, updateDoc, deleteField } from '@angular/fire/firestore';
 import { lastValueFrom } from 'rxjs';
 
 interface ChatProfessor {
-  id: number;
+  id: string;
   name: string;
   image: string;
-  lastMessage?: string;
-  lastMessageTime?: string;
+  lastMessage: string;
+  lastMessageTime: string;
 }
 
 @Component({
@@ -46,16 +46,11 @@ export class Profile implements OnInit {
   favoriteProfessors = computed(() => {
     this.favoritesService.favoritesVersion();
     const favIds = this.favoritesService.getFavorites();
-    return this.allProfessors().filter(p => favIds.includes(String(p.id)));
+
+    return this.allProfessors().filter((professor) =>
+      favIds.includes(String(professor.id))
+    );
   });
-
-  openDeleteModal() {
-    this.showDeleteModal.set(true);
-  }
-
-  closeDeleteModal() {
-    this.showDeleteModal.set(false);
-  }
 
   async ngOnInit(): Promise<void> {
     const isLogged = await this.authService.isAuthReady();
@@ -66,30 +61,53 @@ export class Profile implements OnInit {
       return;
     }
 
-    this.authService.getCurrentUser().then(u => this.user.set(u));
+    this.favoritesService.loadFavoritesForCurrentUser();
 
-    this.professorService.getProfessors().subscribe(profs => {
-      const fixedProfessors = profs.map(professor => {
-        const data = professor as any;
+    this.authService.getCurrentUser().then((currentUser) => {
+      this.user.set(currentUser);
+    });
 
-        return {
-          ...professor,
-          stars: Number(data.stars ?? data.rating ?? 0)
-        };
-      });
+    this.professorService.getProfessors().subscribe({
+      next: (professors) => {
+        const fixedProfessors = professors.map((professor) => {
+          const data = professor as any;
 
-      this.allProfessors.set(fixedProfessors);
-      this.loadChatProfessors(fixedProfessors);
+          return {
+            ...professor,
+            id: String(professor.id),
+            rating: Number(data.rating ?? data.stars ?? 0),
+            stars: Number(data.rating ?? data.stars ?? 0),
+          };
+        });
+
+        this.allProfessors.set(fixedProfessors);
+        this.loadChatProfessors(fixedProfessors);
+      },
+      error: (error) => {
+        console.error('Error cargando profesores:', error);
+        this.allProfessors.set([]);
+        this.chatProfessors.set([]);
+      },
     });
   }
 
-  async onFileSelected(event: any) {
-    const file = event.target.files[0];
+  openDeleteModal(): void {
+    this.showDeleteModal.set(true);
+  }
+
+  closeDeleteModal(): void {
+    this.showDeleteModal.set(false);
+  }
+
+  async onFileSelected(event: Event): Promise<void> {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+
     if (!file) return;
 
     const authUser = await this.authService.getAuthUser();
 
-    if (!authUser || !authUser.uid) {
+    if (!authUser?.uid) {
       alert('Error: No se ha podido verificar tu sesión.');
       return;
     }
@@ -101,9 +119,12 @@ export class Profile implements OnInit {
       formData.append('file', file);
       formData.append('upload_preset', 'codify_preset');
 
-      const cloudinaryUrl = `https://api.cloudinary.com/v1_1/dcqaw1j7r/image/upload`;
+      const cloudinaryUrl = 'https://api.cloudinary.com/v1_1/dcqaw1j7r/image/upload';
 
-      const response: any = await lastValueFrom(this.http.post(cloudinaryUrl, formData));
+      const response: any = await lastValueFrom(
+        this.http.post(cloudinaryUrl, formData)
+      );
+
       const imageUrl = response.secure_url;
 
       const userDocRef = doc(this.firestore, `users/${authUser.uid}`);
@@ -111,7 +132,10 @@ export class Profile implements OnInit {
 
       const currentUser = this.user();
       if (currentUser) {
-        this.user.set({ ...currentUser, profileImageUrl: imageUrl });
+        this.user.set({
+          ...currentUser,
+          profileImageUrl: imageUrl,
+        } as User);
       }
     } catch (error) {
       console.error('Error al subir la imagen:', error);
@@ -121,12 +145,12 @@ export class Profile implements OnInit {
     }
   }
 
-  async confirmDeleteProfileImage() {
+  async confirmDeleteProfileImage(): Promise<void> {
     this.closeDeleteModal();
 
     const authUser = await this.authService.getAuthUser();
 
-    if (!authUser || !authUser.uid) {
+    if (!authUser?.uid) {
       alert('Error: No se ha podido verificar tu sesión.');
       return;
     }
@@ -138,10 +162,11 @@ export class Profile implements OnInit {
       await updateDoc(userDocRef, { profileImageUrl: deleteField() });
 
       const currentUser = this.user();
+
       if (currentUser) {
-        const updatedUser = { ...currentUser };
+        const updatedUser = { ...currentUser } as any;
         delete updatedUser.profileImageUrl;
-        this.user.set(updatedUser);
+        this.user.set(updatedUser as User);
       }
     } catch (error) {
       console.error('Error al borrar la imagen:', error);
@@ -153,34 +178,55 @@ export class Profile implements OnInit {
 
   private loadChatProfessors(professors: Professor[]): void {
     const auth = this.authService.authState();
-    if (!auth.loggedIn || !auth.username) return;
 
-    const userBookings = this.bookingService.getBookingsByUser(auth.username);
-    const professorIds = [...new Set(userBookings.map(b => b.professorId))];
+    if (!auth.loggedIn || !auth.uid) {
+      this.chatProfessors.set([]);
+      return;
+    }
 
-    const chats = professorIds.map(profId => {
-      const professor = professors.find(p => String(p.id) === String(profId));
-      if (!professor) return null;
+    this.bookingService.getBookingsByUser(auth.uid).subscribe({
+      next: (userBookings: BookingItem[]) => {
+        const professorIds = [
+          ...new Set(userBookings.map((booking) => String(booking.professorId))),
+        ];
 
-      const lastBooking = userBookings
-        .filter(b => String(b.professorId) === String(profId))
-        .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())[0];
+        const chats: ChatProfessor[] = professorIds
+          .map((profId): ChatProfessor | null => {
+            const professor = professors.find(
+              (p) => String(p.id) === String(profId)
+            );
 
-      return {
-        id: professor.id,
-        name: professor.name,
-        image: professor.image,
-        lastMessage: `Última reserva: ${lastBooking?.date || 'N/A'}`,
-        lastMessageTime: lastBooking?.date || ''
-      };
-    }).filter(chat => chat !== null) as ChatProfessor[];
+            if (!professor) return null;
 
-    this.chatProfessors.set(chats);
+            const lastBooking = userBookings
+              .filter((booking) => String(booking.professorId) === String(profId))
+              .sort(
+                (a, b) =>
+                  new Date(b.date).getTime() - new Date(a.date).getTime()
+              )[0];
+
+            return {
+              id: String(professor.id),
+              name: professor.name,
+              image: professor.image,
+              lastMessage: `Reserva confirmada para el ${lastBooking?.date || 'N/A'} a las ${lastBooking?.time || ''}`,
+              lastMessageTime: lastBooking?.date || '',
+            };
+          })
+          .filter((chat): chat is ChatProfessor => chat !== null);
+
+        this.chatProfessors.set(chats);
+      },
+      error: (error) => {
+        console.error('Error cargando chats desde reservas:', error);
+        this.chatProfessors.set([]);
+      },
+    });
   }
 
-  goToChat(professorId: number): void {
+  goToChat(professorId: string | number): void {
     this.router.navigate(['/chat', professorId], {
-      state: { from: this.router.url }
+      state: { from: this.router.url },
     });
   }
 
@@ -194,7 +240,7 @@ export class Profile implements OnInit {
     if (element) {
       element.scrollIntoView({
         behavior: 'smooth',
-        block: 'start'
+        block: 'start',
       });
     }
   }
