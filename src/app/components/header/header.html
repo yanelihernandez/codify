@@ -20,9 +20,18 @@
 
   <div class="profile" id="profileDropdown" [class.guest-mode]="!authState().loggedIn">
     <a href="#" class="profile-link" (click)="goToProfile($event)">
-      <img src="https://res.cloudinary.com/dcqaw1j7r/image/upload/v1777657390/perfil_pgak1f.jpg" alt="perfil" id="headerProfileImg">
+      
+      <img
+        [src]="headerProfileImage()"
+        alt="perfil"
+        id="headerProfileImg"
+      >
+
     </a>
-    <span class="username" id="headerUsername">{{ displayName() }}</span>
+
+    <span class="username" id="headerUsername">
+      {{ displayName() }}
+    </span>
 
     @if (authState().loggedIn) {
       <div class="dropdown-menu" id="dropdownMenu" [class.show-dropdown]="menuOpen()">
