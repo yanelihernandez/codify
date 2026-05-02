@@ -12,12 +12,12 @@ import { ToastService } from '../../services/toast.service';
   styleUrl: './teacher-compact-card.css',
 })
 export class TeacherCompactCardComponent {
-  @Input() image_alt = 'image';
-  @Input() image_src = 'images/perfil.jpg';
-  @Input() name = 'Best Professor';
-  @Input() speciality = 'Speciality';
-  @Input() stars = 0;
   @Input() id: string | number = '';
+  @Input() image_src = '';
+  @Input() image_alt = 'Profesor';
+  @Input() name = '';
+  @Input() speciality = '';
+  @Input() rating = 0;
 
   private authService = inject(AuthService);
   private favoritesService = inject(FavoritesService);
@@ -26,16 +26,12 @@ export class TeacherCompactCardComponent {
 
   authState = this.authService.authState;
 
-  shownStars(): number {
-    return Number(this.stars) || 0;
-  }
-
   isFavorite = computed(() => {
     this.favoritesService.favoritesVersion();
-    return this.authState().loggedIn && this.favoritesService.isFavorite(this.id);
+    return this.authState().loggedIn && this.favoritesService.isFavorite(String(this.id));
   });
 
-  onFavoriteClick(event: Event): void {
+  async onFavoriteClick(event: Event): Promise<void> {
     event.preventDefault();
     event.stopPropagation();
 
@@ -46,7 +42,7 @@ export class TeacherCompactCardComponent {
       return;
     }
 
-    const liked = this.favoritesService.toggleFavorite(this.id);
+    const liked = await this.favoritesService.toggleFavorite(String(this.id));
     this.toastService.show(liked ? 'Añadido a favoritos' : 'Eliminado de favoritos');
   }
 }
