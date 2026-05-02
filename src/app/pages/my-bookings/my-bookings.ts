@@ -20,16 +20,30 @@ export class MyBookings implements OnInit {
     private router: Router
   ) {}
 
-  async ngOnInit(): Promise<void> {
-    const isLogged = await this.authService.isAuthReady();
-    const auth = this.authService.authState();
+  ngOnInit(): void {
+    setTimeout(() => {
+      const auth = this.authService.authState();
 
-    if (!isLogged || !auth.username) {
-      this.router.navigate(['/sign-in']);
-      return;
-    }
+      if (!auth.loggedIn || !auth.uid) {
+        this.router.navigate(['/sign-in']);
+        return;
+      }
 
-    const userBookings = this.bookingService.getBookingsByUser(auth.username);
-    this.bookings.set(userBookings);
+      this.bookingService.getBookingsByUser(auth.uid).subscribe({
+        next: (userBookings: BookingItem[]) => {
+          this.bookings.set(userBookings);
+        },
+        error: (error) => {
+          console.error('Error cargando reservas:', error);
+          this.bookings.set([]);
+        },
+      });
+    }, 300);
+  }
+
+  removeBookingFromView(bookingId: string): void {
+    this.bookings.update((bookings) =>
+      bookings.filter((booking) => booking.id !== bookingId)
+    );
   }
 }
