@@ -8,7 +8,7 @@ import { Professor } from '../../models/professor';
 import { TeacherCompactCardComponent } from '../../components/teacher-compact-card/teacher-compact-card';
 import { BookingItem, BookingService } from '../../services/booking.service';
 import { HttpClient } from '@angular/common/http';
-import { Firestore, doc, updateDoc, deleteField } from '@angular/fire/firestore';
+import { Firestore, deleteField, doc, updateDoc } from '@angular/fire/firestore';
 import { lastValueFrom } from 'rxjs';
 
 interface ChatProfessor {
@@ -36,8 +36,8 @@ export class Profile implements OnInit {
   private firestore = inject(Firestore);
 
   user = signal<User | null>(null);
-  isUploading = signal<boolean>(false);
-  showDeleteModal = signal<boolean>(false);
+  isUploading = signal(false);
+  showDeleteModal = signal(false);
 
   authState = this.authService.authState;
   allProfessors = signal<Professor[]>([]);
@@ -63,22 +63,16 @@ export class Profile implements OnInit {
 
     this.favoritesService.loadFavoritesForCurrentUser();
 
-    this.authService.getCurrentUser().then((currentUser) => {
-      this.user.set(currentUser);
-    });
+    const currentUser = await this.authService.getCurrentUser();
+    this.user.set(currentUser);
 
     this.professorService.getProfessors().subscribe({
       next: (professors) => {
-        const fixedProfessors = professors.map((professor) => {
-          const data = professor as any;
-
-          return {
-            ...professor,
-            id: String(professor.id),
-            rating: Number(data.rating ?? data.stars ?? 0),
-            stars: Number(data.rating ?? data.stars ?? 0),
-          };
-        });
+        const fixedProfessors: Professor[] = professors.map((professor) => ({
+          ...professor,
+          id: String(professor.id),
+          rating: Number(professor.rating ?? 0),
+        }));
 
         this.allProfessors.set(fixedProfessors);
         this.loadChatProfessors(fixedProfessors);
@@ -89,6 +83,11 @@ export class Profile implements OnInit {
         this.chatProfessors.set([]);
       },
     });
+  }
+
+  get profileImage(): string {
+    const data = this.user() as any;
+    return data?.profileImageUrl || data?.profileImage || 'images/perfil.jpg';
   }
 
   openDeleteModal(): void {
@@ -131,6 +130,7 @@ export class Profile implements OnInit {
       await updateDoc(userDocRef, { profileImageUrl: imageUrl });
 
       const currentUser = this.user();
+
       if (currentUser) {
         this.user.set({
           ...currentUser,
@@ -164,7 +164,7 @@ export class Profile implements OnInit {
       const currentUser = this.user();
 
       if (currentUser) {
-        const updatedUser = { ...currentUser } as any;
+        const updatedUser = { ...(currentUser as any) };
         delete updatedUser.profileImageUrl;
         this.user.set(updatedUser as User);
       }
@@ -235,13 +235,9 @@ export class Profile implements OnInit {
   }
 
   scrollTo(id: string): void {
-    const element = document.getElementById(id);
-
-    if (element) {
-      element.scrollIntoView({
-        behavior: 'smooth',
-        block: 'start',
-      });
-    }
+    document.getElementById(id)?.scrollIntoView({
+      behavior: 'smooth',
+      block: 'start',
+    });
   }
 }
