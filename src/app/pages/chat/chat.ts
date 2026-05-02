@@ -116,8 +116,11 @@ export class Chat implements OnInit {
   protected toDate(time: Timestamp | FieldValue) {
     if (time instanceof Timestamp) {
       const date = time.toDate();
-      return date.toLocaleString('en-US', {
+      return date.toLocaleString('en-GB', {
         weekday: 'short',
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric',
         hour: '2-digit',
         minute: '2-digit',
         hour12: false
