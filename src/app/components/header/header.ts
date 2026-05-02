@@ -1,6 +1,6 @@
 import { Component, computed, inject, signal } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
-import { AuthService } from '../../services/auth';
+import { AuthService, User } from '../../services/auth';
 import { ToastService } from '../../services/toast.service';
 import { FavoritesService } from '../../services/favorites.service';
 
@@ -19,12 +19,42 @@ export class HeaderComponent {
 
   authState = this.authService.authState;
   menuOpen = signal(false);
-  displayName = computed(() => this.authState().fullName || this.authState().username || 'Invitado');
+  user = signal<User | null>(null);
+
+  defaultProfileImage =
+    'https://res.cloudinary.com/dcqaw1j7r/image/upload/v1777657390/perfil_pgak1f.jpg';
+
+  displayName = computed(() =>
+    this.authState().fullName || this.authState().username || 'Invitado'
+  );
+
+  headerProfileImage = computed(() => {
+    const currentUser = this.user();
+    return currentUser?.profileImageUrl || this.defaultProfileImage;
+  });
+
+  constructor() {
+    this.loadUserForHeader();
+  }
+
+  private async loadUserForHeader(): Promise<void> {
+    const isLogged = await this.authService.isAuthReady();
+
+    if (!isLogged) {
+      this.user.set(null);
+      return;
+    }
+
+    const currentUser = await this.authService.getCurrentUser();
+    this.user.set(currentUser);
+  }
 
   goToProfile(event: Event): void {
     event.preventDefault();
+
     if (this.authState().loggedIn) {
       this.menuOpen.update(v => !v);
+      this.loadUserForHeader();
     } else {
       this.toastService.show('Debes iniciar sesión para acceder a tu perfil');
       sessionStorage.setItem('redirectAfterLogin', '/profile');
@@ -38,10 +68,13 @@ export class HeaderComponent {
     this.router.navigate(['/profile']);
   }
 
-  logout(event: Event): void {
+  async logout(event: Event): Promise<void> {
     event.preventDefault();
     this.menuOpen.set(false);
-    this.authService.logout();
+
+    await this.authService.logout();
+    this.user.set(null);
+
     this.favoritesService.clearForLogout();
     this.toastService.show('¡Hasta pronto! Has cerrado sesión');
     this.router.navigate(['/']);

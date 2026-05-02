@@ -1,13 +1,14 @@
 <article class="best-professor-card">
   <div class="card-top">
-    <p class="stars">★ {{ shownStars() }}</p>
+    <p class="stars">★ {{ rating }}</p>
 
     <button
       class="fav-btn"
       [class.guest-mode]="!authState().loggedIn"
       [class.liked]="isFavorite()"
       [attr.aria-pressed]="isFavorite()"
-      (click)="onFavoriteClick($event)">
+      (click)="onFavoriteClick($event)"
+    >
       {{ isFavorite() ? '♥' : '♡' }}
     </button>
   </div>
@@ -17,7 +18,5 @@
   <p class="professor-name">{{ name }}</p>
   <p class="professor-speciality">Especialidad: {{ speciality }}</p>
 
-  <a [routerLink]="['/teacher-profile', id]" class="see-profile">
-    Ver perfil
-  </a>
+  <a [routerLink]="['/teacher-profile', id]" class="see-profile">Ver perfil</a>
 </article>

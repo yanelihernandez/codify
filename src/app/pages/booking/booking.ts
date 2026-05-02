@@ -11,7 +11,7 @@ import {
   FormGroup,
   ReactiveFormsModule,
   ValidationErrors,
-  Validators
+  Validators,
 } from '@angular/forms';
 
 @Component({
@@ -19,11 +19,12 @@ import {
   standalone: true,
   imports: [RouterLink, ReactiveFormsModule],
   templateUrl: './booking.html',
-  styleUrl: './booking.css'
+  styleUrl: './booking.css',
 })
 export class Booking implements OnInit {
   professor = signal<Professor | null>(null);
   bookingForm!: FormGroup;
+  saving = signal(false);
 
   constructor(
     private route: ActivatedRoute,
@@ -47,7 +48,7 @@ export class Booking implements OnInit {
       date: ['', [Validators.required, this.fechaPasadaValidator]],
       time: ['', Validators.required],
       hours: ['', Validators.required],
-      isGroup: [false]
+      isGroup: [false],
     });
   }
 
@@ -77,15 +78,20 @@ export class Booking implements OnInit {
     this.service.getProfessors().subscribe({
       next: (profs) => {
         const foundProfessor = profs.find(
-          (p) => p.id.toString() === profId
+          (p) => String(p.id) === String(profId)
         );
 
         this.professor.set(foundProfessor ?? null);
+
+        if (!foundProfessor) {
+          console.warn('No se encontró profesor con id:', profId);
+        }
       },
-      error: () => {
+      error: (error) => {
+        console.error('Error cargando profesor:', error);
         this.professor.set(null);
         this.toastService.show('No se pudo cargar el profesor');
-      }
+      },
     });
   }
 
@@ -122,8 +128,6 @@ export class Booking implements OnInit {
   }
 
   onGroupChange(): void {
-    console.log('Modalidad cambiada a grupo:', this.isGroup.value);
-    // Forzar actualización del precio
     this.precio();
   }
 
@@ -131,10 +135,7 @@ export class Booking implements OnInit {
     const prof = this.professor();
     if (!prof) return 0;
 
-    const horas = this.hours.value;
-    if (!horas) return 0;
-
-    const horasNum = Number(horas);
+    const horasNum = Number(this.hours.value);
     if (isNaN(horasNum) || horasNum <= 0) return 0;
 
     const precioHora = Number(prof.hour_price);
@@ -142,25 +143,21 @@ export class Booking implements OnInit {
 
     let total = precioHora * horasNum;
 
-    // Aplicar descuento si es grupo
     if (this.isGroup.value === true) {
-      let descuento = Number(prof.group_discount);
-      if (isNaN(descuento)) descuento = 0;
-
-      if (descuento > 0) {
-        total = total * (1 - descuento / 100);
-        console.log(`Descuento aplicado: ${descuento}% -> Total: ${total}`);
-      }
+      const descuento = Number(prof.group_discount) || 0;
+      total = total * (1 - descuento / 100);
     }
 
-    console.log('Precio calculado:', total);
     return Math.round(total);
   }
 
-  handleSubmit(): void {
+  async handleSubmit(): Promise<void> {
+    console.log('handleSubmit ejecutado');
+
     if (this.bookingForm.invalid) {
       this.bookingForm.markAllAsTouched();
       this.toastService.show('Revisa los campos obligatorios');
+      console.warn('Formulario inválido:', this.bookingForm.value);
       return;
     }
 
@@ -168,29 +165,22 @@ export class Booking implements OnInit {
 
     if (!prof) {
       this.toastService.show('No se ha podido identificar al profesor');
+      console.warn('Profesor null al reservar');
       return;
     }
 
     const auth = this.authService.authState();
-    if (!auth.loggedIn || !auth.username) {
+
+    if (!auth.loggedIn || !auth.uid) {
       this.toastService.show('Debes iniciar sesión para reservar');
       this.router.navigate(['/sign-in']);
+      console.warn('Usuario sin sesión al reservar:', auth);
       return;
     }
 
-    console.log('=== CREANDO RESERVA ===');
-    console.log('Usuario:', auth.username);
-    console.log('Profesor:', prof.name);
-    console.log('Precio por hora:', prof.hour_price);
-    console.log('Descuento grupo:', prof.group_discount);
-    console.log('Horas:', this.hours.value);
-    console.log('Es grupo:', this.isGroup.value);
-    console.log('Precio final:', this.precio());
-    console.log('========================');
-
-    this.bookingService.createBooking({
-      userId: auth.username,
-      professorId: prof.id,
+    const bookingData = {
+      userId: auth.uid,
+      professorId: String(prof.id),
       professorName: prof.name,
       professorImage: prof.image,
       fullName: this.fullName.value,
@@ -198,10 +188,25 @@ export class Booking implements OnInit {
       time: this.time.value,
       hours: Number(this.hours.value),
       isGroup: !!this.isGroup.value,
-      price: this.precio()
-    });
+      price: this.precio(),
+    };
 
-    this.toastService.show('Reserva realizada correctamente');
-    this.router.navigate(['/my-bookings']);
+    console.log('AUTH AL RESERVAR:', auth);
+    console.log('PROFESOR AL RESERVAR:', prof);
+    console.log('DATOS RESERVA:', bookingData);
+
+    try {
+      this.saving.set(true);
+
+      await this.bookingService.createBooking(bookingData);
+
+      this.toastService.show('Reserva realizada correctamente');
+      this.router.navigate(['/my-bookings']);
+    } catch (error) {
+      console.error('Error creando reserva:', error);
+      this.toastService.show('No se pudo guardar la reserva');
+    } finally {
+      this.saving.set(false);
+    }
   }
 }

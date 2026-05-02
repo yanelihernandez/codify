@@ -4,11 +4,12 @@
   <div class="lista-profesores">
     @for (professor of professors(); track professor.id) {
       <app-teacher-compact-card
+        [id]="professor.id"
         [image_src]="professor.image"
+        [image_alt]="professor.name"
         [name]="professor.name"
         [speciality]="professor.speciality"
-        [stars]="professor.stars"
-        [id]="professor.id">
+        [rating]="professor.rating">
       </app-teacher-compact-card>
     }
   </div>

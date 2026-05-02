@@ -1,86 +1,113 @@
 import { Injectable, signal } from '@angular/core';
+import {
+  Firestore,
+  addDoc,
+  collection,
+  collectionData,
+  deleteDoc,
+  doc,
+  getDocs,
+  query,
+  where,
+} from '@angular/fire/firestore';
+import { Subscription } from 'rxjs';
 import { AuthService } from './auth';
+
+interface FavoriteDoc {
+  id: string;
+  userId: string;
+  professorId: string;
+  createdAt: string;
+}
 
 @Injectable({ providedIn: 'root' })
 export class FavoritesService {
-  private version = signal(0);
-  favoritesVersion = this.version.asReadonly();
+  private favorites = signal<string[]>([]);
+  favoritesVersion = this.favorites.asReadonly();
 
-  constructor(private authService: AuthService) {}
+  private sub?: Subscription;
 
-  private getStorageKey(): string | null {
+  constructor(
+    private authService: AuthService,
+    private firestore: Firestore
+  ) {}
+
+  loadFavoritesForCurrentUser(): void {
     const auth = this.authService.authState();
-    return auth.loggedIn && auth.username
-      ? `codify_favorites_${auth.username}`
-      : null;
-  }
 
-  private normalizeId(professorId: string | number): string {
-    return String(professorId);
-  }
+    if (!auth.loggedIn || !auth.uid) {
+      this.favorites.set([]);
+      return;
+    }
 
-  private touch(): void {
-    this.version.update(v => v + 1);
+    this.sub?.unsubscribe();
+
+    const ref = collection(this.firestore, 'favorites');
+    const q = query(ref, where('userId', '==', auth.uid));
+
+    this.sub = (collectionData(q, { idField: 'id' }) as any).subscribe({
+      next: (docs: FavoriteDoc[]) => {
+        this.favorites.set(docs.map((fav) => String(fav.professorId)));
+      },
+      error: (error: unknown) => {
+        console.error('Error cargando favoritos:', error);
+        this.favorites.set([]);
+      },
+    });
   }
 
   getFavorites(): string[] {
-    this.version();
-
-    const key = this.getStorageKey();
-    if (!key) return [];
-
-    try {
-      const raw = localStorage.getItem(key);
-      const favorites = raw ? JSON.parse(raw) : [];
-      return Array.isArray(favorites) ? favorites.map(String) : [];
-    } catch {
-      return [];
-    }
+    return this.favorites();
   }
 
   isFavorite(professorId: string | number): boolean {
-    const id = this.normalizeId(professorId);
-    return this.getFavorites().includes(id);
+    return this.favorites().includes(String(professorId));
   }
 
-  addFavorite(professorId: string | number): void {
-    const key = this.getStorageKey();
-    if (!key) return;
+  async toggleFavorite(professorId: string | number): Promise<boolean> {
+    const auth = this.authService.authState();
 
-    const id = this.normalizeId(professorId);
-    const favorites = this.getFavorites();
-
-    if (!favorites.includes(id)) {
-      favorites.push(id);
-      localStorage.setItem(key, JSON.stringify(favorites));
-      this.touch();
-    }
-  }
-
-  removeFavorite(professorId: string | number): void {
-    const key = this.getStorageKey();
-    if (!key) return;
-
-    const id = this.normalizeId(professorId);
-    const favorites = this.getFavorites().filter(favId => favId !== id);
-
-    localStorage.setItem(key, JSON.stringify(favorites));
-    this.touch();
-  }
-
-  toggleFavorite(professorId: string | number): boolean {
-    const liked = this.isFavorite(professorId);
-
-    if (liked) {
-      this.removeFavorite(professorId);
+    if (!auth.loggedIn || !auth.uid) {
       return false;
     }
 
-    this.addFavorite(professorId);
+    const id = String(professorId);
+    const currentFavorites = this.favorites();
+
+    const ref = collection(this.firestore, 'favorites');
+    const q = query(
+      ref,
+      where('userId', '==', auth.uid),
+      where('professorId', '==', id)
+    );
+
+    if (currentFavorites.includes(id)) {
+      this.favorites.set(currentFavorites.filter((favId) => favId !== id));
+
+      const snap = await getDocs(q);
+
+      await Promise.all(
+        snap.docs.map((favoriteDoc) =>
+          deleteDoc(doc(this.firestore, `favorites/${favoriteDoc.id}`))
+        )
+      );
+
+      return false;
+    }
+
+    this.favorites.set([...currentFavorites, id]);
+
+    await addDoc(ref, {
+      userId: auth.uid,
+      professorId: id,
+      createdAt: new Date().toISOString(),
+    });
+
     return true;
   }
 
   clearForLogout(): void {
-    this.touch();
+    this.favorites.set([]);
+    this.sub?.unsubscribe();
   }
 }
