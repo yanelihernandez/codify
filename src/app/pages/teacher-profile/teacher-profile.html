@@ -42,11 +42,15 @@
         </div>
 
         <div class="opiniones">
-          <h2>Opiniones</h2>
+          <h2>Opiniones ({{ opinions().length }})</h2>
           <section id="opinions">
-            <app-opinion-card></app-opinion-card>
-            <app-opinion-card></app-opinion-card>
-            <app-opinion-card></app-opinion-card>
+            @if (opinions().length > 0) {
+              @for (opinion of opinions(); track opinion.opinionId) {
+                <app-opinion-card [opinion]="opinion"></app-opinion-card>
+              }
+            } @else {
+              <p>Este profesor aún no tiene opiniones.</p>
+            }
           </section>
         </div>
       </div>
