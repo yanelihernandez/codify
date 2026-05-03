@@ -1,5 +1,7 @@
 <main>
-  <h1>¡Bienvenido de nuevo!</h1>
+  <h1>
+    {{ authState().loggedIn ? '¡Bienvenido de nuevo!' : '¡Bienvenido a Codify!' }}
+  </h1>
   <section class="bloque_inicio">
     <div class="imagen_main">
       <img src="https://res.cloudinary.com/dcqaw1j7r/image/upload/v1777657388/home_d0bhen.jpg" alt="Descripción">
