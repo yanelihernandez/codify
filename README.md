@@ -1,5 +1,5 @@
 <p align="center">
-  <img width="200" alt="logo_verde" src="https://github.com/user-attachments/assets/548b29e3-3678-456e-8248-688c6c966ca9" />
+  <img width="756" height="330" alt="logo_verde" src="https://github.com/user-attachments/assets/2874b5f2-1183-4911-8bd0-379e74f70b82" />
 </p>
 
 # Codify - Sprint 3
@@ -102,8 +102,9 @@ Los datos están sincronizados en **tiempo real** mediante las siguientes colecc
 * **`bookings`**: Registro de clases reservadas (vincula `userId` con `professorId`).
 * **`chats`**: Historial de mensajes y conversaciones activas.
 
-<img width="760" height="470" alt="Captura de pantalla 2026-05-03 191332" src="https://github.com/user-attachments/assets/d9d0ef75-26e9-4f56-906f-f9e29fe2f027" />
-
+<p align="center">
+  <img width="760" height="470" alt="Captura de pantalla 2026-05-03 191332" src="https://github.com/user-attachments/assets/d9d0ef75-26e9-4f56-906f-f9e29fe2f027" />
+</p>
 
 ### 3. Almacenamiento Multimedia (Cloudinary)
 > Se utiliza **Cloudinary** para las imágenes para evitar las restricciones de pago de Firebase Storage.
@@ -112,7 +113,9 @@ Para evitar facturaciones y mantener el desarrollo accesible, Cloudinary se pres
 * Se ha migrado también toda la carga gráfica a la nube (incluyendo el *favicon* y recursos estáticos), lo que nos ha permitido **eliminar por completo la carpeta local `/images`**, reduciendo drásticamente el peso del proyecto.
 * **Flujo de datos**: Cuando un usuario sube su foto desde el formulario de Angular, la imagen se manda a Cloudinary. Éste nos devuelve inmediatamente una URL segura (`secure_url`), y es **esa URL la que guardamos en nuestra base de datos de Firebase** (en el campo `profileImageUrl` del usuario).
 
-<img width="1898" height="846" alt="Captura de pantalla 2026-05-03 191439" src="https://github.com/user-attachments/assets/f4f475fb-87ca-43a2-9617-b9362a34249d" />
+<p align="center">
+  <img width="1898" height="846" alt="Captura de pantalla 2026-05-03 191439" src="https://github.com/user-attachments/assets/f4f475fb-87ca-43a2-9617-b9362a34249d" />
+</p>
 
 ---
 
