@@ -141,5 +141,5 @@ Para facilitar la evaluación del proyecto, hemos grabado una demostración comp
 | Usuario | Correo            | Contraseña | 
 |:--------|:------------------|:-----------|
 | `manu`  | `manu@gmail.com`  | `12345678` |
-| `maria` | `maria@gmail.com` | `12345678` |
+| `carla` | `carla@hotmail.com` | `12345678` |
 > *O bien, cualquier usuario existente en el *Firebase* o uno nuevo creado a través de registro.*
