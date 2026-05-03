@@ -9,6 +9,7 @@ import {ToastService} from '../../services/toast.service';
 import {ChatService} from '../../services/chat.service';
 import {Message} from '../../models/chat';
 import {FieldValue, serverTimestamp, Timestamp} from 'firebase/firestore';
+import { BookingService } from '../../services/booking.service';
 
 interface ChatMessage {
   id: string;
@@ -40,7 +41,8 @@ export class Chat implements OnInit {
     private professorService: ProfessorService,
     private authService: AuthService,
     private toastService: ToastService,
-    private chatService: ChatService
+    private chatService: ChatService,
+    private bookingService: BookingService
   ) {
     this.auth = this.authService.authState();
   }
@@ -81,7 +83,31 @@ export class Chat implements OnInit {
 
     // Listener: mensajes en tiempo real
     this.chatService.getMessages(this.chatId).subscribe(msgs => {
-      this.messages.set(msgs);
+
+      // Consultamos las reservas para crear el mensaje inicial de bienvenida
+      this.bookingService.getBookingsByUser(userId).subscribe(bookings => {
+        const normalizedTeacherId = teacherId.replace('teacher', '');
+        const booking = bookings.find(b => String(b.professorId).replace('teacher', '') === normalizedTeacherId);
+
+        if (booking) {
+          const dateObj = new Date(booking.date + 'T00:00:00');
+          const formattedDate = dateObj.toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' });
+          const prof = this.professor();
+          const lang = prof?.speciality || 'la materia';
+
+          const welcomeMsg: Message = {
+            id: 'fake-welcome-msg',
+            senderId: teacherId,
+            text: `¡Hola! Veo que reservaste una clase para el ${formattedDate} a las ${booking.time}. ¿En qué puedo ayudarte con ${lang}?`,
+            createdAt: Timestamp.fromDate(new Date(booking.date + 'T' + booking.time))
+          };
+
+          this.messages.set([welcomeMsg, ...msgs]);
+        } else {
+          this.messages.set(msgs);
+        }
+      });
+
     });
   }
 
@@ -100,6 +126,18 @@ export class Chat implements OnInit {
     this.chatService.sendMessage(this.chatId, message);
 
     this.newMessage = '';
+
+    setTimeout(() => {
+      if (!this.chatId || !this.professorId) return;
+
+      const autoReply: Message = {
+        senderId: this.professorId,
+        text: "Gracias por tu mensaje. Te responderé lo antes posible.",
+        createdAt: serverTimestamp()
+      };
+
+      this.chatService.sendMessage(this.chatId, autoReply);
+    }, 1500);
   }
 
 
@@ -129,65 +167,3 @@ export class Chat implements OnInit {
     return time;
   }
 }
-
-
-
-/*
-  private loadMessages(): void {
-    const raw = localStorage.getItem(this.storageKey());
-
-    if (raw) {
-      this.messages.set(JSON.parse(raw));
-      return;
-    }
-
-    const initialMessages: ChatMessage[] = [
-      {
-        id: crypto.randomUUID(),
-        text: 'Hola, gracias por tu interés. ¿En qué puedo ayudarte?',
-        sender: 'professor',
-        time: this.currentTime()
-      }
-    ];
-
-    this.messages.set(initialMessages);
-    localStorage.setItem(this.storageKey(), JSON.stringify(initialMessages));
-  }
-
-  sendMessage(): void {
-    const text = this.newMessage.trim();
-    if (!text) return;
-
-    const updated = [
-      ...this.messages(),
-      {
-        id: crypto.randomUUID(),
-        text,
-        sender: 'user' as const,
-        time: this.currentTime()
-      }
-    ];
-
-    this.messages.set(updated);
-    this.saveMessages();
-    this.newMessage = '';
-  }
-
-  private saveMessages(): void {
-    localStorage.setItem(this.storageKey(), JSON.stringify(this.messages()));
-  }
-
-  private currentTime(): string {
-    const now = new Date();
-    return now.toLocaleTimeString('es-ES', {
-      hour: '2-digit',
-      minute: '2-digit'
-    });
-  }
-
-  private storageKey(): string {
-    const auth = this.authService.authState();
-    return `chat_${auth.username}_${this.professorId}`;
-  }
-
- */
