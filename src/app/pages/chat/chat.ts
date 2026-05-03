@@ -48,14 +48,7 @@ export class Chat implements OnInit {
   }
 
   ngOnInit(): void {
-    const auth = this.authService.authState();
     const profId = this.route.snapshot.paramMap.get('id');
-
-    if (!auth.loggedIn || !auth.username) {
-      this.toastService.show('Inicia sesión para poder enviar mensajes');
-      this.router.navigate(['/sign-in']);
-      return;
-    }
 
     if (!profId) {
       this.toastService.show('Profesor no válido');

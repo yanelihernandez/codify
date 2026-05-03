@@ -6,7 +6,6 @@ import {
 import { Router, RouterLink } from '@angular/router';
 import {AuthService, User} from '../../services/auth';
 import { ToastService } from '../../services/toast.service';
-import {updateEmail, User as FirebaseUser, verifyBeforeUpdateEmail} from '@angular/fire/auth';
 
 function fechaNacimientoValidator(control: AbstractControl): ValidationErrors | null {
   const value = control.value?.trim();
@@ -86,12 +85,6 @@ export class EditProfileComponent implements OnInit {
   ) {}
 
   async ngOnInit(): Promise<void> {
-    const auth = this.authService.authState();
-    if (!auth.loggedIn || !auth.uid) {
-      this.router.navigate(['/sign-in']);
-      return;
-    }
-
     const user = await this.authService.getCurrentUser();
 
     if (user) {
