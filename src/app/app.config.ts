@@ -21,9 +21,7 @@ export const appConfig: ApplicationConfig = {
       storageBucket: "codify-pwm-2026.firebasestorage.app",
       apiKey: "AIzaSyDcGF9HCbzUgRhFzT9eyLe63-CI8OK_4TQ",
       authDomain: "codify-pwm-2026.firebaseapp.com",
-      messagingSenderId: "1041408943136",
-      //projectNumber: "1041408943136",
-      //version: "2"
+      messagingSenderId: "1041408943136"
       })),
     provideAuth(() => getAuth()),
     provideFirestore(() => getFirestore()),

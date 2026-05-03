@@ -282,12 +282,12 @@ main {
 }
 
 .chat-icon-corner.guest-mode::after {
-  content: "Inicia sesión para chatear";
+  content: "Inicia sesión";
   top: -35px;
 }
 
 .btn-reservar.guest-mode::after {
-  content: "Inicia sesión para reservar";
+  content: "Inicia sesión";
   top: -40px;
 }
 

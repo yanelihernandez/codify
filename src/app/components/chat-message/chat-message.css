@@ -5,12 +5,10 @@
   font-family: Arial, sans-serif;
 }
 
-/* PROFESOR → izquierda */
 .message.profesor {
   flex-direction: row;
 }
 
-/* ALUMNO → derecha */
 .message.alumno {
   flex-direction: row-reverse;
 }
