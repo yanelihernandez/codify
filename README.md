@@ -41,7 +41,7 @@ Sigue estos pasos:
 ---
 
 ## 📁 Estructura del Código del Proyecto Web
-Para cumplir con los requisitos, la aplicación ha sido desarrollada utilizando el framework **Angular**, estructurando el código de forma modular para separar la lógica, las vistas y los componentes:
+Para cumplir con los requisitos, la aplicación ha sido desarrollada utilizando el framework **Angular** y maquetada utilizando componentes y utilidades de **Bootstrap** para garantizar la responsividad. Estructuramos el código de forma modular para separar la lógica, las vistas y los componentes:
 
 ### Componentes (`/src/app/components/`)
 Son elementos visuales modulares y reutilizables en distintas partes de la web. **Estos componentes cumplen exactamente la misma función que la carpeta `templates` que utilizábamos en el sprint anterior**, pero ahora con la ventaja de que Angular encapsula su propia lógica (TypeScript), estructura (HTML) y estilos (CSS) de forma independiente.
@@ -111,7 +111,8 @@ Los datos están sincronizados en **tiempo real** mediante las siguientes colecc
 
 Para evitar facturaciones y mantener el desarrollo accesible, Cloudinary se presentó como la alternativa ideal: es gratuito, muy cómodo de integrar en Angular mediante su API y optimiza las imágenes automáticamente.
 * Se ha migrado también toda la carga gráfica a la nube (incluyendo el *favicon* y recursos estáticos), lo que nos ha permitido **eliminar por completo la carpeta local `/images`**, reduciendo drásticamente el peso del proyecto.
-* **Flujo de datos**: Cuando un usuario sube su foto desde el formulario de Angular, la imagen se manda a Cloudinary. Éste nos devuelve inmediatamente una URL segura (`secure_url`), y es **esa URL la que guardamos en nuestra base de datos de Firebase** (en el campo `profileImageUrl` del usuario).
+* **Flujo de subida de datos**: Cuando un usuario sube su foto desde el formulario de Angular, la imagen se manda a Cloudinary. Éste nos devuelve inmediatamente una URL segura (`secure_url`), y es **esa URL la que guardamos en nuestra base de datos de Firebase** (en el campo `profileImageUrl` del usuario).
+* **Flujo de borrado de datos**: Asimismo, el usuario tiene la opción de **borrar su foto de perfil** en cualquier momento, lo cual restaura el avatar predeterminado de la plataforma y actualiza su documento en Firestore al instante.
 
 <p align="center">
   <img width="1898" height="846" alt="Captura de pantalla 2026-05-03 191439" src="https://github.com/user-attachments/assets/f4f475fb-87ca-43a2-9617-b9362a34249d" />
@@ -120,7 +121,7 @@ Para evitar facturaciones y mantener el desarrollo accesible, Cloudinary se pres
 ---
 
 ### 🎥Tour
-> **Archivo de referencia:** `tour.mp4`
+[![Ver Demo en YouTube](https://img.shields.io/badge/Ver_Tour-YouTube-FF0000?style=for-the-badge&logo=youtube&logoColor=white)](https://youtu.be/zrMwfuKt8_E)
 
 Para facilitar la evaluación del proyecto, hemos grabado una demostración completa donde se pueden observar los siguientes hitos técnicos:
 
