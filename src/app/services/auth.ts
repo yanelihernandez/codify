@@ -50,6 +50,17 @@ export type RegisterResult =
     | 'unknown';
 };
 
+export type LoginResult =
+  | { ok: true }
+  | {
+  ok: false;
+  reason:
+    | 'user-not-found'
+    | 'wrong-password'
+    | 'too-many-requests'
+    | 'unknown';
+};
+
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   authState = signal<AuthState>({ loggedIn: false });
@@ -114,7 +125,7 @@ export class AuthService {
     }
   }
 
-  async login(username: string, password: string): Promise<boolean> {
+  async login(username: string, password: string): Promise<LoginResult> {
     try {
       const q = query(
         collection(this.firestore, 'users'),
@@ -123,17 +134,37 @@ export class AuthService {
 
       const snap = await getDocs(q);
 
-      if (snap.empty) return false;
+      if (snap.empty) {
+        return { ok: false, reason: 'user-not-found' };
+      }
 
       const userData = snap.docs[0].data();
       const email = userData['email'];
 
-      await signInWithEmailAndPassword(this.auth, email, password);
+      try {
+        await signInWithEmailAndPassword(this.auth, email, password);
+        return { ok: true };
+      } catch (error: any) {
+        console.error('LOGIN AUTH ERROR:', error.code);
+        console.error('LOGIN AUTH MSG:', error.message);
 
-      return true;
-    } catch (error) {
-      console.error('LOGIN ERROR:', error);
-      return false;
+        if (
+          error.code === 'auth/wrong-password' ||
+          error.code === 'auth/invalid-credential'
+        ) {
+          return { ok: false, reason: 'wrong-password' };
+        }
+
+        if (error.code === 'auth/too-many-requests') {
+          return { ok: false, reason: 'too-many-requests' };
+        }
+
+        return { ok: false, reason: 'unknown' };
+      }
+    } catch (error: any) {
+      console.error('LOGIN ERROR:', error.code);
+      console.error('LOGIN MSG:', error.message);
+      return { ok: false, reason: 'unknown' };
     }
   }
 
