@@ -1,7 +1,6 @@
-import { Component, Input, inject, signal } from '@angular/core';
+import { Component, Input, inject, signal, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { BookingItem } from '../../services/booking.service';
-import { BookingService } from '../../services/booking.service';
+import { BookingItem, BookingService } from '../../services/booking.service';
 import { ToastService } from '../../services/toast.service';
 import { AuthService } from '../../services/auth';
 
@@ -14,6 +13,7 @@ import { AuthService } from '../../services/auth';
 })
 export class BookingCard {
   @Input() booking!: BookingItem;
+  @Output() cancel = new EventEmitter<string>();
 
   showModal = signal<boolean>(false);
 
@@ -44,19 +44,15 @@ export class BookingCard {
       this.closeModal();
     }
   }
-  
-  confirmCancel(): void {
-    console.log('Cancelando reserva:', this.booking.id);
 
+  confirmCancel(): void {
     const auth = this.authService.authState();
     if (auth.username) {
+      // Borramos de Firebase
       this.bookingService.deleteBooking(this.booking.id);
       this.toastService.show('Reserva cancelada correctamente');
       this.closeModal();
-
-      setTimeout(() => {
-        window.location.reload();
-      }, 500);
+      this.cancel.emit(this.booking.id);
     }
   }
 }

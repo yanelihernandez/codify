@@ -12,7 +12,10 @@
   } @else {
     <section class="reservation-list">
       @for (booking of bookings(); track booking.id) {
-        <app-booking-card [booking]="booking"></app-booking-card>
+        <app-booking-card
+          [booking]="booking"
+          (cancel)="removeBookingFromView($event)">
+        </app-booking-card>
       }
     </section>
   }
