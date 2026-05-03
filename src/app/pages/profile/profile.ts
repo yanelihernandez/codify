@@ -79,12 +79,6 @@ export class Profile implements OnInit {
       },
     });
   }
-
-  get profileImage(): string {
-    const data = this.user() as any;
-    return data?.profileImageUrl || data?.profileImage || 'images/perfil.jpg';
-  }
-
   openDeleteModal(): void {
     this.showDeleteModal.set(true);
   }
@@ -178,20 +172,17 @@ export class Profile implements OnInit {
     if (!auth.loggedIn || !userId) return;
 
     this.bookingService.getBookingsByUser(userId).subscribe(bookings => {
-      // Obtenemos los IDs "limpios" (sin la palabra 'teacher') para comparar fácilmente
       const bookedProfessorIds = new Set(bookings.map(b => String(b.professorId).replace('teacher', '')));
 
       this.chatService.getChats(userId).subscribe(chats => {
         const finalChatsMap = new Map<string, ChatUI>();
 
-        // --- MAGIA: Función auxiliar para crear el mensaje dinámico ---
         const getDynamicMessage = (teacherId: string, professor: Professor | undefined) => {
           const normalizedId = teacherId.replace('teacher', '');
           const booking = bookings.find(b => String(b.professorId).replace('teacher', '') === normalizedId);
 
           if (!booking) return 'Reserva confirmada'; // Por si acaso
 
-          // Arreglamos la fecha (le añadimos T00:00:00 para evitar que el cambio de zona horaria cambie el día)
           const dateObj = new Date(booking.date + 'T00:00:00');
           const formattedDate = dateObj.toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' });
           const lang = professor?.speciality || 'la materia';
@@ -199,7 +190,6 @@ export class Profile implements OnInit {
           return `¡Hola! Veo que reservaste una clase para el ${formattedDate} a las ${booking.time}. ¿En qué puedo ayudarte con ${lang}?`;
         };
 
-        // 1. Procesamos los chats que YA EXISTEN en Firebase
         chats.forEach(chat => {
           const hasMessage = chat.lastMessage && chat.lastMessage.trim() !== '';
           const teacherId = String(chat.teacherId);
@@ -214,16 +204,13 @@ export class Profile implements OnInit {
               id: teacherId,
               name: professor?.name ?? 'Profesor',
               image: professor?.image ?? '',
-              // Usamos la función dinámica si no hay mensaje
               lastMessage: hasMessage ? chat.lastMessage : getDynamicMessage(teacherId, professor),
               lastMessageTime: chat.lastMessageDate ? chat.lastMessageDate.toDate?.() ?? null : null
             });
           }
         });
 
-        // 2. Añadimos profesores reservados que AÚN NO tienen chat creado
         bookedProfessorIds.forEach(normalizedId => {
-          // Comprobamos si ya lo hemos metido antes
           const alreadyAdded = Array.from(finalChatsMap.keys()).some(k => k.replace('teacher', '') === normalizedId);
 
           if (!alreadyAdded) {
@@ -238,14 +225,12 @@ export class Profile implements OnInit {
               id: originalId,
               name: professor?.name ?? bookingData?.professorName ?? 'Profesor',
               image: professor?.image ?? bookingData?.professorImage ?? '',
-              // Usamos la función dinámica
               lastMessage: getDynamicMessage(originalId, professor),
               lastMessageTime: null
             });
           }
         });
 
-        // 3. Convertimos la mezcla a lista y la ordenamos por fecha
         const sortedChats = Array.from(finalChatsMap.values()).sort((a, b) => {
           const dateA = a.lastMessageTime?.getTime() ?? 0;
           const dateB = b.lastMessageTime?.getTime() ?? 0;
