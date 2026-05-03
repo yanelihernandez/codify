@@ -44,6 +44,7 @@ Este repositorio utiliza ramas para organizar las entregas del proyecto:
     ├── 📂 src/ (Código fuente de la SPA migrada a Angular)
     │   └── 📂 app/
     │       ├── 📂 components/ (Componentes reutilizables)
+    │       ├── 📂 guards/ (Control de acceso a rutas públicas y privadas)
     │       ├── 📂 models/ (Interfaces y modelos de datos TypeScript)
     │       ├── 📂 pages/ (Vistas enrutables de la web)
     │       └── 📂 services/ (Servicios de lógica de negocio, autenticación y conexión a Firebase)
