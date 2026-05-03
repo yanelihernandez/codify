@@ -3,6 +3,8 @@ import { Router, RouterLink } from '@angular/router';
 import { AuthService, User } from '../../services/auth';
 import { ToastService } from '../../services/toast.service';
 import { FavoritesService } from '../../services/favorites.service';
+import { LanguagesService } from '../../services/languages.service';
+import { Language } from '../../models/language';
 
 @Component({
   selector: 'app-header',
@@ -16,10 +18,13 @@ export class HeaderComponent {
   private favoritesService = inject(FavoritesService);
   private toastService = inject(ToastService);
   private router = inject(Router);
+  private languagesService = inject(LanguagesService);
 
   authState = this.authService.authState;
   menuOpen = signal(false);
   user = signal<User | null>(null);
+  languages = signal<Language[]>([]);
+  mobileMenuOpen = signal(false);
 
   defaultProfileImage =
     'https://res.cloudinary.com/dcqaw1j7r/image/upload/v1777657390/perfil_pgak1f.jpg';
@@ -35,6 +40,7 @@ export class HeaderComponent {
 
   constructor() {
     this.loadUserForHeader();
+    this.loadLanguages();
   }
 
   private async loadUserForHeader(): Promise<void> {
@@ -78,5 +84,15 @@ export class HeaderComponent {
     this.favoritesService.clearForLogout();
     this.toastService.show('¡Hasta pronto! Has cerrado sesión');
     this.router.navigate(['/']);
+  }
+
+  private loadLanguages(): void {
+    this.languagesService.getLanguages().subscribe(data => {
+      this.languages.set(data);
+    });
+  }
+
+  toggleMobileMenu(): void {
+    this.mobileMenuOpen.update(v => !v);
   }
 }

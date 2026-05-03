@@ -1,6 +1,6 @@
 <header>
   <div class="header-left">
-    <button class="menu-toggle">☰</button>
+    <button class="menu-toggle" (click)="toggleMobileMenu()">☰</button>
 
     <a class="home-btn" id="homeLink" [routerLink]="''">
       <img src="https://res.cloudinary.com/dcqaw1j7r/image/upload/v1777657389/logo_a7axaq.png" alt="Logo Codify">
@@ -10,17 +10,20 @@
   <section>
     <nav>
       <ul class="nav-bar">
-        <li><a [routerLink]="['/language-teachers', 'python']">Python</a></li>
-        <li><a [routerLink]="['/language-teachers', 'java']">Java</a></li>
-        <li><a [routerLink]="['/language-teachers', 'c']">C</a></li>
-        <li><a [routerLink]="['/language-teachers', 'assembly']">Assembly</a></li>
+        @for (lang of languages(); track lang.id) {
+          <li>
+            <a [routerLink]="['/language-teachers', lang.slug]">
+              {{ lang.name }}
+            </a>
+          </li>
+        }
       </ul>
     </nav>
   </section>
 
   <div class="profile" id="profileDropdown" [class.guest-mode]="!authState().loggedIn">
     <a href="#" class="profile-link" (click)="goToProfile($event)">
-      
+
       <img
         [src]="headerProfileImage()"
         alt="perfil"
@@ -40,4 +43,23 @@
       </div>
     }
   </div>
+  @if (mobileMenuOpen()) {
+    <div class="mobile-nav-overlay" (click)="toggleMobileMenu()">
+      <nav class="mobile-nav" (click)="$event.stopPropagation()">
+        <div class="mobile-nav-header">
+          <h3>Idiomas</h3>
+          <button class="close-menu" (click)="toggleMobileMenu()">✕</button>
+        </div>
+        <ul>
+          @for (lang of languages(); track lang.id) {
+            <li>
+              <a [routerLink]="['/language-teachers', lang.slug]" (click)="toggleMobileMenu()">
+                {{ lang.name }}
+              </a>
+            </li>
+          }
+        </ul>
+      </nav>
+    </div>
+  }
 </header>
