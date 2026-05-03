@@ -66,7 +66,7 @@ export class Profile implements OnInit {
       return;
     }
 
-    this.authService.getCurrentUser().then(u => this.user.set(u));
+    this.favoritesService.loadFavoritesForCurrentUser();
 
     const currentUser = await this.authService.getCurrentUser();
     this.user.set(currentUser);
