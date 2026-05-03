@@ -48,14 +48,6 @@ export class Profile implements OnInit {
   });
 
   async ngOnInit(): Promise<void> {
-    const isLogged = await this.authService.isAuthReady();
-
-    if (!isLogged) {
-      sessionStorage.setItem('redirectAfterLogin', '/profile');
-      this.router.navigate(['/sign-in']);
-      return;
-    }
-
     this.favoritesService.loadFavoritesForCurrentUser();
 
     const currentUser = await this.authService.getCurrentUser();

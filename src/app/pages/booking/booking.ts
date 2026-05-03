@@ -11,7 +11,7 @@ import {
   FormGroup,
   ReactiveFormsModule,
   ValidationErrors,
-  Validators,
+  Validators
 } from '@angular/forms';
 
 @Component({
@@ -19,7 +19,7 @@ import {
   standalone: true,
   imports: [RouterLink, ReactiveFormsModule],
   templateUrl: './booking.html',
-  styleUrl: './booking.css',
+  styleUrl: './booking.css'
 })
 export class Booking implements OnInit {
   professor = signal<Professor | null>(null);
@@ -34,11 +34,11 @@ export class Booking implements OnInit {
     private bookingService: BookingService,
     private router: Router,
     private fb: FormBuilder
-  ) {}
+  ) {
+  }
 
   ngOnInit(): void {
     this.initForm();
-    this.checkLogin();
     this.loadProfessor();
   }
 
@@ -48,25 +48,9 @@ export class Booking implements OnInit {
       date: ['', [Validators.required, this.fechaPasadaValidator]],
       time: ['', Validators.required],
       hours: ['', Validators.required],
-      isGroup: [false],
+      isGroup: [false]
     });
   }
-
-  private checkLogin(): void {
-    const auth = this.authService.authState();
-    const id = this.route.snapshot.paramMap.get('id');
-
-    if (!auth.loggedIn) {
-      this.toastService.show('Debes iniciar sesión para reservar una clase');
-
-      if (id) {
-        sessionStorage.setItem('redirectAfterLogin', `/booking/${id}`);
-      }
-
-      this.router.navigate(['/sign-in']);
-    }
-  }
-
   private loadProfessor(): void {
     const profId = this.route.snapshot.paramMap.get('id');
 
@@ -91,7 +75,7 @@ export class Booking implements OnInit {
         console.error('Error cargando profesor:', error);
         this.professor.set(null);
         this.toastService.show('No se pudo cargar el profesor');
-      },
+      }
     });
   }
 
@@ -188,7 +172,7 @@ export class Booking implements OnInit {
       time: this.time.value,
       hours: Number(this.hours.value),
       isGroup: !!this.isGroup.value,
-      price: this.precio(),
+      price: this.precio()
     };
 
     console.log('AUTH AL RESERVAR:', auth);
