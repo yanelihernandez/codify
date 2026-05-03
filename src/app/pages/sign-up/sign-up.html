@@ -86,6 +86,9 @@
       @if (email.hasError('email') && email.touched) {
         <p class="error-msg">Correo no válido</p>
       }
+      @if (email.hasError('emailTaken')) {
+        <p class="error-msg">Ese correo ya está registrado</p>
+      }
     </div>
 
     <div class="form-group">
