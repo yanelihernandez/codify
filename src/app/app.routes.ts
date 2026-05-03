@@ -9,18 +9,20 @@ import { Booking } from './pages/booking/booking';
 import { SignInComponent } from './pages/sign-in/sign-in';
 import { SignUpComponent } from './pages/sign-up/sign-up';
 import { EditProfileComponent } from './pages/edit-profile/edit-profile';
+import { authGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
+  // Rutas públicas
   { path: '', component: HomeComponent },
   { path: 'language-teachers/:slug', component: LanguageTeachers },
   { path: 'teacher-profile/:id', component: TeacherProfileComponent },
-  { path: 'profile', component: Profile },
-  { path: 'my-bookings', component: MyBookings },
-
-  { path: 'chat/:id', component: Chat },
-
-  { path: 'booking/:id', component: Booking },
   { path: 'sign-in', component: SignInComponent },
   { path: 'sign-up', component: SignUpComponent },
-  { path: 'edit-profile', component: EditProfileComponent },
+
+  // Rutas protegidas por el Guard
+  { path: 'profile', component: Profile, canActivate: [authGuard] },
+  { path: 'my-bookings', component: MyBookings, canActivate: [authGuard] },
+  { path: 'chat/:id', component: Chat, canActivate: [authGuard] },
+  { path: 'booking/:id', component: Booking, canActivate: [authGuard] },
+  { path: 'edit-profile', component: EditProfileComponent, canActivate: [authGuard] },
 ];
