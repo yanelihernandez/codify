@@ -13,16 +13,6 @@ import { lastValueFrom } from 'rxjs';
 import { ChatService } from '../../services/chat.service';
 import {ChatUI} from '../../models/chat';
 
-/*
-interface ChatProfessor {
-  id: string;
-  name: string;
-  image: string;
-  lastMessage?: string;
-  lastMessageTime?: Timestamp | FieldValue;
-}
- */
-
 @Component({
   selector: 'app-profile',
   standalone: true,
@@ -183,34 +173,62 @@ export class Profile implements OnInit {
 
   private loadChatsFromService(): void {
     const auth = this.authService.authState();
-    if (!auth.loggedIn || !auth.uid) return;
+    const userId = auth.uid;
 
-    this.chatService.getChats(auth.uid).subscribe(chats => {
+    if (!auth.loggedIn || !userId) return;
 
-      const sortedChats = [...chats].sort((a, b) => {
-        const dateA = a.lastMessageDate?.toDate().getTime() ?? 0;
-        const dateB = b.lastMessageDate?.toDate().getTime() ?? 0;
+    this.bookingService.getBookingsByUser(userId).subscribe(bookings => {
+      const bookedProfessorIds = new Set(bookings.map(b => String(b.professorId)));
 
-        return dateB - dateA;
+      this.chatService.getChats(userId).subscribe(chats => {
+        const finalChatsMap = new Map<string, ChatUI>();
+
+        chats.forEach(chat => {
+          const hasMessage = chat.lastMessage && chat.lastMessage.trim() !== '';
+          const teacherId = String(chat.teacherId);
+
+          if (hasMessage || bookedProfessorIds.has(teacherId)) {
+            const professor = this.allProfessors().find(
+              p => String(p.id).replace('teacher', '') === teacherId.replace('teacher', '')
+            );
+
+            finalChatsMap.set(teacherId, {
+              id: teacherId,
+              name: professor?.name ?? 'Profesor',
+              image: professor?.image ?? '',
+              lastMessage: hasMessage ? chat.lastMessage : 'Reserva confirmada',
+              lastMessageTime: chat.lastMessageDate ? chat.lastMessageDate.toDate?.() ?? null : null
+            });
+          }
+        });
+
+        bookedProfessorIds.forEach(teacherId => {
+          if (!finalChatsMap.has(teacherId)) {
+            const professor = this.allProfessors().find(
+              p => String(p.id).replace('teacher', '') === teacherId.replace('teacher', '')
+            );
+
+            const bookingData = bookings.find(b => String(b.professorId) === teacherId);
+
+            finalChatsMap.set(teacherId, {
+              id: teacherId,
+              name: professor?.name ?? bookingData?.professorName ?? 'Profesor',
+              image: professor?.image ?? bookingData?.professorImage ?? '',
+              lastMessage: 'Reserva confirmada',
+              lastMessageTime: null
+            });
+          }
+        });
+
+        // La ordenamos por fecha
+        const sortedChats = Array.from(finalChatsMap.values()).sort((a, b) => {
+          const dateA = a.lastMessageTime?.getTime() ?? 0;
+          const dateB = b.lastMessageTime?.getTime() ?? 0;
+          return dateB - dateA;
+        });
+
+        this.chatProfessors.set(sortedChats);
       });
-
-      const mapped: ChatUI[] = sortedChats.map(chat => {
-        const professor = this.allProfessors().find(
-          p => String(p.id) === String(chat.teacherId)
-        );
-
-        return {
-          id: chat.teacherId,
-          name: professor?.name ?? 'Profesor',
-          image: professor?.image ?? '',
-          lastMessage: chat.lastMessage ?? '',
-          lastMessageTime: chat.lastMessageDate
-            ? chat.lastMessageDate.toDate?.() ?? null
-            : null
-        };
-      });
-
-      this.chatProfessors.set(mapped);
     });
   }
 
@@ -235,55 +253,3 @@ export class Profile implements OnInit {
     }
   }
 }
-
-
-/*
-private loadChatProfessors(professors: Professor[]): void {
-    const auth = this.authService.authState();
-    if (!auth.loggedIn || !auth.username) return;
-
-    const userBookings = this.bookingService.getBookingsByUser(auth.username);
-    const professorIds = [...new Set(userBookings.map(b => b.professorId))];
-
-    const chats = professorIds.map(profId => {
-      const professor = professors.find(p => String(p.id) === String(profId));
-      if (!professor) return null;
-
-      const lastBooking = userBookings
-        .filter(b => String(b.professorId) === String(profId))
-        .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())[0];
-
-      return {
-        id: professor.id,
-        name: professor.name,
-        image: professor.image,
-        lastMessage: `Última reserva: ${lastBooking?.date || 'N/A'}`,
-        lastMessageTime: lastBooking?.date || ''
-      };
-    }).filter(chat => chat !== null) as ChatProfessor[];
-
-    this.chatProfessors.set(chats);
-  }
-
-  goToChat(professorId: number): void {
-    this.router.navigate(['/chat', professorId], {
-      state: { from: this.router.url }
-    });
-  }
-
-  goToTeachers(): void {
-    this.router.navigate(['/']);
-  }
-
-  scrollTo(id: string): void {
-    const element = document.getElementById(id);
-
-    if (element) {
-      element.scrollIntoView({
-        behavior: 'smooth',
-        block: 'start'
-      });
-    }
-  }
-}
-*/
