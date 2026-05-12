@@ -1,13 +1,78 @@
-<ion-header [translucent]="true">
+<ion-header class="ion-no-border">
   <ion-toolbar>
-    <ion-title>sign-in</ion-title>
+    <ion-title>Inicia Sesión</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">sign-in</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content class="ion-padding">
+  <div class="contenedor">
+    <h1>Inicia Sesión</h1>
+
+    <a routerLink="/">
+      <img src="https://res.cloudinary.com/dcqaw1j7r/image/upload/v1777657390/logo_verde_el93m0.png" alt="Logo" class="logo">
+    </a>
+
+    <form class="formulario" [formGroup]="loginForm" (ngSubmit)="handleSubmit()">
+      
+      <ion-list lines="none" class="transparent-list">
+        
+        <ion-item class="custom-input">
+          <ion-input
+            label="Usuario"
+            labelPlacement="floating"
+            type="text"
+            formControlName="usuario"
+            (ionInput)="clearErrors()"
+            [class.ion-invalid]="(usuario.invalid && usuario.touched) || errorUsuarioNoExiste()"
+            [class.ion-touched]="usuario.touched"
+          ></ion-input>
+        </ion-item>
+        
+        @if (usuario.hasError('required') && usuario.touched) {
+          <p class="error-msg">Por favor, rellena este campo</p>
+        }
+        @if (errorUsuarioNoExiste()) {
+          <p class="error-msg">El usuario no existe</p>
+        }
+
+        <ion-item class="custom-input ion-margin-top">
+          <ion-input
+            label="Contraseña"
+            labelPlacement="floating"
+            [type]="showPassword() ? 'text' : 'password'"
+            formControlName="contrasena"
+            (ionInput)="clearErrors()"
+            [class.ion-invalid]="(contrasena.invalid && contrasena.touched) || errorPassIncorrecta()"
+            [class.ion-touched]="contrasena.touched"
+          ></ion-input>
+          <ion-button fill="clear" slot="end" (click)="togglePassword()" color="medium" class="btn-eye">
+            {{ showPassword() ? '🔒' : '👁' }}
+          </ion-button>
+        </ion-item>
+
+        @if (contrasena.hasError('required') && contrasena.touched) {
+          <p class="error-msg">Por favor, rellena este campo</p>
+        }
+        @if (errorPassIncorrecta()) {
+          <p class="error-msg">Contraseña incorrecta</p>
+        }
+
+      </ion-list>
+
+      @if (isLoading()) {
+        <ion-progress-bar type="indeterminate" class="ion-margin-top" style="--progress-background: #87ab69;"></ion-progress-bar>
+      }
+
+      <div class="botones">
+        <ion-button expand="block" type="submit" [disabled]="isLoading()" class="btn-principal">
+          {{ isLoading() ? 'Verificando...' : 'Aceptar' }}
+        </ion-button>
+        
+        <ion-button expand="block" fill="clear" routerLink="/sign-up" class="btn-secundario">
+          ¿No tienes cuenta? Regístrate
+        </ion-button>
+      </div>
+
+    </form>
+  </div>
 </ion-content>
