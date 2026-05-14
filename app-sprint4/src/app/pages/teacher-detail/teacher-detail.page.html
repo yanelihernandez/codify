@@ -1,13 +1,158 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/"></ion-back-button>
+    </ion-buttons>
+
     <ion-title>teacher-detail</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">teacher-detail</ion-title>
-    </ion-toolbar>
-  </ion-header>
-</ion-content>
+@if(professor()){
+<ng-container>
+
+  <ion-content>
+
+    <ion-grid class="profesor-perfil-horizontal">
+
+      <!-- ICONO CHAT -->
+      <ion-fab vertical="top" horizontal="end" slot="fixed">
+        <ion-fab-button
+          [class.guest-mode]="isGuest()"
+          title="Enviar mensaje"
+        >
+          📩
+        </ion-fab-button>
+      </ion-fab>
+
+      <ion-row>
+
+        <!-- COLUMNA IZQUIERDA -->
+        <ion-col size="12" sizeMd="4">
+
+          <div class="profesor-imagen">
+            <ion-img [src]="professor()?.image" [alt]="professor()?.name"></ion-img>
+          </div>
+
+          <h1 id="main-name">{{ professor()?.name }}</h1>
+
+          <ion-card>
+            <ion-card-header>
+              <ion-card-title>Sobre {{ professor()?.name }}</ion-card-title>
+            </ion-card-header>
+
+            <ion-card-content>
+              <p>
+                {{ professor()?.info }}
+              </p>
+            </ion-card-content>
+          </ion-card>
+
+          <ion-card>
+            <ion-card-content>
+
+              <div class="estadisticas-vertical">
+
+                <div class="estadistica-item">
+                  <span class="estadistica-valor" id="hour-price">
+                    {{ professor()?.hour_price }}
+                  </span>
+                  <span class="estadistica-etiqueta">PRECIO/HORA</span>
+                </div>
+
+                <div class="estadistica-item">
+                  <span class="estadistica-valor" id="response-time">
+                    {{ professor()?.response_time }}
+                  </span>
+                  <span class="estadistica-etiqueta">T RESPUESTA</span>
+                </div>
+
+                <div class="estadistica-item">
+                  <span class="estadistica-valor" id="students">
+                    {{ professor()?.students }}
+                  </span>
+                  <span class="estadistica-etiqueta">Nº ALUMNOS</span>
+                </div>
+
+              </div>
+
+            </ion-card-content>
+          </ion-card>
+
+        </ion-col>
+
+        <!-- COLUMNA CENTRAL -->
+        <ion-col size="12" sizeMd="5">
+
+          <ion-card>
+            <ion-card-header>
+              <ion-card-title>Opiniones</ion-card-title>
+            </ion-card-header>
+
+            <ion-card-content>
+              <div id="opinions">
+                <p>Opinion...</p>
+                <p>Opinion...</p>
+                <p>Opinion...</p>
+              </div>
+            </ion-card-content>
+          </ion-card>
+
+        </ion-col>
+
+        <!-- COLUMNA DERECHA -->
+        <ion-col size="12" sizeMd="3">
+
+          <ion-card>
+            <ion-card-header>
+              <ion-card-title>Grupos</ion-card-title>
+            </ion-card-header>
+
+            <ion-card-content>
+              <p>
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+              </p>
+
+              <p class="descuento">
+                <strong>{{ professor()?.group_discount }}% en cada hora</strong>
+              </p>
+            </ion-card-content>
+          </ion-card>
+
+          <ion-card>
+            <ion-card-header>
+              <ion-card-title>Video</ion-card-title>
+            </ion-card-header>
+
+            <ion-card-content>
+              <div class="video-placeholder">
+                <p>[Video URL]</p>
+              </div>
+            </ion-card-content>
+          </ion-card>
+
+          <ion-button
+            expand="block"
+            color="primary"
+            [disabled]="isGuest()"
+          >
+            Reservar
+          </ion-button>
+
+        </ion-col>
+
+      </ion-row>
+
+    </ion-grid>
+
+  </ion-content>
+
+</ng-container>
+}
+@else{
+<ng-template>
+  <ion-content>
+    <p>Profesor no cargado</p>
+  </ion-content>
+</ng-template>
+}

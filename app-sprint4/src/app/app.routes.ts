@@ -16,12 +16,12 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/sign-up/sign-up.page').then( m => m.SignUpPage)
   },
   {
-    path: 'teacher-list',
+    path: 'teacher-list/:slug',
     loadComponent: () => import('./pages/teacher-list/teacher-list.page').then( m => m.TeacherListPage),
     canActivate: [authGuard]
   },
   {
-    path: 'teacher-detail',
+    path: 'teacher-detail/:id',
     loadComponent: () => import('./pages/teacher-detail/teacher-detail.page').then( m => m.TeacherDetailPage),
     canActivate: [authGuard]
   },

@@ -2,12 +2,52 @@
   <ion-toolbar>
     <ion-title>teacher-list</ion-title>
   </ion-toolbar>
+  <nav>
+    <ion-button routerLink="/teacher-list/python">
+      Python
+    </ion-button>
+    <ion-button routerLink="/teacher-list/java">
+      Java
+    </ion-button>
+    <ion-button routerLink="/teacher-list/c">
+      C
+    </ion-button>
+    <ion-button routerLink="/teacher-list/assembly">
+      Assembly
+    </ion-button>
+    <ion-button
+      routerLink="/sign-in"
+      style="--background: #4caf50; --color: white;"
+    >
+      SIGN IN
+    </ion-button>
+  </nav>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">teacher-list</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content class="teachers-page">
+
+  <div class="introduction">
+    <h1 class="introduction-title">
+      {{ language()?.name }}
+    </h1>
+
+    <p class="language-introduction">
+      {{ language()?.introduction }}
+    </p>
+  </div>
+
+  <ion-list class="professors-list">
+    @for (professor of filteredProfessors(); track professor.id) {
+
+    <app-teacher-detail-card
+      [id]="professor.id"
+      [image_src]="professor.image"
+      [image_alt]="professor.name"
+      [name]="professor.name"
+      [info]="professor.info">
+    </app-teacher-detail-card>
+
+    }
+  </ion-list>
+
 </ion-content>

@@ -1,0 +1,35 @@
+<ion-card class="professor-card">
+
+  <img [attr.alt]="image_alt" [attr.src]="image_src">
+
+  <ion-card-content class="professor-content">
+
+    <div class="professor-content">
+      <p class="professor-name">{{ name }}</p>
+      <p class="professor-info">{{ info }}</p>
+    </div>
+
+    <div class="professor-card-buttons">
+
+      <ion-button
+        fill="clear"
+        class="fav-btn"
+        [class.guest-mode]="!authState().loggedIn"
+        [class.liked]="isFavorite()"
+        [attr.aria-pressed]="isFavorite()"
+        (click)="onFavoriteClick($event)"
+      >
+        {{ isFavorite() ? '♥' : '♡' }}
+      </ion-button>
+
+      <ion-button
+        [routerLink]="['/teacher-detail', id]"
+      >
+        Ver Perfil
+      </ion-button>
+
+    </div>
+
+  </ion-card-content>
+
+</ion-card>

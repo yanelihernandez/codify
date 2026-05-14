@@ -21,7 +21,7 @@ interface FavoriteDoc {
 }
 
 @Injectable({ providedIn: 'root' })
-export class FavoritesService {
+export class FavoritesService2 {
   private favorites = signal<string[]>([]);
   favoritesVersion = this.favorites.asReadonly();
 

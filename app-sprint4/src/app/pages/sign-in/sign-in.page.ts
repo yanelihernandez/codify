@@ -13,6 +13,7 @@ import {
 
 import { AuthService } from '../../services/auth';
 import { ToastService } from '../../services/toast.service';
+import { FavoritesService } from '../../services/favorites-sqlite';
 
 @Component({
   selector: 'app-sign-in',
@@ -43,6 +44,7 @@ export class SignInPage {
   constructor(
     private authService: AuthService,
     private toastService: ToastService,
+    private favoritesService: FavoritesService,
     private router: Router
   ) {}
 
@@ -100,6 +102,9 @@ export class SignInPage {
       return;
     }
 
+    // Cargar favoritos del usuario autenticado
+    await this.favoritesService.loadFavoritesForCurrentUser();
+
     this.toastService.show('¡Bienvenido!');
 
     const redirect = sessionStorage.getItem('redirectAfterLogin');
@@ -108,7 +113,7 @@ export class SignInPage {
       sessionStorage.removeItem('redirectAfterLogin');
       this.router.navigateByUrl(redirect);
     } else {
-      this.router.navigate(['/teacher-list']);
+      this.router.navigate(['/teacher-list/python']);
     }
   }
 }
