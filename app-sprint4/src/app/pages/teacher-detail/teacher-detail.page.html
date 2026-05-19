@@ -12,21 +12,7 @@
 <ng-container>
 
   <ion-content>
-
     <ion-grid class="profesor-perfil-horizontal">
-
-      <!-- ICONO CHAT -->
-      <ion-fab vertical="top" horizontal="end" slot="fixed">
-        <ion-fab-button
-          [class.guest-mode]="isGuest()"
-          title="Enviar mensaje"
-        >
-          📩
-        </ion-fab-button>
-      </ion-fab>
-
-      <ion-row>
-
         <!-- COLUMNA IZQUIERDA -->
         <ion-col size="12" sizeMd="4">
 
@@ -34,7 +20,19 @@
             <ion-img [src]="professor()?.image" [alt]="professor()?.name"></ion-img>
           </div>
 
-          <h1 id="main-name">{{ professor()?.name }}</h1>
+          <div id="teacher-top">
+            <h1 id="main-name">{{ professor()?.name }}</h1>
+            <ion-button
+              fill="clear"
+              class="fav-btn"
+              [class.guest-mode]="!authState().loggedIn"
+              [class.liked]="isFavorite()"
+              [attr.aria-pressed]="isFavorite()"
+              (click)="onFavoriteClick($event)"
+            >
+              {{ isFavorite() ? '♥' : '♡' }}
+            </ion-button>
+          </div>
 
           <ion-card>
             <ion-card-header>
@@ -141,7 +139,7 @@
 
         </ion-col>
 
-      </ion-row>
+
 
     </ion-grid>
 

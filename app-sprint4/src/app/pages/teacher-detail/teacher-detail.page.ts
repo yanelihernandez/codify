@@ -8,7 +8,6 @@ import {
   IonBackButton,
   IonContent,
   IonGrid,
-  IonRow,
   IonCol,
   IonCard,
   IonCardContent,
@@ -16,8 +15,6 @@ import {
   IonCardTitle,
   IonImg,
   IonButton,
-  IonFab,
-  IonFabButton,
 } from '@ionic/angular/standalone';
 
 import { Component, OnInit, computed, signal } from '@angular/core';
@@ -28,6 +25,7 @@ import { Professor } from '../../models/professor';
 import { AuthService } from '../../services/auth';
 import { ToastService } from '../../services/toast.service';
 //import { BookingService } from '../../services/booking.service';
+import { FavoritesService } from '../../services/favorites-sqlite';
 
 @Component({
   standalone: true,
@@ -42,7 +40,6 @@ import { ToastService } from '../../services/toast.service';
     IonBackButton,
     IonContent,
     IonGrid,
-    IonRow,
     IonCol,
     IonCard,
     IonCardContent,
@@ -50,8 +47,6 @@ import { ToastService } from '../../services/toast.service';
     IonCardTitle,
     IonImg,
     IonButton,
-    IonFab,
-    IonFabButton,
   ],
   templateUrl: './teacher-detail.page.html',
   styleUrls: ['./teacher-detail.page.scss']
@@ -66,8 +61,19 @@ export class TeacherDetailPage implements OnInit {
     private authService: AuthService,
     private toastService: ToastService,
     //private bookingService: BookingService,
-    private router: Router
+    private router: Router,
+    private favoritesService: FavoritesService,
   ) {}
+
+  authState = this.authService.authState;
+
+  isFavorite = computed(() => {
+      this.favoritesService.favoritesVersion();
+      return (
+        this.authState().loggedIn &&
+        this.favoritesService.isFavorite(String(this.professor()?.id))
+      );
+    });
 
   ngOnInit() {
     this.route.paramMap.subscribe(params => {
@@ -78,6 +84,24 @@ export class TeacherDetailPage implements OnInit {
         this.professor.set(p ?? null);
       });
     });
+  }
+
+  async onFavoriteClick(event: Event): Promise<void> {
+    event.preventDefault();
+    event.stopPropagation();
+
+    if (!this.authState().loggedIn) {
+      this.toastService.show('Debes iniciar sesión para guardar favoritos');
+      sessionStorage.setItem('redirectAfterLogin', this.router.url);
+      this.router.navigate(['/sign-in']);
+      return;
+    }
+
+    const liked = await this.favoritesService.toggleFavorite(String(this.professor()?.id));
+
+    this.toastService.show(
+      liked ? 'Añadido a favoritos' : 'Eliminado de favoritos'
+    );
   }
 
 /*
