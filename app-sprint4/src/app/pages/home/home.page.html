@@ -1,0 +1,77 @@
+<app-header></app-header>
+
+<ion-content class="home-page-content">
+  <div class="main-container">
+    
+    <!-- TÍTULO DE BIENVENIDA CON EL NOMBRE DEL USUARIO -->
+    <h1 class="welcome-title">
+      {{ authState().loggedIn ? '¡Bienvenido de nuevo, ' + username() + '!' : '¡Bienvenido a Codify!' }}
+    </h1>
+
+    <!-- BLOQUE INICIO (IMAGEN Y TEXTO) -->
+    <section class="bloque_inicio">
+      <div class="imagen_main">
+        <img src="https://res.cloudinary.com/dcqaw1j7r/image/upload/v1777657388/home_d0bhen.jpg" alt="Codify Aprendizaje">
+      </div>
+      <div class="texto_main">
+        <p>
+          Impulsa tu carrera tecnológica con clases personalizadas impartidas por expertos en los principales lenguajes de programación.
+          Nuestra plataforma te conecta con profesores especializados en áreas como Python, Java, JavaScript y C++, entre muchos otros.
+        </p>
+        <p>
+          Reserva fácilmente, elige la modalidad y avanza a tu ritmo con acompañamiento profesional.
+          Ya sea que estés comenzando desde cero o quieras perfeccionar tus habilidades, aquí encontrarás el apoyo ideal para alcanzar tus metas.
+        </p>
+        <p>
+          Da el siguiente paso y convierte tu aprendizaje en resultados reales.
+        </p>
+      </div>
+    </section>
+
+    <!-- PANELES DE INICIO DE SESIÓN PARA INVITADOS -->
+    @if (!authState().loggedIn) {
+      <section class="auth-callout">
+        <p>Únete a nuestra plataforma para poder contactar con los profesores y guardar tus favoritos.</p>
+        <div class="auth-buttons">
+          <ion-button class="see-teachers-btn" (click)="goToLogin()">
+            Iniciar Sesión
+          </ion-button>
+          <ion-button fill="outline" class="auth-btn outline-btn" (click)="goToRegister()">
+            Registrarse
+          </ion-button>
+        </div>
+      </section>
+    }
+
+    <!-- SECCIÓN ACERCA DE CODIFY -->
+    <section class="about-us" id="acerca-codify">
+      <div class="about-us-intro">
+        <p class="about-us-title">Acerca de Codify</p>
+        <p class="about-us-text">¿Quiénes somos? ¿Qué hemos hecho? Descúbrelo aquí:</p>
+      </div>
+
+      <div class="history">
+        <div class="history-text">
+          <h2>Información</h2>
+          <p>
+            Codify es una empresa innovadora que brinda servicios especializados a profesores de programación para ayudarles a promover y potenciar sus clases en el entorno digital. Actualmente, trabaja con docentes de distintos países, ofreciéndoles herramientas de marketing educativo, gestión de alumnos y posicionamiento en redes sociales. Su plataforma permite crear páginas personalizadas para cada profesor, facilitando la inscripción y el seguimiento de estudiantes. Además, Codify asesora en la creación de contenido atractivo y actualizado, adaptado a las tendencias tecnológicas del mercado.
+          </p>
+          <p>
+            En sus inicios, hace algunos años, Codify comenzó como un pequeño proyecto impulsado por un grupo de desarrolladores y educadores que detectaron la dificultad que tenían muchos profesores para dar visibilidad a sus cursos. Al principio, ofrecían únicamente asesorías básicas de promoción digital, pero con el tiempo ampliaron sus servicios hacia soluciones más completas e integrales. Gracias a su crecimiento constante y a la confianza de sus clientes, hoy se posiciona como un aliado estratégico clave para quienes enseñan programación y desean expandir su alcance profesional.
+          </p>
+        </div>
+      </div>
+
+      <div class="contact">
+        <p>
+          ¿Eres miembro de la prensa y tienes preguntas sobre Codify?<br>
+          ¿Tienes preguntas sobre marketing o sobre el contenido?<br>
+          Escríbenos a: <strong>codifygmail.com</strong>
+        </p>
+      </div>
+    </section>
+
+  </div>
+  
+  <app-footer></app-footer>
+</ion-content>

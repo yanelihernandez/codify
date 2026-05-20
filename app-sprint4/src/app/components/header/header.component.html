@@ -1,0 +1,56 @@
+<header>
+  <div class="header-left">
+    <button class="menu-toggle" (click)="toggleMobileMenu()">☰</button>
+
+    <a class="home-btn" id="homeLink" [routerLink]="'/home'">
+      <img src="https://res.cloudinary.com/dcqaw1j7r/image/upload/v1777657389/logo_a7axaq.png" alt="Logo Codify">
+    </a>
+  </div>
+
+  <section>
+    <nav>
+      <ul class="nav-bar">
+        <li *ngFor="let lang of languages()">
+          <a [routerLink]="['/teacher-list', lang.slug]">
+            {{ lang.name }}
+          </a>
+        </li>
+      </ul>
+    </nav>
+  </section>
+
+  <div class="profile" id="profileDropdown" [class.guest-mode]="!authState().loggedIn" (click)="goToProfile($event)">
+    <a href="#" class="profile-link" (click)="$event.preventDefault()">
+      <img
+        [src]="headerProfileImage()"
+        alt="perfil"
+        id="headerProfileImg"
+      >
+    </a>
+
+    <span class="username" id="headerUsername">
+      {{ displayName() }}
+    </span>
+
+    <div *ngIf="authState().loggedIn" class="dropdown-menu" id="dropdownMenu" [class.show-dropdown]="menuOpen()" (click)="$event.stopPropagation()">
+      <a href="#" id="profileLinkMenu" (click)="goToMyProfile($event)">Mi Perfil</a>
+      <a href="#" id="logoutBtn" (click)="logout($event)">Cerrar Sesión</a>
+    </div>
+  </div>
+
+  <div *ngIf="mobileMenuOpen()" class="mobile-nav-overlay" (click)="toggleMobileMenu()">
+    <nav class="mobile-nav" (click)="$event.stopPropagation()">
+      <div class="mobile-nav-header">
+        <h3>Lenguajes</h3>
+        <button class="close-menu" (click)="toggleMobileMenu()">✕</button>
+      </div>
+      <ul>
+        <li *ngFor="let lang of languages()">
+          <a [routerLink]="['/teacher-list', lang.slug]" (click)="toggleMobileMenu()">
+            {{ lang.name }}
+          </a>
+        </li>
+      </ul>
+    </nav>
+  </div>
+</header>

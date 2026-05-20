@@ -3,25 +3,24 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
   IonContent,
-  IonHeader, IonList,
-  IonTitle,
-  IonToolbar,
-  IonButton
+  IonList
 } from '@ionic/angular/standalone';
 import {Professor} from "../../models/professor";
 import {Language} from "../../models/language";
-import {ActivatedRoute, Router, RouterLink} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {ProfessorService} from "../../services/professors.service";
 import {TeacherDetailCard} from "../../components/teacher-detail-card/teacher-detail-card.component";
 import {LanguagesService} from "../../services/language.service";
+import {HeaderComponent} from "../../components/header/header.component";
+import {FooterComponent} from "../../components/footer/footer.component";
 
 @Component({
   selector: 'app-teacher-list',
   templateUrl: './teacher-list.page.html',
   styleUrls: ['./teacher-list.page.scss'],
   standalone: true,
-  imports: [IonContent, IonHeader, IonTitle, IonToolbar, RouterLink,
-    CommonModule, FormsModule, IonList, TeacherDetailCard, IonButton]
+  imports: [IonContent,
+    CommonModule, FormsModule, IonList, TeacherDetailCard, HeaderComponent, FooterComponent]
 })
 export class TeacherListPage implements OnInit {
 
@@ -49,6 +48,9 @@ export class TeacherListPage implements OnInit {
       const slug = params.get('slug') ?? '';
 
       this.languageService.getLanguageBySlug(slug).subscribe((lang) => {
+        if (lang && lang.introduction) {
+          lang.introduction = lang.introduction.replace(/\\n/g, '\n');
+        }
         this.language.set(lang);
       });
 

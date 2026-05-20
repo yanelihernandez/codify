@@ -17,6 +17,8 @@ import {
 
 import { AuthService, User } from '../../services/auth';
 import { ToastService } from '../../services/toast.service';
+import { HeaderComponent } from '../../components/header/header.component';
+import { FooterComponent } from '../../components/footer/footer.component';
 
 function fechaNacimientoValidator(control: AbstractControl): ValidationErrors | null {
   const value = control.value?.trim();
@@ -62,10 +64,9 @@ function passwordsCoinciden(group: AbstractControl): ValidationErrors | null {
   standalone: true,
   imports: [
     ReactiveFormsModule,
-    IonHeader,
-    IonToolbar,
-    IonTitle,
     IonContent,
+    HeaderComponent,
+    FooterComponent
   ],
   templateUrl: './sign-up.page.html',
   styleUrls: ['./sign-up.page.scss'],
@@ -190,7 +191,7 @@ export class SignUpPage {
       username,
       email,
       moreInfo: 'Usuario registrado',
-      profileImageUrl: 'https://res.cloudinary.com/dcqaw1j7r/image/upload/v1777657390/logo_verde_el93m0.png',
+      profileImageUrl: 'https://res.cloudinary.com/dcqaw1j7r/image/upload/v1777657390/perfil_pgak1f.jpg',
     };
 
     const result = await this.authService.registerUser(nuevoUsuario, pass);

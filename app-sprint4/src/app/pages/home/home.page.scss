@@ -1,0 +1,293 @@
+:host {
+  display: block;
+}
+
+ion-content {
+  --background: #ecf0f1;
+  font-family: Arial, sans-serif;
+}
+
+.main-container {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.welcome-title {
+  font-size: 2.2rem;
+  font-weight: bold;
+  color: #1a2f0a;
+  margin: 10px 0 20px 20px;
+}
+
+/* BLOQUE INICIO */
+.bloque_inicio {
+  display: flex;
+  align-items: flex-start;
+  gap: 40px;
+  padding: 20px;
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  margin-bottom: 30px;
+}
+
+.imagen_main {
+  flex-shrink: 0;
+}
+
+.imagen_main img {
+  height: 300px;
+  width: auto;
+  border-radius: 12px;
+  object-fit: cover;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+}
+
+.texto_main {
+  flex: 1;
+  line-height: 1.8;
+  color: #2d3748;
+  font-size: 1rem;
+}
+
+.texto_main p {
+  margin: 0 0 16px 0;
+}
+
+/* SECCIÓN CÓMO FUNCIONA */
+.how-it-works {
+  background: #ffffff;
+  padding: 30px 24px;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.how-it-works h2 {
+  font-size: 1.6rem;
+  font-weight: bold;
+  color: #1a2f0a;
+  margin: 0 0 8px 0;
+}
+
+.steps-subtitle {
+  font-size: 0.95rem;
+  color: #718096;
+  margin: 0 0 24px 0;
+}
+
+.steps-grid {
+  display: flex;
+  gap: 20px;
+  justify-content: space-between;
+}
+
+.step-card {
+  flex: 1;
+  background: #f8fafc;
+  padding: 24px 16px;
+  border-radius: 12px;
+  border: 1px solid rgba(135, 171, 105, 0.15);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  transition: transform 0.2s ease;
+}
+
+.step-card:hover {
+  transform: translateY(-2px);
+}
+
+.step-number {
+  background: #25510a;
+  color: #ffffff;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 1rem;
+  margin-bottom: 12px;
+}
+
+.step-card h3 {
+  font-size: 1.15rem;
+  font-weight: bold;
+  color: #1a2f0a;
+  margin: 0 0 8px 0;
+}
+
+.step-card p {
+  font-size: 0.9rem;
+  color: #4a5568;
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* AUTH CALLOUT PARA INVITADOS */
+.auth-callout {
+  background: #ffffff;
+  padding: 24px;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  text-align: center;
+  margin-bottom: 30px;
+  border-left: 5px solid #87ab69;
+}
+
+.auth-callout p {
+  margin: 0 0 16px 0;
+  color: #2d3748;
+  font-size: 0.95rem;
+}
+
+.auth-buttons {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+
+.see-teachers-btn {
+  --background: #25510a;
+  --color: #fff;
+  --border-radius: 8px;
+  font-weight: bold;
+  height: 44px;
+  margin: 0;
+}
+
+.auth-btn {
+  --border-radius: 8px;
+  font-weight: bold;
+  height: 44px;
+  margin: 0;
+}
+
+.outline-btn {
+  --color: #25510a;
+  --border-color: #25510a;
+  --border-width: 2px;
+}
+
+/* SECCIÓN ACERCA DE CODIFY */
+.about-us {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  margin: 40px 0;
+}
+
+.about-us-intro {
+  background-color: #595f60;
+  color: white;
+  text-align: center;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+.about-us-title {
+  font-size: 26px;
+  font-weight: bold;
+  margin: 0 0 8px 0;
+}
+
+.about-us-text {
+  font-size: 16px;
+  margin: 0;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.history {
+  display: flex;
+  gap: 20px;
+}
+
+.history-text {
+  flex: 1;
+  padding: 24px;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  color: #2d3748;
+  line-height: 1.8;
+}
+
+.history-text h2 {
+  font-size: 22px;
+  font-weight: bold;
+  color: #1a2f0a;
+  margin: 0 0 16px 0;
+}
+
+.history-text p {
+  margin: 0 0 16px 0;
+}
+
+.contact {
+  padding: 24px;
+  background: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 12px;
+  text-align: center;
+  line-height: 1.6;
+  color: #2d3748;
+  font-size: 0.95rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+}
+
+.contact strong {
+  color: #25510a;
+}
+
+/* RESPONSIVO PARA MÓVILES */
+@media (max-width: 1024px) {
+  .bloque_inicio {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 20px;
+  }
+
+  .imagen_main img {
+    height: auto;
+    width: 100%;
+    max-width: 400px;
+  }
+
+  .welcome-title {
+    text-align: center;
+    margin: 10px 0 20px 0;
+    font-size: 1.8rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .bloque_inicio {
+    padding: 16px;
+  }
+  
+  .imagen_main img {
+    max-width: 100%;
+  }
+
+  .auth-buttons {
+    flex-direction: column;
+    width: 100%;
+    gap: 8px;
+  }
+
+  .auth-buttons ion-button {
+    width: 100%;
+  }
+
+  .steps-grid {
+    flex-direction: column;
+    gap: 16px;
+  }
+}

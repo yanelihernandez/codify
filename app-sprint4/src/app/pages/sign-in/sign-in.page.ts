@@ -14,14 +14,16 @@ import {
 import { AuthService } from '../../services/auth';
 import { ToastService } from '../../services/toast.service';
 import { FavoritesService } from '../../services/favorites-sqlite';
+import { HeaderComponent } from '../../components/header/header.component';
+import { FooterComponent } from '../../components/footer/footer.component';
 
 @Component({
   selector: 'app-sign-in',
   standalone: true,
   imports: [
     ReactiveFormsModule, RouterLink,
-    IonContent, IonHeader, IonTitle, IonToolbar,
-    IonItem, IonInput, IonButton, IonList, IonProgressBar
+    IonContent, IonItem, IonInput, IonButton, IonList, IonProgressBar,
+    HeaderComponent, FooterComponent
   ],
   templateUrl: './sign-in.page.html',
   styleUrl: './sign-in.page.scss',
